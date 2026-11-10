@@ -73,7 +73,6 @@ export default function SearchBox() {
     }
     if (event.key === 'Escape') {
       close();
-      inputRef.current?.blur();
     }
   };
 
