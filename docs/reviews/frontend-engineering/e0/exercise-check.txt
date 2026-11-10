@@ -1,0 +1,5 @@
+route: #/lesson/s0-l1
+exercise: s0-l1-ex-1 (Node.js track)
+action: fill solution from content, click 运行测试
+result: toast 'Node.js 轨道全部测试通过'; status '已通过 · Node.js 轨道'
+console errors: 0

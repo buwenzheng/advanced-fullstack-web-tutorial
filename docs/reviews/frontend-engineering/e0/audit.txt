@@ -1,0 +1,17 @@
+# content/exercise audits
+$ t=audit-content
+audit mode=ready lessons=45 draft=0 errors=0 warnings=0
+$ t=check-links
+links broken=0
+$ t=check-duplication
+duplication lessons=45 pairs=0 failing=0
+$ t=check-facts
+facts unregistered=0 total=10
+$ t=run-js-exercises
+js code exercises=38 failing=0 starterFailing=38
+$ t=run-sql-exercises
+sql exercises=2 failing=0
+$ t=test-progress-migration
+progress migration ok: q/l/drafts mapped, graduation preserved, idempotent
+# npm audit
+found 0 vulnerabilities (registry.npmjs.org, --omit=dev)

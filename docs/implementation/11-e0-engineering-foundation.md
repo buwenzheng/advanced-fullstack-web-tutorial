@@ -443,7 +443,7 @@ npm run preview
   - 关闭动画：`*, *::before, *::after { animation: none !important; transition: none !important; }`；
   - 等待 `document.fonts.ready`；
   - `fullPage: true`；
-  - 视觉用例只在 `chromium` 项目跑。
+  - 视觉用例只在 `chromium` 项目跑，标题含 `@visual`，供 CI 按平台排除；
 - **命令**：
 
 ```bash
@@ -486,7 +486,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npx playwright install --with-deps chromium
-      - run: npx playwright test --project=chromium
+      - run: npx playwright test --project=chromium --grep-invert "@visual"
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

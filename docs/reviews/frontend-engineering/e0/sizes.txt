@@ -1,0 +1,4 @@
+index.html raw=4152 gzip=1934
+assets/index-C7C4HMlC.css raw=42552 gzip=8640
+assets/index-CuUT27m2.js raw=1422361 gzip=427535
+dist total=1.5M (du -sh)
