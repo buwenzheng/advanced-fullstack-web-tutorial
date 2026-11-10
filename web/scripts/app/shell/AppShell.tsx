@@ -9,16 +9,16 @@ function PageFallback() {
 }
 
 function ShellLayout() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   const { pathname } = useLocation();
   const lastPathname = useRef(pathname);
+  const [drawer, setDrawer] = useState({ open: false, path: pathname });
+  const drawerOpen = drawer.open && drawer.path === pathname;
 
   useEffect(() => {
     const isRouteChange = lastPathname.current !== pathname;
     lastPathname.current = pathname;
     window.scrollTo(0, 0);
-    setDrawerOpen(false);
     if (isRouteChange) mainRef.current?.focus({ preventScroll: true });
   }, [pathname]);
 
@@ -36,7 +36,10 @@ function ShellLayout() {
         跳到主要内容
       </a>
       <div className="app" id="app">
-        <Topbar drawerOpen={drawerOpen} onToggleDrawer={() => setDrawerOpen((open) => !open)} />
+        <Topbar
+          drawerOpen={drawerOpen}
+          onToggleDrawer={() => setDrawer({ open: !drawerOpen, path: pathname })}
+        />
         <Sidebar open={drawerOpen} />
         <main className="main" id="main" tabIndex={-1} ref={mainRef}>
           <Suspense fallback={<PageFallback />}>
@@ -49,7 +52,7 @@ function ShellLayout() {
         id="scrim"
         hidden={!drawerOpen}
         aria-hidden="true"
-        onClick={() => setDrawerOpen(false)}
+        onClick={() => setDrawer({ open: false, path: pathname })}
       />
     </>
   );

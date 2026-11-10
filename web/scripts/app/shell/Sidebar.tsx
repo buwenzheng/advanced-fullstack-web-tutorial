@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, matchPath, useLocation } from 'react-router';
 import { curriculum, graduationProject, lessonById } from '../../content/index';
 import { useProgress } from '../hooks/useProgress';
@@ -12,24 +12,26 @@ export default function Sidebar({ open }: { open: boolean }) {
   const activeStageId = stageMatch?.params.stageId
     ?? lessonById(lessonMatch?.params.lessonId ?? '')?.stageId;
   const [openStages, setOpenStages] = useState<Set<string>>(() => new Set());
-
-  useEffect(() => {
-    if (!activeStageId) return;
-    setOpenStages((prev) => {
-      if (prev.has(activeStageId)) return prev;
-      const next = new Set(prev);
-      next.add(activeStageId);
-      return next;
-    });
-  }, [activeStageId]);
+  const [collapsedStages, setCollapsedStages] = useState<Set<string>>(() => new Set());
 
   const toggleStage = (stageId: string) => {
-    setOpenStages((prev) => {
-      const next = new Set(prev);
-      if (next.has(stageId)) next.delete(stageId);
-      else next.add(stageId);
-      return next;
-    });
+    const isExpanded = openStages.has(stageId)
+      || (stageId === activeStageId && !collapsedStages.has(stageId));
+    if (isExpanded) {
+      setOpenStages((prev) => {
+        const next = new Set(prev);
+        next.delete(stageId);
+        return next;
+      });
+      setCollapsedStages((prev) => new Set(prev).add(stageId));
+    } else {
+      setCollapsedStages((prev) => {
+        const next = new Set(prev);
+        next.delete(stageId);
+        return next;
+      });
+      setOpenStages((prev) => new Set(prev).add(stageId));
+    }
   };
 
   const routeName = pathname.startsWith('/lab') ? 'lab' : pathname.startsWith('/report') ? 'report' : '';
@@ -46,7 +48,8 @@ export default function Sidebar({ open }: { open: boolean }) {
           const mastery = progress.stage(stage);
           const isActive = stage.id === activeStageId;
           const isDone = mastery.total > 0 && mastery.done === mastery.total;
-          const expanded = openStages.has(stage.id);
+          const expanded = openStages.has(stage.id)
+            || (isActive && !collapsedStages.has(stage.id));
 
           return (
             <div
