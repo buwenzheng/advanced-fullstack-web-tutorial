@@ -1,6 +1,7 @@
-const stage = (id, label) => `<a href="#/stage/${id}">${label}</a>`;
-const lesson = (id, label) => `<a href="#/lesson/${id}">${label}</a>`;
-const project = (id, label) => `<a href="#/project/${id}">${label}</a>`;
+import type { Project } from './types.js';
+const stage = (id: string, label: string) => `<a href="#/stage/${id}">${label}</a>`;
+const lesson = (id: string, label: string) => `<a href="#/lesson/${id}">${label}</a>`;
+const project = (id: string, label: string) => `<a href="#/project/${id}">${label}</a>`;
 
 export const graduationProject = {
   "id": "p-graduation",
@@ -334,4 +335,4 @@ export const graduationProject = {
       "body": "# LinkHub 答辩评分表\n\n- 候选人：\n- 日期：\n- 评委：\n- 规则：7 维各 1-5 分；平均 ≥ 3.5 且无单项低于 3；硬门槛全部通过。\n\n## 1. 七维评分\n| 维度 | 5 分标准 | 得分 | 证据 |\n| --- | --- | --- | --- |\n| 架构与取舍 | 三个取舍均有备选、代价与反悔条件 | | |\n| 数据与一致性 | 事务、幂等、统计一致性讲得清 | | |\n| 可靠性与运维 | SLO、演练、回滚有数据 | | |\n| 全栈与体验 | 契约、渲染、实时、安全形成闭环 | | |\n| AI 工程 | 评估、注入、引用、成本、降级有证据 | | |\n| AI Coding 系统 | 五层模型、失败 taxonomy、度量可复盘 | | |\n| 表达与追问 | 结构清晰、数字一致、能承认未知 | | |\n\n## 2. 硬门槛\n- [ ] 至少三个取舍\n- [ ] 重复点击只计一次\n- [ ] 一次回滚 + 一次故障恢复\n- [ ] 契约零漂移、CWV、安全头、RUM 齐全\n- [ ] AI 五项质量门槛逐项有证据\n- [ ] AI 协作记录完整，至少 3 个失败案例\n- [ ] 讲清两个失败模式\n\n## 3. 必问问题\n1. 你这个系统最贵的三个取舍是什么？如果重来会改哪个？\n2. 统计为什么最终一致？重复、丢失、延迟分别怎么处理？\n3. 一次请求从浏览器到数据库经过哪些层？哪一层最容易出问题？\n4. AI 功能答错了你怎么发现？怎么证明修复没有回归？\n5. 哪些任务你绝不会交给 AI？为什么？\n6. 如果流量涨 10 倍，先动哪里？瓶颈会迁移到哪里？\n\n## 4. 扣分项\n- [ ] 只演示 happy path，没有失败模式\n- [ ] 数字与报告不一致\n- [ ] 说不清 AI 功能的评估与成本\n- [ ] 把「AI 说测试过了」当验证\n- [ ] 跨租户或注入用例未覆盖\n\n## 5. 结论\n- 平均分：\n- 最低项：\n- 硬门槛：通过 / 不通过\n- 结论：通过 / 有条件通过 / 不通过\n"
     }
   ]
-};
+} satisfies Project;

@@ -1,6 +1,6 @@
 import { h } from '../ui.js';
 import { formatDuration } from '../store.js';
-import { stageById } from '../content/index.js';
+import { stageById } from '../content/index';
 import { isLessonMastered, stageMastery } from '../progress.js';
 
 const ACCENT_VAR = {

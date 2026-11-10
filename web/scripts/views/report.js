@@ -1,6 +1,6 @@
 import { h } from '../ui.js';
 import { store } from '../store.js';
-import { curriculum, allLessons, graduationProject, stageLabel } from '../content/index.js';
+import { curriculum, allLessons, graduationProject, stageLabel } from '../content/index';
 import { courseMastery, isLessonMastered, trackSolved } from '../progress.js';
 
 function taskLabel(task) {

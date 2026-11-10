@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s5L1 } from './s5-l1.js';
 import { s5L2 } from './s5-l2.js';
 import { s5L3 } from './s5-l3.js';
@@ -20,6 +21,6 @@ export const stage5 = {
     "能设计复制、分片与读写分离方案并说明取舍"
   ],
   keywords: ["模块边界","Outbox","Saga","最终一致","Fencing Token","复制延迟","分片","一致性哈希"],
-  lessons: [s5L1, s5L2, s5L3, s5DataScale],
+  lessons: [s5L1, s5L2, s5L3, s5DataScale] as LessonData[],
   project: p5,
-};
+} satisfies StageData;

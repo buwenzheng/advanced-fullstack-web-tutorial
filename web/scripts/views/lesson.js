@@ -1,6 +1,6 @@
 import { h } from '../ui.js';
 import { store, formatDuration } from '../store.js';
-import { lessonById, stageById, stageLabel } from '../content/index.js';
+import { lessonById, stageById, stageLabel } from '../content/index';
 import { isLessonMastered, lessonTasks, taskSolved } from '../progress.js';
 import { renderBlock } from './blocks.js';
 import { renderTask } from '../engine/exercise.js';

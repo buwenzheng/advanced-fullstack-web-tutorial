@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s7L1 } from './s7-l1.js';
 import { s7L2 } from './s7-l2.js';
 import { s7L3 } from './s7-l3.js';
@@ -21,6 +22,6 @@ export const stage7 = {
     "能用五层模型与七步循环系统化 AI 协作，并留下可复盘证据"
   ],
   keywords: ["LLM","SSE","RAG","pgvector","提示注入","评估集","AI Coding","Agent","MCP"],
-  lessons: [s7L1, s7L2, s7L3, s7L4, s7L5],
+  lessons: [s7L1, s7L2, s7L3, s7L4, s7L5] as LessonData[],
   project: p7,
-};
+} satisfies StageData;

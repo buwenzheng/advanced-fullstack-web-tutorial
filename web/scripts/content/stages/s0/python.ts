@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   "s0-l1": [
     {
@@ -11,7 +12,7 @@ export const PYTHON_BLOCKS = {
       "note": "asyncio 只有一个就绪队列，没有 nextTick 与 Promise 微任务的区分；不要照搬 Node 的顺序结论。"
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   "s0-l1-ex-1": {
@@ -118,4 +119,4 @@ export const PYTHON_TRACKS = {
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

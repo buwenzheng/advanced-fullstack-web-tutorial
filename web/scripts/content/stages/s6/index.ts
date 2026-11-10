@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s6L1 } from './s6-l1.js';
 import { s6L2 } from './s6-l2.js';
 import { s6L3 } from './s6-l3.js';
@@ -20,6 +21,6 @@ export const stage6 = {
     "能设计会话、CSRF、CSP、实时链路与边缘缓存的安全边界"
   ],
   keywords: ["BFF","契约驱动","SSR","流式渲染","CWV","RUM","SSE","CSP","边缘缓存"],
-  lessons: [s6L1, s6L2, s6L3, s6L4],
+  lessons: [s6L1, s6L2, s6L3, s6L4] as LessonData[],
   project: p6,
-};
+} satisfies StageData;

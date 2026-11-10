@@ -1,5 +1,5 @@
 import { h } from '../ui.js';
-import { curriculum, allLessons } from '../content/index.js';
+import { curriculum, allLessons } from '../content/index';
 import { courseMastery, stageMastery, nextLesson } from '../progress.js';
 
 const ACCENT_VAR = {

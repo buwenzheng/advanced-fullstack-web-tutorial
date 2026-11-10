@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   's4-l1': [
     {
@@ -214,7 +215,7 @@ def evaluate_flag(flag, context=None):
       note: 'Python 整数不会溢出，用 & 0xFFFFFFFF 显式截断到 32 位才能与 JS 的 Math.imul 结果一致。百分比必须按 userId 稳定哈希，不能用 random 或请求序号；否则同一用户会在开与关之间抖动。'
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   's4-l1-ex-1': {
@@ -876,4 +877,4 @@ assert_eq(evaluate_flag({}, {'userId': 'u1'})['reason'], 'NOT_IN_ROLLOUT')`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

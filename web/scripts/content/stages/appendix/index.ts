@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { a1 } from './a1.js';
 import { a2 } from './a2.js';
 import { a3 } from './a3.js';
@@ -29,6 +30,6 @@ export const stageAppendix = {
     "能解释推理服务、向量索引与 AI 成本模型的底座"
   ],
   keywords: ["复杂度","B+tree","LSM","堆","LRU","布隆过滤器","HyperLogLog","Little 定律","HNSW","KV cache"],
-  lessons: [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13],
+  lessons: [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13] as LessonData[],
   project: null,
-};
+} satisfies StageData;

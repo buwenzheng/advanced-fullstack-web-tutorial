@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const nonEmpty = z.string().min(1);
-const testCaseSchema = z.strictObject({ name: nonEmpty, code: nonEmpty });
+const testCaseSchema = z.strictObject({ name: nonEmpty, code: nonEmpty, async: z.boolean().optional() });
 const pythonTrackSchema = z.strictObject({
   starter: nonEmpty,
   solution: nonEmpty,

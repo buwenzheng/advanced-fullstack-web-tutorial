@@ -1,10 +1,12 @@
+import type { PythonTrackMap } from '../../types.js';
 import { aiChanges, reviewPolicy } from '../../fixtures/ai/ai-diffs.js';
 import { evalCases, evalThresholds, toolPolicy } from '../../fixtures/ai/eval-set.js';
 
-function pyLiteral(value) {
+function pyLiteral(value: unknown): string {
   if (Array.isArray(value)) return '[' + value.map(pyLiteral).join(', ') + ']';
   if (value && typeof value === 'object') {
-    return '{' + Object.keys(value).map((key) => JSON.stringify(key) + ': ' + pyLiteral(value[key])).join(', ') + '}';
+    const record = value as Record<string, unknown>;
+    return '{' + Object.keys(record).map((key) => JSON.stringify(key) + ': ' + pyLiteral(record[key])).join(', ') + '}';
   }
   if (typeof value === 'string') return JSON.stringify(value);
   if (typeof value === 'boolean') return value ? 'True' : 'False';
@@ -1455,4 +1457,4 @@ export const PYTHON_TRACKS = {
     solution: l4Solution,
     tests: l4Tests
   }
-};
+} satisfies PythonTrackMap;

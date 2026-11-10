@@ -27,7 +27,7 @@ for (const { task, lesson } of tasks) {
   if (solutionResults.some((result) => !result.ok)) {
     failing += 1;
     const detail = solutionResults
-      .map((result, index) => (result.ok ? null : `  - ${result.name}: ${result.error}`))
+      .map((result) => (result.ok ? null : `  - ${result.name}: ${result.error}`))
       .filter(Boolean)
       .join('\n');
     errors.push(`${lesson.id}/${task.id}: solution 未通过\n${detail}`);

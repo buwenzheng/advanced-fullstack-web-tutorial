@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s1L1 } from './s1-l1.js';
 import { s1L2 } from './s1-l2.js';
 import { s1L3 } from './s1-l3.js';
@@ -20,6 +21,6 @@ export const stage1 = {
     "能写出可从空库与旧版库各跑一次的可回滚迁移"
   ],
   keywords: ["关系模型","SQL","索引","B+tree","EXPLAIN","事务","MVCC","迁移"],
-  lessons: [s1L1, s1L2, s1L3, s1Schema],
+  lessons: [s1L1, s1L2, s1L3, s1Schema] as LessonData[],
   project: p1,
-};
+} satisfies StageData;

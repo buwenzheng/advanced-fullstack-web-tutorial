@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { ROOT, content, manifest, EXPECTED, LESSON_ID_RE, walkStrings, stripHtml } from './lib/content.js';
+import { ROOT, content, manifest, EXPECTED, LESSON_ID_RE, stripHtml } from './lib/content.js';
 import { runSourceSuite } from './lib/js-runner.js';
 import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql.js';
 import type { Lesson } from '../web/scripts/content/types.js';
@@ -60,7 +60,7 @@ for (const stage of content.curriculum) {
     if (!LESSON_ID_RE.test(lesson.id)) error(`${where}: ID 不符合命名规则`);
     if (lesson.stageId !== stage.id) error(`${where}: stageId=${lesson.stageId} != ${stage.id}`);
 
-    const lessonFile = path.join(ROOT, `web/scripts/content/stages/${stage.id}/${lesson.id}.js`);
+    const lessonFile = path.join(ROOT, `web/scripts/content/stages/${stage.id}/${lesson.id}.ts`);
     if (!fs.existsSync(lessonFile)) error(`${where}: 缺少文件 ${path.relative(ROOT, lessonFile)}`);
 
     if ((lesson.status as string) !== 'draft' && (lesson.status as string) !== 'ready') error(`${where}: 非法 status=${lesson.status}`);

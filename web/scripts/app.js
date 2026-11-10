@@ -1,7 +1,7 @@
 import { h, clear, toast } from './ui.js';
 import { store } from './store.js';
 import { lang, LANGUAGES } from './lang.js';
-import { curriculum, allLessons, lessonById, stageById, stageLabel, graduationProject } from './content/index.js';
+import { curriculum, allLessons, lessonById, stageById, stageLabel, graduationProject } from './content/index';
 import { isLessonMastered, courseMastery, stageMastery } from './progress.js';
 import { renderOverview } from './views/overview.js';
 import { renderStage } from './views/stage.js';

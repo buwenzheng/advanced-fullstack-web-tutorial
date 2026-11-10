@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   's2-l1': [
     {
@@ -268,7 +269,7 @@ def verify_webhook(secret, timestamp, body, signature, now_ms):
       note: 'Python 用 hmac.compare_digest 做常量时间比较；参数必须是同类型的 ASCII 字符串或 bytes，比较前先确认 signature 的形状。签名覆盖「时间戳 + 原始 body」，接入框架时要拿原始字节，不能先用框架解析成 dict 再重新序列化。'
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   's2-l1-ex-1': {
@@ -791,4 +792,4 @@ assert_eq(second['data'][0]['id'], 'b')`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

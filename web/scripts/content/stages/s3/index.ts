@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s3L1 } from './s3-l1.js';
 import { s3L2 } from './s3-l2.js';
 import { s3L3 } from './s3-l3.js';
@@ -20,6 +21,6 @@ export const stage3 = {
     "能用压测数据证明保护生效，而不是只讲机制"
   ],
   keywords: ["缓存","Cache-Aside","消息队列","幂等消费","令牌桶","熔断","超时","压测"],
-  lessons: [s3L1, s3L2, s3L3, s3Resilience],
+  lessons: [s3L1, s3L2, s3L3, s3Resilience] as LessonData[],
   project: p3,
-};
+} satisfies StageData;

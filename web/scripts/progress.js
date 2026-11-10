@@ -1,5 +1,5 @@
 import { store } from './store.js';
-import { allLessons } from './content/index.js';
+import { allLessons } from './content/index';
 
 export function lessonTasks(lesson) {
   return [...(lesson.checks || []), ...(lesson.exercises || [])];

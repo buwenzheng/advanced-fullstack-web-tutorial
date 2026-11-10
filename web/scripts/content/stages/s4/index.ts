@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s4L1 } from './s4-l1.js';
 import { s4Perf } from './s4-perf.js';
 import { s4L3 } from './s4-l3.js';
@@ -20,6 +21,6 @@ export const stage4 = {
     "能设计可灰度、可回滚的发布流程"
   ],
   keywords: ["结构化日志","RED/USE","OpenTelemetry","压测","火焰图","优雅退出","Docker","金丝雀"],
-  lessons: [s4L1, s4Perf, s4L3, s4L4],
+  lessons: [s4L1, s4Perf, s4L3, s4L4] as LessonData[],
   project: p4,
-};
+} satisfies StageData;

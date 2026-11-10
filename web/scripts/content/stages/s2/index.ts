@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s2L1 } from './s2-l1.js';
 import { s2L2 } from './s2-l2.js';
 import { s2L3 } from './s2-l3.js';
@@ -20,6 +21,6 @@ export const stage2 = {
     "能把分页、幂等、限流与 OpenAPI 契约写成可验证的工程产物"
   ],
   keywords: ["REST","HTTP 语义","错误契约","JWT","RBAC","多租户","幂等键","OpenAPI"],
-  lessons: [s2L1, s2L2, s2L3, s2L4],
+  lessons: [s2L1, s2L2, s2L3, s2L4] as LessonData[],
   project: p2,
-};
+} satisfies StageData;

@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   's6-l1': [
     {
@@ -292,7 +293,7 @@ def is_enabled(flag, context):
       note: '两端 traceId 必须同时存在且相等才合并；只对上一边时宁可标记 incomplete，也不要拼出一条看似完整的假链路。span 先按开始时间排序再算间隙，输入乱序不会影响结论。'
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   's6-l1-ex-1': {
@@ -1136,4 +1137,4 @@ assert_eq(result['largestGap'], 900)`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

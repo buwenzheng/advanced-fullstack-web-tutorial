@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   's5-l1': [
     {
@@ -319,7 +320,7 @@ class IdGenerator:
       note: 'Python 整数没有 32/64 位溢出问题，但仍要显式处理序列耗尽与时钟回拨。高位时间戳让 ID 趋势递增，节点位避免冲突；不要用 time.time() 的浮点秒，统一用毫秒整数。'
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   's5-l1-ex-1': {
@@ -1223,4 +1224,4 @@ assert_eq(ring.get_node('link:7'), before)`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

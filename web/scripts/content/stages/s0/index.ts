@@ -1,3 +1,4 @@
+import type { LessonData, StageData } from '../../types.js';
 import { s0L1 } from './s0-l1.js';
 import { s0L2 } from './s0-l2.js';
 import { s0Cli } from './s0-cli.js';
@@ -18,6 +19,6 @@ export const stage0 = {
     "能用 CLI 定位端口占用、进程状态与 DNS 解析问题"
   ],
   keywords: ["DNS","TCP","TLS","HTTP","事件循环","进程","端口","curl"],
-  lessons: [s0L1, s0L2, s0Cli],
+  lessons: [s0L1, s0L2, s0Cli] as LessonData[],
   project: p0,
-};
+} satisfies StageData;

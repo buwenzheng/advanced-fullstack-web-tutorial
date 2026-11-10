@@ -1,4 +1,5 @@
-export const PYTHON_BLOCKS = {};
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
+export const PYTHON_BLOCKS = {} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   "s1-l2-ex-1": {
@@ -672,4 +673,4 @@ assert_eq(sorted(state["records"].keys()), [1, 2, 3])`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

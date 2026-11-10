@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   's3-l1': [
     {
@@ -304,7 +305,7 @@ class CircuitBreaker:
       note: '同步版本用 try/except 包住调用；半开失败要重置 opened_at，否则下一次调用会立即再次半开。生产实现还要给下游调用加超时。'
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   's3-l1-ex-1': {
@@ -1054,4 +1055,4 @@ assert_eq(breaker.state, 'open')`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;

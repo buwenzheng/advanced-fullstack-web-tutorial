@@ -1,3 +1,4 @@
+import type { PythonBlockMap, PythonTrackMap } from '../../types.js';
 export const PYTHON_BLOCKS = {
   'a1': [
     {
@@ -639,7 +640,7 @@ class HyperLogLog:
       note: '翻转次数只看相邻结果是否变化；排序键用负 flips 实现降序，name 升序作为并列时的稳定次序。'
     }
   ]
-};
+} satisfies PythonBlockMap;
 
 export const PYTHON_TRACKS = {
   'a1-ex-1': {
@@ -2102,4 +2103,4 @@ assert_eq([item['flaky'] for item in result], [False, False])`
       }
     ]
   }
-};
+} satisfies PythonTrackMap;
