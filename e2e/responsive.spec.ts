@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { entryUrl } from './lib/entry';
 
 const PAGES = [
   '#/',
@@ -15,13 +16,11 @@ const WIDTHS = [
   { width: 1280, height: 900 },
 ];
 
-const ENTRY = '/index.next.html';
-
 for (const route of PAGES) {
   for (const viewport of WIDTHS) {
     test(`@responsive ${viewport.width} ${route}`, async ({ page }) => {
       await page.setViewportSize(viewport);
-      await page.goto(`${ENTRY}${route}`);
+      await page.goto(entryUrl(route));
       await expect(page.locator('main h1')).toBeVisible();
 
       const overflow = await page.evaluate(
@@ -46,7 +45,7 @@ test.describe('移动端抽屉专项', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test('菜单按钮打开抽屉，scrim 可见且 aria-expanded 同步', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     await page.locator('#menu-toggle').click();
     await expect(page.locator('#sidebar')).toHaveClass(/is-open/);
     await expect(page.locator('#scrim')).toBeVisible();
@@ -54,7 +53,7 @@ test.describe('移动端抽屉专项', () => {
   });
 
   test('点击 scrim 关闭抽屉并复位 aria-expanded', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     const toggle = page.locator('#menu-toggle');
     await toggle.click();
     await page.locator('#scrim').click({ position: { x: 380, y: 400 } });
@@ -64,7 +63,7 @@ test.describe('移动端抽屉专项', () => {
   });
 
   test('从抽屉进入课时后自动关闭', async ({ page }) => {
-    await page.goto(`${ENTRY}#/lesson/s0-l1`);
+    await page.goto(entryUrl('#/lesson/s0-l1'));
     await page.locator('#menu-toggle').click();
     await expect(page.locator('#sidebar')).toHaveClass(/is-open/);
     await page.locator('.lesson-link[data-lesson="s0-l2"]').click();
@@ -74,7 +73,7 @@ test.describe('移动端抽屉专项', () => {
   });
 
   test('代码块与表格在自身容器内滚动，文档无横向溢出', async ({ page }) => {
-    await page.goto(`${ENTRY}#/lesson/s0-l1`);
+    await page.goto(entryUrl('#/lesson/s0-l1'));
     await expect(page.locator('main h1')).toBeVisible();
 
     const overflow = await page.evaluate(

@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { entryUrl } from './lib/entry';
 
 test.describe('React shell', () => {
   test('侧栏、搜索与语言轨道', async ({ page }) => {
-    await page.goto('/index.next.html#/lesson/s0-l1');
+    await page.goto(entryUrl('#/lesson/s0-l1'));
     await expect(page.locator('.stage-node')).toHaveCount(9);
     await expect(page.locator('.lesson-link')).toHaveCount(45);
     await expect(page.locator('.lesson-link.is-current')).toContainText('从 URL 到响应');
@@ -26,7 +27,7 @@ test.describe('移动端抽屉', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test('菜单打开、scrim 关闭', async ({ page }) => {
-    await page.goto('/index.next.html#/');
+    await page.goto(entryUrl('#/'));
     await page.getByRole('button', { name: '打开课程目录' }).click();
     await expect(page.locator('#sidebar')).toHaveClass(/is-open/);
     await expect(page.locator('#scrim')).toBeVisible();

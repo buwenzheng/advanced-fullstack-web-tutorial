@@ -1,0 +1,32 @@
+$ npx playwright test e2e/responsive.spec.ts --project=chromium --grep-invert "@python"
+
+Running 25 tests using 8 workers
+
+  ok  1 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/ (1.1s)
+  ok  2 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/ (1.3s)
+  ok  3 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/ (1.3s)
+  ok  5 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/stage/s0 (1.1s)
+  ok  4 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/stage/s0 (1.3s)
+  ok  6 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/stage/s0 (1.1s)
+  ok  8 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/lesson/s0-l1 (1.3s)
+  ok  7 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/lesson/s0-l1 (1.3s)
+  ok  9 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/lesson/s0-l1 (1.2s)
+  ok 10 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/lesson/s7-l5 (1.1s)
+  ok 11 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/lesson/s7-l5 (1.2s)
+  ok 13 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/project/p-graduation (1.0s)
+  ok 12 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/lesson/s7-l5 (1.2s)
+  ok 16 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/lab (816ms)
+  ok 14 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/project/p-graduation (1.1s)
+  ok 15 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/project/p-graduation (1.3s)
+  ok 17 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/lab (921ms)
+  ok 18 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/lab (951ms)
+  ok 19 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/report (871ms)
+  ok 20 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/report (1.1s)
+  ok 21 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/report (1.0s)
+  ok 22 [chromium] › e2e\responsive.spec.ts:47:3 › 移动端抽屉专项 › 菜单按钮打开抽屉，scrim 可见且 aria-expanded 同步 (1.0s)
+  ok 23 [chromium] › e2e\responsive.spec.ts:55:3 › 移动端抽屉专项 › 点击 scrim 关闭抽屉并复位 aria-expanded (1.1s)
+  ok 24 [chromium] › e2e\responsive.spec.ts:65:3 › 移动端抽屉专项 › 从抽屉进入课时后自动关闭 (1.1s)
+  ok 25 [chromium] › e2e\responsive.spec.ts:75:3 › 移动端抽屉专项 › 代码块与表格在自身容器内滚动，文档无横向溢出 (1.0s)
+
+  25 passed (5.9s)
+exit=0

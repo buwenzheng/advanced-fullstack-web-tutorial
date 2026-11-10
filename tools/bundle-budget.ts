@@ -32,20 +32,11 @@ try {
   process.exit(1);
 }
 
-function findEntryKey(entries: Record<string, ManifestItem>): string | undefined {
-  const direct = Object.keys(entries).find(
-    (key) => entries[key]?.isEntry && key.endsWith('index.next.html'),
-  );
-  if (direct) return direct;
-  // 多 HTML 入口共享同一脚本时 Vite 会合并入口 chunk，manifest 不保留 HTML 键，改从产物 HTML 定位
-  const html = readFileSync(path.join(DIST, 'index.next.html'), 'utf8');
-  const src = html.match(/<script[^>]*\ssrc="([^"]+)"/)?.[1]?.replace(/^\.\//, '');
-  return src ? Object.keys(entries).find((key) => entries[key]?.file === src) : undefined;
-}
-
-const reactKey = findEntryKey(manifest);
+const reactKey = Object.keys(manifest).find(
+  (key) => manifest[key]?.isEntry && key.endsWith('index.html'),
+);
 if (!reactKey) {
-  console.error('FAIL manifest 中找不到 index.next.html 入口');
+  console.error('FAIL manifest 中找不到 index.html 入口');
   process.exit(1);
 }
 
@@ -95,7 +86,7 @@ const allJs = [...new Set(Object.values(manifest).map((item) => item.file))].fil
 );
 
 const rows = [
-  ['entry (index.next.html)', entryGzip, LIMITS.entry],
+  ['entry (index.html)', entryGzip, LIMITS.entry],
   [`lazy max (${maxLazy.file})`, maxLazy.gzip, LIMITS.lazy],
   ['search index', searchGzip, LIMITS.search],
 ] as const;
@@ -116,7 +107,7 @@ if (process.argv.includes('--json')) {
     generatedAt: new Date().toISOString(),
     budgets: {
       entry: {
-        label: 'entry (index.next.html)',
+        label: 'entry (index.html)',
         limit: LIMITS.entry,
         gzip: entryGzip,
         pass: entryGzip <= LIMITS.entry,

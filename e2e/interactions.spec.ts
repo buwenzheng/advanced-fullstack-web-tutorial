@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { s1L2 } from '../web/scripts/content/stages/s1/s1-l2';
 import { s1L3 } from '../web/scripts/content/stages/s1/s1-l3';
+import { entryUrl } from './lib/entry';
 
 interface ExerciseData {
   id: string;
@@ -48,7 +49,7 @@ function collectErrors(page: Page): string[] {
 }
 
 async function gotoReact(page: Page, route: string): Promise<void> {
-  await page.goto(`/index.next.html${route}`);
+  await page.goto(entryUrl(route));
   await page.locator('main h1').waitFor();
   await page.waitForLoadState('networkidle');
 }

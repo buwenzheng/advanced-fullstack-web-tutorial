@@ -1,0 +1,28 @@
+$ npx playwright test e2e/visual.spec.ts --project=chromium
+
+Running 21 tests using 8 workers
+
+  ok  2 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual stage-s0 @ 1440x900 (1.9s)
+  ok  1 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual home @ 1440x900 (2.1s)
+  ok  7 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual home @ 768x1024 (1.8s)
+  ok  6 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lab @ 1440x900 (1.8s)
+  ok  8 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual report @ 1440x900 (2.2s)
+  ok  9 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual stage-s0 @ 768x1024 (1.2s)
+  ok 13 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lab @ 768x1024 (1.2s)
+  ok  3 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual project-p-graduation @ 1440x900 (4.0s)
+  ok  5 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lesson-s0-l1 @ 1440x900 (3.7s)
+  ok  4 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lesson-s7-l5 @ 1440x900 (3.9s)
+  ok 10 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lesson-s0-l1 @ 768x1024 (2.5s)
+  ok 14 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual report @ 768x1024 (1.5s)
+  ok 11 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lesson-s7-l5 @ 768x1024 (2.5s)
+  ok 12 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual project-p-graduation @ 768x1024 (2.5s)
+  ok 16 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual stage-s0 @ 390x844 (1.2s)
+  ok 15 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual home @ 390x844 (1.3s)
+  ok 20 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lab @ 390x844 (1.1s)
+  ok 21 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual report @ 390x844 (1.2s)
+  ok 17 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lesson-s0-l1 @ 390x844 (2.0s)
+  ok 18 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual lesson-s7-l5 @ 390x844 (2.1s)
+  ok 19 [chromium] › e2e\visual.spec.ts:23:7 › v2 visual baseline › @visual project-p-graduation @ 390x844 (2.2s)
+
+  21 passed (8.5s)
+exit=0

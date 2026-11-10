@@ -1,0 +1,21 @@
+$ npx playwright test e2e/interactions.spec.ts --project=chromium --grep-invert "@python"
+
+Running 14 tests using 7 workers
+
+  ok  7 [chromium] › e2e\interactions.spec.ts:350:3 › 旧进度夹具 › 种子草稿显示在编辑器，旧 s6 草稿键迁移为 a1 (1.1s)
+  ok  4 [chromium] › e2e\interactions.spec.ts:244:3 › React 入口交互清单 › 报告：预置进度后统计与进度条正确 (1.4s)
+  ok  6 [chromium] › e2e\interactions.spec.ts:290:3 › React 入口交互清单 › 重置进度：确认后清空记录并删除草稿 (1.1s)
+  ok  2 [chromium] › e2e\interactions.spec.ts:101:3 › React 入口交互清单 › SQL 题：标准答案返回正确结果 (1.7s)
+  ok  1 [chromium] › e2e\interactions.spec.ts:62:3 › React 入口交互清单 › MCQ：答错反馈、重试后可再次作答 (1.9s)
+  ok  3 [chromium] › e2e\interactions.spec.ts:193:3 › React 入口交互清单 › 模板：复制模板写剪贴板并弹出提示 (1.8s)
+  ok  5 [chromium] › e2e\interactions.spec.ts:134:3 › React 入口交互清单 › 草稿：刷新保留输入，重置恢复 starter (1.6s)
+  ok  9 [chromium] › e2e\interactions.spec.ts:266:3 › React 入口交互清单 › 搜索：Enter 打开毕业项目，Esc 关闭结果 (1.3s)
+  ok  8 [chromium] › e2e\interactions.spec.ts:366:3 › 旧进度夹具 › 种子错误作答显示上次答错 (1.5s)
+  ok 10 [chromium] › e2e\interactions.spec.ts:323:3 › 旧进度夹具 › s6 旧课时 ID 迁移后 a1 显示本讲已掌握 (1.5s)
+  ok 12 [chromium] › e2e\interactions.spec.ts:82:3 › React 入口交互清单 › 代码题：标准答案通过全部测试，重置恢复 starter (1.7s)
+  ok 13 [chromium] › e2e\interactions.spec.ts:212:3 › React 入口交互清单 › 实验台：429 连发、幂等重放与重置清空历史 (1.5s)
+  ok 11 [chromium] › e2e\interactions.spec.ts:113:3 › React 入口交互清单 › 方案题：勾满自检清单并刷新保持 (2.5s)
+  ok 14 [chromium] › e2e\interactions.spec.ts:170:3 › React 入口交互清单 › 项目：里程碑进度 +1 且刷新保持，毕业项目笔记刷新保持 (2.4s)
+
+  14 passed (6.1s)
+exit=0

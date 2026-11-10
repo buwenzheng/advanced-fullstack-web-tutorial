@@ -1,10 +1,9 @@
 import { expect, test } from '@playwright/test';
-
-const ENTRY = '/index.next.html';
+import { entryUrl } from './lib/entry';
 
 test.describe('键盘路径门禁', () => {
   test('skip link 首个 Tab 可达，Enter 聚焦 #main 且不改变 hash', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     await expect(page.locator('main h1')).toBeVisible();
     await page.keyboard.press('Tab');
     await expect(page.locator('.skip-link')).toBeFocused();
@@ -14,7 +13,7 @@ test.describe('键盘路径门禁', () => {
   });
 
   test('路由切换后 #main 获焦且滚动复位', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     await page.evaluate(() => window.scrollTo(0, 600));
     await page.locator('.stage-node[data-stage="s0"] .stage-node__head').click();
     await page.locator('.lesson-link[data-lesson="s0-l1"]').click();
@@ -24,7 +23,7 @@ test.describe('键盘路径门禁', () => {
   });
 
   test('搜索键盘路径：展开、ArrowDown、Enter 跳转', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     const search = page.locator('#search-input');
     await search.focus();
     await page.keyboard.type('LinkHub 短链服务');
@@ -41,7 +40,7 @@ test.describe('键盘路径门禁', () => {
   });
 
   test('搜索 Escape 关闭结果且焦点留在输入框', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     const search = page.locator('#search-input');
     await search.focus();
     await page.keyboard.type('LinkHub');
@@ -53,7 +52,7 @@ test.describe('键盘路径门禁', () => {
   });
 
   test('侧栏阶段折叠可用 Enter 操作，课时列表显隐一致', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     const head = page.locator('.stage-node[data-stage="s0"] .stage-node__head');
     const lessons = page.locator('.stage-node[data-stage="s0"] .stage-node__lessons');
     await head.focus();
@@ -69,7 +68,7 @@ test.describe('键盘路径门禁', () => {
   });
 
   test('选择题可用 Enter 与 Space 作答', async ({ page }) => {
-    await page.goto(`${ENTRY}#/lesson/s0-l1`);
+    await page.goto(entryUrl('#/lesson/s0-l1'));
     const options = page.locator('.quiz').first().locator('.opt');
     const first = options.nth(0);
     const second = options.nth(1);
@@ -89,7 +88,7 @@ test.describe('抽屉键盘可达性', () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test('Tab 到菜单按钮后 Enter 打开抽屉', async ({ page }) => {
-    await page.goto(`${ENTRY}#/`);
+    await page.goto(entryUrl('#/'));
     await expect(page.locator('main h1')).toBeVisible();
     const toggle = page.locator('#menu-toggle');
     for (let index = 0; index < 5; index += 1) {

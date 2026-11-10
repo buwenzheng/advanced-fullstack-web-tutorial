@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { entryUrl } from './lib/entry';
 import { entryClosure } from './lib/manifest';
 
 const lessons = [
@@ -19,7 +20,7 @@ function collectErrors(page: import('@playwright/test').Page) {
 for (const item of lessons) {
   test(`lesson 正文与检查题渲染：${item.route}`, async ({ page }) => {
     const errors = collectErrors(page);
-    await page.goto(`/index.next.html#${item.route}`);
+    await page.goto(entryUrl(`#${item.route}`));
     await expect(page.locator('main h1')).toHaveText(item.title);
     await expect(page.locator('.lesson-body .lblock').first()).toBeVisible();
     await expect(page.locator('.quiz')).toHaveCount(3);
@@ -30,7 +31,7 @@ for (const item of lessons) {
 
 test('lesson 双轨切换与 MCQ 作答反馈', async ({ page }) => {
   const errors = collectErrors(page);
-  await page.goto('/index.next.html#/lesson/s0-l1');
+  await page.goto(entryUrl('#/lesson/s0-l1'));
 
   const panes = page.locator('.code-tracks .codeblock');
   await expect(panes).toHaveCount(2);
@@ -51,7 +52,7 @@ test('lesson 双轨切换与 MCQ 作答反馈', async ({ page }) => {
 
 test('project 页渲染毕业项目里程碑与模板，勾选后进度更新', async ({ page }) => {
   const errors = collectErrors(page);
-  await page.goto('/index.next.html#/project/p-graduation');
+  await page.goto(entryUrl('#/project/p-graduation'));
 
   await expect(page.locator('main h1')).toHaveText('LinkHub 短链服务');
   await expect(page.locator('.project-hero .eyebrow')).toHaveText('毕业项目');
@@ -70,7 +71,7 @@ test('project 页渲染毕业项目里程碑与模板，勾选后进度更新', 
 
 test('lab 实验台 10 个场景、429 限流与幂等重放', async ({ page }) => {
   const errors = collectErrors(page);
-  await page.goto('/index.next.html#/lab');
+  await page.goto(entryUrl('#/lab'));
 
   await expect(page.locator('main h1')).toHaveText('HTTP 实验室');
   await expect(page.locator('.lab-layout > .list-stack').first().locator('button')).toHaveCount(10);
@@ -122,7 +123,7 @@ test('lazy 入口闭包与阶段 chunk 强断言', async ({ page }) => {
   const errors = collectErrors(page);
   const jsResponses = collectJsResponses(page);
 
-  await page.goto('/index.next.html#/');
+  await page.goto(entryUrl('#/'));
   await expect(page.locator('main h1')).toHaveText('把前端的手感，接后端的世界');
   await settle(page);
   expect(outsideClosure(jsResponses, closure), '首页只应请求入口闭包内 JS').toEqual(new Set());
@@ -155,7 +156,7 @@ test('search 索引在聚焦搜索框后才按需下载并可用', async ({ page
     if (response.url().includes('/search-index')) indexRequests.push(response.url());
   });
 
-  await page.goto('/index.next.html#/');
+  await page.goto(entryUrl('#/'));
   await expect(page.locator('main h1')).toHaveText('把前端的手感，接后端的世界');
   await settle(page);
   expect(indexRequests, '首页不应请求 search-index 产物').toEqual([]);
@@ -177,7 +178,7 @@ test('report 报告页展示统计与错题列表', async ({ page }) => {
       meta: { version: 2, startedAt: 0 },
     }));
   });
-  await page.goto('/index.next.html#/report');
+  await page.goto(entryUrl('#/report'));
 
   await expect(page.locator('main h1')).toHaveText('学习报告');
   await expect(page.locator('.stat')).toHaveCount(5);

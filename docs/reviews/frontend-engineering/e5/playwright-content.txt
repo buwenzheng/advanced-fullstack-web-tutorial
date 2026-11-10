@@ -1,0 +1,16 @@
+$ npx playwright test e2e/content.spec.ts --project=chromium --grep-invert "@python"
+
+Running 9 tests using 8 workers
+
+  ok 1 [chromium] › e2e\content.spec.ts:21:3 › lesson 正文与检查题渲染：/lesson/a1 (1.3s)
+  ok 2 [chromium] › e2e\content.spec.ts:21:3 › lesson 正文与检查题渲染：/lesson/s0-l1 (1.4s)
+  ok 4 [chromium] › e2e\content.spec.ts:32:1 › lesson 双轨切换与 MCQ 作答反馈 (1.5s)
+  ok 5 [chromium] › e2e\content.spec.ts:21:3 › lesson 正文与检查题渲染：/lesson/s7-l5 (1.2s)
+  ok 8 [chromium] › e2e\content.spec.ts:152:1 › search 索引在聚焦搜索框后才按需下载并可用 (1.1s)
+  ok 9 [chromium] › e2e\content.spec.ts:171:1 › report 报告页展示统计与错题列表 (699ms)
+  ok 7 [chromium] › e2e\content.spec.ts:72:1 › lab 实验台 10 个场景、429 限流与幂等重放 (1.3s)
+  ok 3 [chromium] › e2e\content.spec.ts:53:1 › project 页渲染毕业项目里程碑与模板，勾选后进度更新 (1.7s)
+  ok 6 [chromium] › e2e\content.spec.ts:121:1 › lazy 入口闭包与阶段 chunk 强断言 (2.3s)
+
+  9 passed (4.5s)
+exit=0

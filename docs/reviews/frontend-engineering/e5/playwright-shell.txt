@@ -1,0 +1,9 @@
+$ npx playwright test e2e/shell.spec.ts --project=chromium --grep-invert "@python"
+
+Running 2 tests using 2 workers
+
+  ok 1 [chromium] › e2e\shell.spec.ts:29:3 › 移动端抽屉 › 菜单打开、scrim 关闭 (874ms)
+  ok 2 [chromium] › e2e\shell.spec.ts:5:3 › React shell › 侧栏、搜索与语言轨道 (1.4s)
+
+  2 passed (2.5s)
+exit=0

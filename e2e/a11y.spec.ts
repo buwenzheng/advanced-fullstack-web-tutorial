@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { entryUrl } from './lib/entry';
 
 const PAGES = [
   '#/',
@@ -15,13 +16,12 @@ const WIDTHS = [
   { width: 390, height: 844 },
 ];
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
-const ENTRY = '/index.next.html';
 
 for (const route of PAGES) {
   for (const viewport of WIDTHS) {
     test(`@a11y ${viewport.width} ${route}`, async ({ page }) => {
       await page.setViewportSize(viewport);
-      await page.goto(`${ENTRY}${route}`);
+      await page.goto(entryUrl(route));
       await expect(page.locator('main h1')).toBeVisible();
       await page.evaluate(async () => {
         await document.fonts.ready;
