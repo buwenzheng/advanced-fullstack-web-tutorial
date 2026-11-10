@@ -110,6 +110,7 @@ describe('LabPage 场景与交互', () => {
   it('重置恢复默认请求、清空响应与历史并恢复教学文案', async () => {
     const user = userEvent.setup();
     renderLab();
+    expect(screen.queryByText('还没有请求记录。')).toBeNull();
     await user.click(screen.getByRole('button', { name: '创建成功（201）' }));
     await user.click(screen.getByRole('button', { name: '发送请求' }));
     await waitFor(() => expect(screen.getByRole('button', { name: '发送请求' })).toBeEnabled());

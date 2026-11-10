@@ -28,7 +28,7 @@ export function StageLessonRow({ lesson, number, done }: { lesson: Lesson; numbe
         <span>{formatDuration(lesson.duration)}</span>
         {isDraft
           ? <span className="badge badge--muted">草稿</span>
-          : <span>{taskCount} 题</span>}
+          : <span>{`${taskCount} 题`}</span>}
         {done ? <span className="badge badge--teal">已掌握</span> : null}
       </div>
     </a>
@@ -63,11 +63,11 @@ export function StageView({ stage }: { stage: Stage }) {
         <p>{stage.subtitle}</p>
         <div className="stage-hero__tags">
           <span className="badge badge--muted">{formatDuration(stage.duration)}</span>
-          <span className="badge badge--muted">{stage.lessons.length} 讲</span>
+          <span className="badge badge--muted">{`${stage.lessons.length} 讲`}</span>
           {stage.appendix
             ? <span className="badge badge--teal">附录 · 性能、架构、工程与 AI 基础设施</span>
             : null}
-          <span className="badge badge--muted">已完成 {doneCount}/{stage.lessons.length}</span>
+          <span className="badge badge--muted">{`已完成 ${doneCount}/${stage.lessons.length}`}</span>
           {(stage.keywords || []).map((keyword) => (
             <span key={keyword} className="badge badge--blue">{keyword}</span>
           ))}

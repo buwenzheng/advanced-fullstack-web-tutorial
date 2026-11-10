@@ -37,6 +37,7 @@ export default function LabPage() {
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<LabResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [historyTouched, setHistoryTouched] = useState(false);
   const [teach, setTeach] = useState(TEACH_IDLE);
   const [curlFallback, setCurlFallback] = useState<string | null>(null);
 
@@ -66,6 +67,7 @@ export default function LabPage() {
       : { ...(await runMock(request, mockRef.current)), timeMs: Math.round(60 + Math.random() * 90) };
     setResult(nextResult);
     setHistory((prev) => [{ request, result: nextResult }, ...prev].slice(0, 6));
+    setHistoryTouched(true);
     setSending(false);
   };
 
@@ -87,6 +89,7 @@ export default function LabPage() {
     setBody('');
     mockRef.current = createMockState();
     setHistory([]);
+    setHistoryTouched(true);
     setResult(null);
     setTeach(target === 'live' ? TEACH_LIVE : TEACH_IDLE);
   };
@@ -194,9 +197,9 @@ export default function LabPage() {
                     </span>
                     <span className="tiny muted">{entry.result.timeMs ?? '-'} ms</span>
                   </div>
-                )) : (
+                )) : historyTouched ? (
                   <div className="empty-state">还没有请求记录。</div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>

@@ -58,10 +58,10 @@ export default function OverviewPage() {
           <h1 style={{ marginTop: 10 }}>把前端的手感，<em>接后端的世界</em></h1>
           <p className="hero__lede">{LEDE}</p>
           <div className="hero__stats">
-            <div className="hero__stat"><b>{stats.mainStageCount} + 1</b><span>阶段 + 附录</span></div>
+            <div className="hero__stat"><b>{`${stats.mainStageCount} + 1`}</b><span>阶段 + 附录</span></div>
             <div className="hero__stat"><b>{stats.lessonCount}</b><span>课程讲解</span></div>
             <div className="hero__stat"><b>{stats.taskCount}</b><span>可验证练习</span></div>
-            <div className="hero__stat"><b>{mastery.course.done}/{mastery.course.total}</b><span>已掌握</span></div>
+            <div className="hero__stat"><b>{`${mastery.course.done}/${mastery.course.total}`}</b><span>已掌握</span></div>
           </div>
           <div className="hero__cta">
             <a className="btn btn--primary" href={next ? `#/lesson/${next.id}` : '#/'}>

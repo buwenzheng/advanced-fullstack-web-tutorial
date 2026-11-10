@@ -85,10 +85,9 @@ export default function Sidebar({ open }: { open: boolean }) {
               >
                 <span className="stage-node__pip">{stage.appendix ? 'A' : String(stage.index)}</span>
                 <span className="stage-node__title">{stage.title}</span>
-                <span className="badge badge--muted tiny">{stageMastery.done}/{stageMastery.total}</span>
-                <svg className="stage-node__chevron" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M8 5l6 5-6 5" />
-                </svg>
+                <span className="badge badge--muted tiny">{`${stageMastery.done}/${stageMastery.total}`}</span>
+                {/* v2 的箭头是 HTML 命名空间的空 svg，占位但不绘制；保留同尺寸空盒以维持布局与像素对等 */}
+                <span className="stage-node__chevron" aria-hidden="true" />
               </button>
               <div className="stage-node__bar"><i style={{ width: `${stageMastery.percent}%` }} /></div>
               <ul className="stage-node__lessons">

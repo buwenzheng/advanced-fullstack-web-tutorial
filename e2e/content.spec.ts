@@ -34,8 +34,9 @@ test('lesson 双轨切换与 MCQ 作答反馈', async ({ page }) => {
   const panes = page.locator('.code-tracks .codeblock');
   await expect(panes).toHaveCount(2);
   await expect(panes.nth(1)).toHaveAttribute('hidden', '');
-  await page.getByRole('tab', { name: 'Python' }).click();
-  await expect(page.getByRole('tab', { name: 'Python' })).toHaveAttribute('aria-selected', 'true');
+  const pythonTab = page.getByRole('tablist', { name: '语言实现' }).getByRole('tab', { name: 'Python' });
+  await pythonTab.click();
+  await expect(pythonTab).toHaveAttribute('aria-selected', 'true');
   await expect(panes.nth(1)).not.toHaveAttribute('hidden');
 
   const quiz = page.locator('.quiz').first();
