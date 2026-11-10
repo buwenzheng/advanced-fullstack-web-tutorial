@@ -1,0 +1,22 @@
+T-E1.6 catalog 与搜索索引生成证据（2026-11-10）
+
+[catalog]
+bytes=73160 gzip=15282
+sha256=d2ab730dba911068947fa6fa73f2886ae02a6fcc47067b289c46db86e3e63dec
+stages=9 lessons=45 projects=9 tasks=214
+accent 全为真：true
+task.python 全为布尔：true
+python 代码任务=38
+task kinds=mcq,code,design,sql
+
+[search-index]
+bytes=509581 gzip=199467
+sha256=c824dce44f71b2227eb36df02dcbf5de3019e80aa8b3e6ef3865a754780b6dbe
+documents=63（9 阶段 + 45 课时 + 9 项目）
+
+[幂等]
+连续两次 npm run content:build，sha256sum 输出 diff 为空（HASH_STABLE）。
+体积满足门禁：catalog gzip 15.3KB ≤ 32KB；search gzip 199.5KB ≤ 300KB。
+
+[说明]
+web/generated/ 已被 .gitignore 忽略，生成物不提交；本阶段不接入运行时。

@@ -17,6 +17,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit",
     "content:snapshot": "tsx tools/content-snapshot.ts",
     "content:validate": "tsx tools/validate-content.ts",
+    "content:build": "tsx tools/build-content.ts",
     "audit:content": "tsx tools/audit-content.ts",
     "audit:exercises": "tsx tools/run-js-exercises.ts && tsx tools/run-sql-exercises.ts",
     "audit:python": "tsx tools/run-python-exercises.ts",
