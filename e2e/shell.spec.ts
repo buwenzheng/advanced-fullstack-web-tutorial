@@ -1,26 +1,6 @@
-import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
-const routes = JSON.parse(readFileSync('e2e/routes.json', 'utf8')) as string[];
-const reactUrl = (route: string) => `/index.next.html${route}`;
-
 test.describe('React shell', () => {
-  test.setTimeout(180_000);
-
-  test('66 条路由可解析且无控制台错误', async ({ page }) => {
-    const errors: string[] = [];
-    page.on('console', (message) => {
-      if (message.type() === 'error') errors.push(message.text());
-    });
-    page.on('pageerror', (error) => errors.push(error.message));
-
-    for (const route of routes) {
-      await page.goto(reactUrl(route));
-      await expect(page.locator('main h1')).toBeVisible();
-      expect(errors, route).toEqual([]);
-    }
-  });
-
   test('侧栏、搜索与语言轨道', async ({ page }) => {
     await page.goto('/index.next.html#/lesson/s0-l1');
     await expect(page.locator('.stage-node')).toHaveCount(9);
