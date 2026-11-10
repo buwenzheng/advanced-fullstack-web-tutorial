@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useParams } from 'react-router';
-import { findProject, graduationProject } from '../../content/index';
 import type { Project } from '../../content/types';
 import { store } from '../../state/store';
+import { useGraduationId, useProject } from '../data/content';
 import { useProgress } from '../hooks/useProgress';
 import { RichText } from '../lesson/RichText';
 import { MilestoneList } from '../project/MilestoneList';
@@ -53,7 +53,8 @@ function RichListCard({ title, items }: { title: string; items: string[] }) {
 
 export function ProjectView({ project }: { project: Project }) {
   useProgress();
-  const isGraduation = project.id === graduationProject.id;
+  const graduationId = useGraduationId();
+  const isGraduation = project.id === graduationId;
   const doneCount = project.milestones.filter((milestone) => (
     store.milestoneDone(project.id, milestone.id)
   )).length;
@@ -138,7 +139,7 @@ export function ProjectView({ project }: { project: Project }) {
 
 export default function ProjectPage() {
   const { projectId = '' } = useParams();
-  const project = findProject(projectId);
+  const project = useProject(projectId);
   if (!project) return <EmptyState text="找不到这个项目。" />;
   return <ProjectView project={project} />;
 }

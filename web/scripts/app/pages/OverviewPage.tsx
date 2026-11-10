@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { useGraduation, useStageSummaries, useStats } from '../data/content';
+import { useGraduationId, useStageSummaries, useStats } from '../data/content';
 import { useMastery } from '../data/mastery';
 import type { Accent, StageSummary } from '../data/types';
 
@@ -46,7 +46,7 @@ export default function OverviewPage() {
   const stats = useStats();
   const stages = useStageSummaries();
   const mastery = useMastery();
-  const graduation = useGraduation();
+  const graduationId = useGraduationId();
   const next = mastery.nextLessonId ? { id: mastery.nextLessonId } : null;
   const done = mastery.course.done;
 
@@ -133,7 +133,9 @@ export default function OverviewPage() {
               把八个核心阶段的成果合成一个可部署、可运营、可答辩的产品：认证与权限、持久化、缓存、异步统计、限流与幂等、可观测性、容器化发布、Web/BFF，以及带评估与降级的 AI 助手。做完它，你具备独立负责一条全栈业务线的能力。
             </p>
             <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-              <a className="btn btn--primary btn--sm" href={`#/project/${graduation.id}`}>查看毕业项目</a>
+              {graduationId ? (
+                <a className="btn btn--primary btn--sm" href={`#/project/${graduationId}`}>查看毕业项目</a>
+              ) : null}
             </div>
           </div>
         </div>

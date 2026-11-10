@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { searchCurriculum } from '../app/shell/search';
+import { searchCurriculum } from './search-curriculum';
 
 describe('searchCurriculum', () => {
   it('空白查询返回空数组', () => {

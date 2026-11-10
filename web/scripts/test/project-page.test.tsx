@@ -1,8 +1,10 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { Suspense } from 'react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ProjectPage from '../app/pages/ProjectPage';
+import { loadCatalog, loadProject } from '../app/data/resources';
 import { ToastProvider } from '../app/shell/ToastProvider';
 import { store } from '../state/store';
 
@@ -15,16 +17,25 @@ function mockClipboard() {
   });
 }
 
-function renderAt(path: string) {
+async function renderAt(path: string) {
+  const projectId = path.split('/').at(-1) ?? '';
+  await loadCatalog();
+  await loadProject(projectId);
   const router = createMemoryRouter(
     [{ path: '/project/:projectId', element: <ProjectPage /> }],
     { initialEntries: [path] },
   );
-  render(
-    <ToastProvider>
-      <RouterProvider router={router} />
-    </ToastProvider>,
-  );
+  await act(async () => {
+    render(
+      <ToastProvider>
+        <Suspense fallback={null}>
+          <RouterProvider router={router} />
+        </Suspense>
+      </ToastProvider>,
+    );
+  });
+  expect(document.querySelector('.page')).not.toBeNull();
+  return router;
 }
 
 beforeEach(() => {
@@ -37,15 +48,15 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('ProjectPage', () => {
-  it('无效项目显示空状态', () => {
-    renderAt('/project/not-exist');
+  it('无效项目显示空状态', async () => {
+    await renderAt('/project/not-exist');
     expect(screen.getByText('找不到这个项目。')).toBeInTheDocument();
     expect(document.querySelector('.empty-state')).toBeInTheDocument();
     expect(document.querySelector('.project-hero')).toBeNull();
   });
 
-  it('阶段项目渲染 hero、路线与里程碑清单', () => {
-    renderAt('/project/p0');
+  it('阶段项目渲染 hero、路线与里程碑清单', async () => {
+    await renderAt('/project/p0');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('HTTP 探针 CLI');
     expect(document.querySelector('.project-hero .eyebrow')).toHaveTextContent('阶段 0');
     expect(document.querySelector('.badge--amber')).toHaveTextContent('里程碑进度 0/5');
@@ -65,7 +76,7 @@ describe('ProjectPage', () => {
 
   it('勾选里程碑更新进度徽章，再次点击撤销', async () => {
     const user = userEvent.setup();
-    renderAt('/project/p0');
+    await renderAt('/project/p0');
     const button = screen.getByRole('button', { name: '标记 发起请求并打印响应 完成' });
     await user.click(button);
     expect(document.querySelectorAll('.milestone')[0]).toHaveClass('is-done');
@@ -78,8 +89,8 @@ describe('ProjectPage', () => {
     expect(document.querySelector('.badge--amber')).toHaveTextContent('里程碑进度 0/5');
   });
 
-  it('毕业项目渲染 11 个里程碑、6 份模板与里程碑笔记', () => {
-    renderAt('/project/p-graduation');
+  it('毕业项目渲染 11 个里程碑、6 份模板与里程碑笔记', async () => {
+    await renderAt('/project/p-graduation');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('LinkHub 短链服务');
     expect(document.querySelector('.project-hero .eyebrow')).toHaveTextContent('毕业项目');
     expect(document.querySelector('.badge--amber')).toHaveTextContent('里程碑进度 0/11');
@@ -91,13 +102,13 @@ describe('ProjectPage', () => {
 
   it('毕业里程碑笔记持久化并在重渲染后恢复', async () => {
     const user = userEvent.setup();
-    renderAt('/project/p-graduation');
+    await renderAt('/project/p-graduation');
     const note = screen.getAllByPlaceholderText('记录这个里程碑的证据位置、缺口与下一步……')[0] as HTMLTextAreaElement;
     await user.type(note, '证据在 docs/m1.md');
     expect(store.milestoneNote('p-graduation', 'm1')).toBe('证据在 docs/m1.md');
 
     cleanup();
-    renderAt('/project/p-graduation');
+    await renderAt('/project/p-graduation');
     const restored = screen.getAllByPlaceholderText('记录这个里程碑的证据位置、缺口与下一步……')[0] as HTMLTextAreaElement;
     expect(restored.value).toBe('证据在 docs/m1.md');
   });
@@ -106,7 +117,7 @@ describe('ProjectPage', () => {
     const user = userEvent.setup();
     mockClipboard();
     writeText.mockResolvedValue(undefined);
-    renderAt('/project/p-graduation');
+    await renderAt('/project/p-graduation');
     await user.click(screen.getAllByRole('button', { name: '复制模板' })[0]!);
     expect(await screen.findByRole('button', { name: '已复制' })).toBeInTheDocument();
     expect(screen.getByText('已复制：ADR 模板')).toBeInTheDocument();
@@ -117,7 +128,7 @@ describe('ProjectPage', () => {
     const user = userEvent.setup();
     mockClipboard();
     writeText.mockRejectedValue(new Error('clipboard denied'));
-    renderAt('/project/p-graduation');
+    await renderAt('/project/p-graduation');
     await user.click(screen.getAllByRole('button', { name: '复制模板' })[0]!);
     expect(await screen.findByRole('button', { name: '复制失败' })).toBeInTheDocument();
   });

@@ -1,7 +1,8 @@
-import { stageLabel } from '../../content/index';
-import { courseMasteryLessons, isLessonMastered, trackSolved } from '../../state/mastery-core';
+import { trackSolved } from '../../state/mastery-core';
 import { store } from '../../state/store';
-import { getAllLessons, useAllStages, useGraduation } from '../data/content';
+import { useAllStages, useGraduation } from '../data/content';
+import { stageLabel } from '../data/labels';
+import { useMastery } from '../data/mastery';
 import { useProgress } from '../hooks/useProgress';
 import { buildReportModel, taskLabel } from '../report/report-model';
 
@@ -9,14 +10,15 @@ export default function ReportPage() {
   useProgress();
   const stages = useAllStages();
   const graduation = useGraduation();
+  const mastery = useMastery();
 
   const model = buildReportModel({
     state: store.get(),
     stages,
     graduation,
-    mastery: courseMasteryLessons(getAllLessons()),
+    mastery: mastery.course,
     stageLabel,
-    isLessonMastered,
+    isLessonMastered: (lesson) => mastery.lesson(lesson.id),
     trackSolved,
     milestoneDone: (projectId, milestoneId) => store.milestoneDone(projectId, milestoneId),
   });

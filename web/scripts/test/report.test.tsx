@@ -1,8 +1,24 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { Suspense } from 'react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import ReportPage from '../app/pages/ReportPage';
+import { loadAllStages, loadCatalog, loadGraduation } from '../app/data/resources';
 import { curriculum, graduationProject } from '../content/index';
 import { store } from '../state/store';
+
+async function renderReport() {
+  await loadCatalog();
+  await loadAllStages();
+  await loadGraduation();
+  await act(async () => {
+    render(
+      <Suspense fallback={null}>
+        <ReportPage />
+      </Suspense>,
+    );
+  });
+  expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
+}
 
 function sectionByHeading(title: string): HTMLElement {
   const heading = screen.getByRole('heading', { name: title });
@@ -34,8 +50,8 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('ReportPage', () => {
-  it('空进度展示零统计、空错题与 9 条阶段进度', () => {
-    render(<ReportPage />);
+  it('空进度展示零统计、空错题与 9 条阶段进度', async () => {
+    await renderReport();
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('学习报告');
     const stats = document.querySelectorAll('.stat');
@@ -83,10 +99,10 @@ describe('ReportPage', () => {
     expect(nextLinks[1]).toHaveAttribute('href', '#/lesson/s0-l2');
   });
 
-  it('答错题目进入待攻克列表，附录阶段显示 A 标签', () => {
+  it('答错题目进入待攻克列表，附录阶段显示 A 标签', async () => {
     store.recordAnswer('s2-l1-check-3', [2], false);
     store.recordAnswer('a1-check-1', [0], false);
-    render(<ReportPage />);
+    await renderReport();
 
     const stats = document.querySelectorAll('.stat');
     expect(stats[1]).toHaveTextContent('2');
@@ -113,7 +129,7 @@ describe('ReportPage', () => {
 
     cleanup();
     store.recordAnswer('s2-l1-check-3', [2], true);
-    render(<ReportPage />);
+    await renderReport();
     const afterStats = document.querySelectorAll('.stat');
     expect(afterStats[1]).toHaveTextContent('2');
     expect(afterStats[2]).toHaveTextContent('50%');
@@ -123,12 +139,12 @@ describe('ReportPage', () => {
     expect((remaining[0] as HTMLElement).querySelector('.lesson-row__num')).toHaveTextContent('A');
   });
 
-  it('设计题未完成计入错题，Python 轨道与里程碑分别汇总', () => {
+  it('设计题未完成计入错题，Python 轨道与里程碑分别汇总', async () => {
     store.recordChecklist('s2-l1-ex-2', [0, 1], 8);
     store.recordAnswer('s2-l1-ex-1@py', [], true);
     store.setLessonDone('s0-l1', true);
     store.toggleMilestone('p0', 'p0-m1');
-    render(<ReportPage />);
+    await renderReport();
 
     const stats = document.querySelectorAll('.stat');
     expect(stats[0]).toHaveTextContent('1/45');

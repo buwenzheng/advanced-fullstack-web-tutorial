@@ -96,6 +96,56 @@ test('lab 实验台 10 个场景、429 限流与幂等重放', async ({ page }) 
   expect(errors).toEqual([]);
 });
 
+function isStageChunk(name: string): boolean {
+  return /\/assets\/(?:s[0-7]|appendix)-[^/]+\.js$/.test(name);
+}
+
+async function resourceNames(page: import('@playwright/test').Page): Promise<string[]> {
+  return page.evaluate(() => performance.getEntriesByType('resource').map((entry) => entry.name));
+}
+
+test('lazy 阶段内容按阶段加载，跨阶段才新增 chunk', async ({ page }) => {
+  const errors = collectErrors(page);
+  await page.goto('/index.next.html#/');
+  await expect(page.locator('main h1')).toHaveText('把前端的手感，接后端的世界');
+  expect((await resourceNames(page)).filter(isStageChunk)).toEqual([]);
+
+  await page.getByRole('link', { name: '从第一讲开始' }).click();
+  await expect(page.locator('main h1')).toHaveText('从 URL 到响应：请求的四段旅程');
+  await expect.poll(async () => (await resourceNames(page)).filter(isStageChunk)).toHaveLength(1);
+
+  const sameStage = (await resourceNames(page)).filter(isStageChunk);
+  await page.locator('.lesson-nav a').filter({ hasText: '下一讲' }).click();
+  await expect(page.locator('main h1')).toHaveText('Node.js/Python 运行时：事件循环与并发模型');
+  expect((await resourceNames(page)).filter(isStageChunk)).toEqual(sameStage);
+
+  await page.locator('.stage-node[data-stage="s1"] .stage-node__head').click();
+  await page.locator('.lesson-link[data-lesson="s1-l1"]').click();
+  await expect(page.locator('main h1')).toHaveText('关系模型与 SQL：从对象到表');
+  await expect.poll(async () => (await resourceNames(page)).filter(isStageChunk).length).toBe(sameStage.length + 1);
+  expect(errors).toEqual([]);
+});
+
+test('search 索引在聚焦搜索框后才按需下载并可用', async ({ page }) => {
+  const errors = collectErrors(page);
+  await page.goto('/index.next.html#/');
+  await expect(page.locator('main h1')).toHaveText('把前端的手感，接后端的世界');
+  const isIndexChunk = (name: string) => name.includes('/search-index-');
+  expect((await resourceNames(page)).filter(isIndexChunk)).toEqual([]);
+
+  await page.locator('#search-input').focus();
+  await expect.poll(async () => page.evaluate(() => {
+    const found = performance.getEntriesByType('resource')
+      .find((item) => item.name.includes('/search-index-')) as
+      { decodedBodySize?: number; encodedBodySize?: number } | undefined;
+    return found ? found.decodedBodySize || found.encodedBodySize || 0 : 0;
+  })).toBeGreaterThan(300_000);
+
+  await page.locator('#search-input').fill('LinkHub');
+  await expect(page.getByRole('option').first()).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
 test('report 报告页展示统计与错题列表', async ({ page }) => {
   const errors = collectErrors(page);
   await page.addInitScript(() => {

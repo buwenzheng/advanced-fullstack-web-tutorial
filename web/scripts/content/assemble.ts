@@ -57,12 +57,20 @@ function normalizeLesson(lesson: LessonData, stageId: string, input: StageInput)
   };
 }
 
-export function assembleContent(inputs: readonly StageInput[]): Stage[] {
-  const stages: Stage[] = inputs.map((input) => ({
+export function assembleStage(input: StageInput, stageId: string): Stage {
+  return {
     ...input.data,
-    lessons: input.data.lessons.map((lesson) => normalizeLesson(lesson, input.data.id, input)),
+    lessons: input.data.lessons.map((lesson) => normalizeLesson(lesson, stageId, input)),
     project: normalizeProject(input.data.project),
-  }));
+  };
+}
+
+export function assembleProject(raw: Project | null | undefined): Project {
+  return normalizeProject(raw ?? null) as Project;
+}
+
+export function assembleContent(inputs: readonly StageInput[]): Stage[] {
+  const stages: Stage[] = inputs.map((input) => assembleStage(input, input.data.id));
 
   const codeTaskIds = new Set<string>();
   for (const stage of stages) {

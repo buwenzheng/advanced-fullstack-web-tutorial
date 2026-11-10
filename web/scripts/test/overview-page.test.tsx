@@ -1,8 +1,19 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { Suspense } from 'react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import OverviewPage, { StageCard } from '../app/pages/OverviewPage';
+import { loadCatalog } from '../app/data/resources';
 import { store } from '../state/store';
 import type { StageSummary } from '../app/data/types';
+
+async function renderOverview() {
+  await loadCatalog();
+  return act(async () => render(
+    <Suspense fallback={null}>
+      <OverviewPage />
+    </Suspense>,
+  ));
+}
 
 beforeEach(() => {
   localStorage.clear();
@@ -12,8 +23,8 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('OverviewPage', () => {
-  it('渲染四个统计与九张阶段卡', () => {
-    render(<OverviewPage />);
+  it('渲染四个统计与九张阶段卡', async () => {
+    await renderOverview();
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('把前端的手感，接后端的世界');
     const stats = document.querySelectorAll('.hero__stat');
@@ -31,16 +42,16 @@ describe('OverviewPage', () => {
     expect(within(cards[0] as HTMLElement).getByText('STAGE 00')).toBeInTheDocument();
   });
 
-  it('附录卡使用 APPENDIX 序号', () => {
-    render(<OverviewPage />);
+  it('附录卡使用 APPENDIX 序号', async () => {
+    await renderOverview();
     const cards = document.querySelectorAll('.stage-card');
     expect(within(cards[8] as HTMLElement).getByText('APPENDIX')).toBeInTheDocument();
     expect(within(cards[8] as HTMLElement).getByText('性能、架构与 AI 基础设施')).toBeInTheDocument();
   });
 
-  it('阶段卡展示进度与毕业面板', () => {
+  it('阶段卡展示进度与毕业面板', async () => {
     store.setLessonDone('s0-l1', true);
-    render(<OverviewPage />);
+    await renderOverview();
     const first = document.querySelectorAll('.stage-card')[0] as HTMLElement;
     expect(within(first).getByText('33%')).toBeInTheDocument();
     expect(within(first).getByText('含阶段项目')).toBeInTheDocument();
@@ -79,15 +90,15 @@ describe('OverviewPage', () => {
     expect(appendixMeta).not.toHaveTextContent('含阶段项目');
   });
 
-  it('CTA 文案与目标随进度变化', () => {
-    const first = render(<OverviewPage />);
-    const cta = screen.getByRole('link', { name: '从第一讲开始' });
+  it('CTA 文案与目标随进度变化', async () => {
+    const first = await renderOverview();
+    const cta = await screen.findByRole('link', { name: '从第一讲开始' });
     expect(cta).toHaveAttribute('href', '#/lesson/s0-l1');
     first.unmount();
 
     store.setLessonDone('s0-l1', true);
-    render(<OverviewPage />);
-    const next = screen.getByRole('link', { name: '继续学习' });
+    await renderOverview();
+    const next = await screen.findByRole('link', { name: '继续学习' });
     expect(next).toHaveAttribute('href', '#/lesson/s0-l2');
     expect(screen.getByRole('link', { name: '打开 HTTP 实验室' })).toHaveAttribute('href', '#/lab');
   });

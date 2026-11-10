@@ -1,17 +1,29 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { Suspense } from 'react';
+import { act, cleanup, render, screen, within } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import StagePage, { StageLessonRow, StageView } from '../app/pages/StagePage';
+import { loadCatalog, loadStage } from '../app/data/resources';
 import { curriculum } from '../content/index';
 import { store } from '../state/store';
 import type { Lesson, Stage } from '../content/types';
 
-function renderAt(path: string) {
+async function renderAt(path: string) {
+  const stageId = path.split('/').at(-1) ?? '';
+  await loadCatalog();
+  await loadStage(stageId);
   const router = createMemoryRouter(
     [{ path: '/stage/:stageId', element: <StagePage /> }],
     { initialEntries: [path] },
   );
-  render(<RouterProvider router={router} />);
+  await act(async () => {
+    render(
+      <Suspense fallback={null}>
+        <RouterProvider router={router} />
+      </Suspense>,
+    );
+  });
+  expect(document.querySelector('.page')).not.toBeNull();
 }
 
 beforeEach(() => {
@@ -22,14 +34,14 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('StagePage', () => {
-  it('无效阶段显示空状态', () => {
-    renderAt('/stage/not-exist');
+  it('无效阶段显示空状态', async () => {
+    await renderAt('/stage/not-exist');
     expect(screen.getByText('找不到这个阶段。')).toBeInTheDocument();
     expect(document.querySelector('.empty-state')).toBeInTheDocument();
   });
 
-  it('阶段 s0 的 hero 徽章序列与课时行', () => {
-    renderAt('/stage/s0');
+  it('阶段 s0 的 hero 徽章序列与课时行', async () => {
+    await renderAt('/stage/s0');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('地基：请求、运行时与排障');
     expect(document.querySelector('.stage-hero__num')).toHaveTextContent('STAGE 00');
     expect((document.querySelector('.stage-hero') as HTMLElement).style.getPropertyValue('--accent')).toBe('var(--teal)');
@@ -54,16 +66,16 @@ describe('StagePage', () => {
     expect(within(projectCard).getByText('HTTP 探针 CLI')).toBeInTheDocument();
   });
 
-  it('标记课时后显示已掌握与进度', () => {
+  it('标记课时后显示已掌握与进度', async () => {
     store.setLessonDone('s0-l1', true);
-    renderAt('/stage/s0');
+    await renderAt('/stage/s0');
     const rows = document.querySelectorAll('.lesson-row');
     expect(within(rows[0] as HTMLElement).getByText('已掌握')).toBeInTheDocument();
     expect(document.querySelector('.stage-hero__tags .badge:nth-child(3)')).toHaveTextContent('已完成 1/3');
   });
 
-  it('附录阶段的编号、徽章与课时行', () => {
-    renderAt('/stage/appendix');
+  it('附录阶段的编号、徽章与课时行', async () => {
+    await renderAt('/stage/appendix');
     expect(document.querySelector('.stage-hero__num')).toHaveTextContent('APPENDIX');
     const badges = [...document.querySelectorAll('.stage-hero__tags .badge')].map((node) => node.textContent);
     expect(badges[2]).toBe('附录 · 性能、架构、工程与 AI 基础设施');
@@ -82,10 +94,14 @@ describe('StagePage', () => {
     expect(row.querySelector('.lesson-row__right')).not.toHaveTextContent('题');
   });
 
-  it('空 outcome 不渲染达成标准卡', () => {
+  it('空 outcome 不渲染达成标准卡', async () => {
     const stage = { ...curriculum[0]!, outcome: [] } as Stage;
-    render(<StageView stage={stage} />);
+    render(
+      <Suspense fallback={null}>
+        <StageView stage={stage} />
+      </Suspense>,
+    );
+    expect(await screen.findByText('阶段目标')).toBeInTheDocument();
     expect(screen.queryByText('达成标准')).not.toBeInTheDocument();
-    expect(screen.getByText('阶段目标')).toBeInTheDocument();
   });
 });

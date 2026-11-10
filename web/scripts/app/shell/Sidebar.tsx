@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { matchPath, useLocation } from 'react-router';
-import { useGraduation, useLessonSummaries, useStageSummaries } from '../data/content';
+import { useGraduationId, useLessonSummaries, useStageSummaries } from '../data/content';
 import { useMastery } from '../data/mastery';
 import type { LessonSummary } from '../data/types';
 import ResetProgress from './ResetProgress';
@@ -10,7 +10,7 @@ export default function Sidebar({ open }: { open: boolean }) {
   const stages = useStageSummaries();
   const lessons = useLessonSummaries();
   const mastery = useMastery();
-  const graduation = useGraduation();
+  const graduationId = useGraduationId();
   const stageMatch = matchPath('/stage/:stageId', pathname);
   const lessonMatch = matchPath('/lesson/:lessonId', pathname);
   const [openStages, setOpenStages] = useState<Set<string>>(() => new Set());
@@ -128,12 +128,14 @@ export default function Sidebar({ open }: { open: boolean }) {
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16V9M8 16V5M12 16v-4M16 16V7" /></svg>
             <span>学习报告</span>
           </a>
-          <a className="rail-link" href={`#/project/${graduation.id}`} data-rail="graduation">
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="M10 3l7 4v6l-7 4-7-4V7z" /><path d="M10 17v-6" />
-            </svg>
-            <span>毕业项目</span>
-          </a>
+          {graduationId ? (
+            <a className="rail-link" href={`#/project/${graduationId}`} data-rail="graduation">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M10 3l7 4v6l-7 4-7-4V7z" /><path d="M10 17v-6" />
+              </svg>
+              <span>毕业项目</span>
+            </a>
+          ) : null}
         </div>
       </nav>
       <ResetProgress />

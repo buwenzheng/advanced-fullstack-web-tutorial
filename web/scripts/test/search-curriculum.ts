@@ -1,5 +1,5 @@
-import { curriculum, graduationProject, stageLabel } from '../../content/index';
-import { lessonHaystack } from '../../content/search';
+import { curriculum, graduationProject, stageLabel } from '../content/index';
+import { lessonHaystack } from '../content/search';
 
 export type SearchHitType = 'stage' | 'lesson' | 'project';
 

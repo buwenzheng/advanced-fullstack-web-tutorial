@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
 import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LessonView } from '../app/pages/LessonPage';
+import { loadCatalog, loadLessonContext } from '../app/data/resources';
 import { routes } from '../app/router';
 import { lessonById, stageById } from '../content/index';
 import { s0L1 } from '../content/stages/s0/s0-l1';
@@ -10,9 +12,19 @@ import type { Lesson } from '../content/types';
 import { lang } from '../state/lang';
 import { store } from '../state/store';
 
-function renderAt(path: string) {
+async function renderAt(path: string) {
+  const lessonId = path.split('/').at(-1) ?? '';
+  await loadCatalog();
+  await loadLessonContext(lessonId);
   const router = createMemoryRouter(routes, { initialEntries: [path] });
-  render(<RouterProvider router={router} />);
+  await act(async () => {
+    render(
+      <Suspense fallback={null}>
+        <RouterProvider router={router} />
+      </Suspense>,
+    );
+  });
+  expect(document.querySelector('.page')).not.toBeNull();
   return router;
 }
 
@@ -27,14 +39,14 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('LessonPage', () => {
-  it('无效课时渲染空状态与返回总览', () => {
-    renderAt('/lesson/not-exist');
+  it('无效课时渲染空状态与返回总览', async () => {
+    await renderAt('/lesson/not-exist');
     expect(screen.getByText('找不到这一讲，可能是链接有误。')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: '返回总览' })).toHaveAttribute('href', '/');
   });
 
-  it('s0-l1 渲染 meta、目标、12 类块区域、检查题与翻页', () => {
-    renderAt('/lesson/s0-l1');
+  it('s0-l1 渲染 meta、目标、12 类块区域、检查题与翻页', async () => {
+    await renderAt('/lesson/s0-l1');
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('从 URL 到响应：请求的四段旅程');
     expect(screen.getByText(s0L1.subtitle)).toBeInTheDocument();
@@ -67,18 +79,25 @@ describe('LessonPage', () => {
 
   it('掌握按钮写入进度并展示已掌握徽标', async () => {
     const user = userEvent.setup();
-    renderAt('/lesson/s0-l1');
+    await renderAt('/lesson/s0-l1');
     await user.click(screen.getByRole('button', { name: '标记为已掌握' }));
     expect(store.lessonDone('s0-l1')).toBe(true);
     expect(screen.getByRole('button', { name: '已掌握' })).toBeInTheDocument();
     expect(screen.getByText('本讲已掌握')).toBeInTheDocument();
   });
 
-  it('草稿课时隐藏 objectives 与掌握按钮并展示横幅', () => {
+  it('草稿课时隐藏 objectives 与掌握按钮并展示横幅', async () => {
     const lesson = lessonById('s0-l1')!;
     const stage = stageById('s0')!;
     const draftLesson = { ...lesson, status: 'draft' } as unknown as Lesson;
-    render(<LessonView context={{ lesson: draftLesson, stage, prev: null, next: null }} />);
+    await loadCatalog();
+    await act(async () => {
+      render(
+        <Suspense fallback={null}>
+          <LessonView context={{ lesson: draftLesson, stage, prev: null, next: null }} />
+        </Suspense>,
+      );
+    });
 
     const banner = document.querySelector('.draft-banner');
     expect(banner).not.toBeNull();
@@ -97,7 +116,7 @@ describe('LessonPage', () => {
   it('语言切换整页重挂载：代码轨道重置且已答状态保留', async () => {
     const user = userEvent.setup();
     store.recordAnswer('s0-l1-check-1', [1], true);
-    renderAt('/lesson/s0-l1');
+    await renderAt('/lesson/s0-l1');
 
     expect(document.querySelectorAll('[role="tab"]')[0]).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByText('答对了')).toBeInTheDocument();

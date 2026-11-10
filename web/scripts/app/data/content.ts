@@ -1,15 +1,15 @@
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
+import type { Catalog, CatalogLesson, CatalogStage } from '../../content/catalog';
 import {
-  allLessons,
-  curriculum,
-  findProject,
-  graduationProject,
-  lessonById,
-  stageById,
-} from '../../content/index';
+  loadAllStages,
+  loadCatalog,
+  loadGraduation,
+  loadLessonContext,
+  loadProject,
+  loadStage,
+} from './resources';
 import type {
   Accent,
-  Lesson,
   LessonContext,
   LessonSummary,
   Project,
@@ -18,7 +18,11 @@ import type {
   Stats,
 } from './types';
 
-function toStageSummary(stage: Stage): StageSummary {
+export function useCatalog(): Catalog {
+  return use(loadCatalog());
+}
+
+function toStageSummary(stage: CatalogStage, draftCount: number): StageSummary {
   return {
     id: stage.id,
     index: stage.index,
@@ -27,80 +31,74 @@ function toStageSummary(stage: Stage): StageSummary {
     duration: stage.duration,
     appendix: Boolean(stage.appendix),
     accent: stage.accent as Accent,
-    lessonCount: stage.lessons.length,
-    projectId: stage.project?.id ?? null,
-    draftCount: stage.lessons.filter((lesson) => lesson.status !== 'ready').length,
+    lessonCount: stage.lessonCount,
+    projectId: stage.projectId,
+    draftCount,
   };
 }
 
-function toLessonSummary(lesson: Lesson): LessonSummary {
+function toLessonSummary(lesson: CatalogLesson): LessonSummary {
   return {
     id: lesson.id,
     stageId: lesson.stageId,
     title: lesson.title,
-    subtitle: lesson.subtitle || '',
+    subtitle: lesson.subtitle,
     duration: lesson.duration,
     status: lesson.status,
-    checks: lesson.checks.length,
-    exercises: lesson.exercises.length,
+    checks: lesson.checks,
+    exercises: lesson.exercises,
   };
 }
 
-export function getStages(): Stage[] {
-  return curriculum;
-}
-
-export function getAllLessons(): Lesson[] {
-  return allLessons;
-}
-
 export function useStageSummaries(): StageSummary[] {
-  return useMemo(() => curriculum.map(toStageSummary), []);
+  const catalog = useCatalog();
+  return useMemo(() => {
+    const drafts = new Map<string, number>();
+    catalog.lessons.forEach((lesson) => {
+      if (lesson.status !== 'ready') drafts.set(lesson.stageId, (drafts.get(lesson.stageId) ?? 0) + 1);
+    });
+    return catalog.stages.map((stage) => toStageSummary(stage, drafts.get(stage.id) ?? 0));
+  }, [catalog]);
 }
 
 export function useLessonSummaries(): LessonSummary[] {
-  return useMemo(() => allLessons.map(toLessonSummary), []);
+  const catalog = useCatalog();
+  return useMemo(() => catalog.lessons.map(toLessonSummary), [catalog]);
 }
 
 export function useStage(stageId: string): Stage | null {
-  return useMemo(() => stageById(stageId), [stageId]);
+  return use(loadStage(stageId));
 }
 
 export function useLesson(lessonId: string): LessonContext | null {
-  return useMemo(() => {
-    const lesson = lessonById(lessonId);
-    if (!lesson) return null;
-    const stage = stageById(lesson.stageId);
-    if (!stage) return null;
-    const index = stage.lessons.findIndex((item) => item.id === lesson.id);
-    return {
-      lesson,
-      stage,
-      prev: index > 0 ? stage.lessons[index - 1] ?? null : null,
-      next: index >= 0 && index < stage.lessons.length - 1 ? stage.lessons[index + 1] ?? null : null,
-    };
-  }, [lessonId]);
+  return use(loadLessonContext(lessonId));
 }
 
 export function useProject(projectId: string): Project | null {
-  return useMemo(() => findProject(projectId), [projectId]);
+  return use(loadProject(projectId));
 }
 
 export function useAllStages(): Stage[] {
-  return useMemo(() => curriculum, []);
+  return use(loadAllStages());
 }
 
 export function useGraduation(): Project {
-  return useMemo(() => graduationProject, []);
+  return use(loadGraduation());
+}
+
+export function useGraduationId(): string | null {
+  const catalog = useCatalog();
+  return catalog.projects.find((project) => project.stageLabel === '毕业项目')?.id ?? null;
 }
 
 export function useStats(): Stats {
-  return useMemo(() => ({
-    mainStageCount: curriculum.filter((stage) => !stage.appendix).length,
-    lessonCount: allLessons.length,
-    taskCount: allLessons.reduce(
-      (sum, lesson) => sum + lesson.checks.length + lesson.exercises.length,
-      0,
-    ),
-  }), []);
+  const catalog = useCatalog();
+  return useMemo(
+    () => ({
+      mainStageCount: catalog.stages.filter((stage) => !stage.appendix).length,
+      lessonCount: catalog.lessons.length,
+      taskCount: catalog.tasks.length,
+    }),
+    [catalog],
+  );
 }

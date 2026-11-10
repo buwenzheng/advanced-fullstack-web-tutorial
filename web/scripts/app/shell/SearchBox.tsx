@@ -1,16 +1,33 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { searchCurriculum } from './search';
+import { loadSearchIndex } from '../data/resources';
+import { searchFromDocs } from './search-docs';
+import type { SearchDocument } from './search-docs';
 
 export default function SearchBox() {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
+  const [docs, setDocs] = useState<SearchDocument[] | null>(null);
+  const [indexFailed, setIndexFailed] = useState(false);
+  const indexRequested = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const hits = useMemo(() => searchCurriculum(query), [query]);
+  const hits = useMemo(() => searchFromDocs(docs ?? [], query), [docs, query]);
+
+  const ensureIndex = () => {
+    if (indexRequested.current) return;
+    indexRequested.current = true;
+    loadSearchIndex().then(
+      (value) => setDocs(value),
+      (error: unknown) => {
+        console.warn('搜索索引加载失败', error);
+        setIndexFailed(true);
+      },
+    );
+  };
 
   useEffect(() => {
     const onDocumentClick = (event: MouseEvent) => {
@@ -32,11 +49,11 @@ export default function SearchBox() {
     setActive(-1);
   };
 
-  const pick = (to: string) => {
+  const pick = (href: string) => {
     setQuery('');
     close();
     inputRef.current?.blur();
-    navigate(to);
+    navigate(href.replace(/^#/, ''));
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -51,7 +68,7 @@ export default function SearchBox() {
       const target = hits[active] ?? hits[0];
       if (!target) return;
       event.preventDefault();
-      pick(target.to);
+      pick(target.href);
       return;
     }
     if (event.key === 'Escape') {
@@ -79,31 +96,35 @@ export default function SearchBox() {
         aria-activedescendant={open && active >= 0 ? `search-hit-${active}` : undefined}
         value={query}
         onChange={(event) => {
+          ensureIndex();
           const next = event.target.value;
           setQuery(next);
           setOpen(Boolean(next.trim()));
           setActive(-1);
         }}
         onFocus={() => {
+          ensureIndex();
           if (query) setOpen(true);
         }}
         onKeyDown={onKeyDown}
       />
       <div className="search-results" id="search-results" role="listbox" hidden={!open}>
-        {open && hits.length === 0 ? (
+        {open && docs === null && !indexFailed ? (
+          <div className="search-empty">正在加载搜索索引…</div>
+        ) : open && hits.length === 0 ? (
           <div className="search-empty">没有匹配的课程内容</div>
         ) : (
           hits.map((hit, index) => (
             <Link
-              key={`${hit.type}-${hit.to}`}
+              key={hit.href}
               id={`search-hit-${index}`}
               className={`search-hit${index === active ? ' is-active' : ''}`}
-              to={hit.to}
+              to={hit.href.replace(/^#/, '')}
               role="option"
               aria-selected={index === active}
               onClick={(event) => {
                 event.preventDefault();
-                pick(hit.to);
+                pick(hit.href);
               }}
             >
               <strong>{hit.title}</strong>

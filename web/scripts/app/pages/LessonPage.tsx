@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { useParams } from 'react-router';
-import { stageLabel } from '../../content/index';
+import { stageLabel } from '../data/labels';
 import { formatDuration, store } from '../../state/store';
 import { lessonTasks, taskSolved } from '../../state/mastery-core';
 import { useLesson } from '../data/content';
