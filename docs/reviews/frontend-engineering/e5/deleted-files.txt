@@ -1,0 +1,41 @@
+T-E5.3 删除清单（v2 运行时代码与配置清理）
+
+任务卡要求以 `git show --stat --oneline HEAD > deleted-files.txt` 记录。由于本阶段
+执行「一任务一提交」，该命令在提交前指向 T-E5.2、提交后生成的文件又不在本任务提交内，
+因此改用提交前暂存区差异记录（内容等价，且删除清单与删除动作处于同一提交）：
+
+$ git diff --cached --diff-filter=D --stat
+ dev_server.py                  |  16 --
+ web/scripts/app.js             | 388 --------------------------
+ web/scripts/engine/exercise.js | 610 -----------------------------------------
+ web/scripts/ui.js              |  94 -------
+ web/scripts/views/blocks.js    | 164 -----------
+ web/scripts/views/lab.js       | 520 -----------------------------------
+ web/scripts/views/lesson.js    | 118 --------
+ web/scripts/views/overview.js  | 107 --------
+ web/scripts/views/project.js   | 182 ------------
+ web/scripts/views/report.js    | 171 ------------
+ web/scripts/views/stage.js     |  79 ------
+ 11 files changed, 2449 deletions(-)
+
+$ git diff --cached --stat（含配置改动）
+ .prettierignore                |   1 -
+ dev_server.py                  |  16 --
+ tsconfig.json                  |   4 +-
+ web/scripts/app.js             | 388 --------------------------
+ web/scripts/engine/exercise.js | 610 -----------------------------------------
+ web/scripts/ui.js              |  94 -------
+ web/scripts/views/blocks.js    | 164 -----------
+ web/scripts/views/lab.js       | 520 -----------------------------------
+ web/scripts/views/lesson.js    | 118 --------
+ web/scripts/views/overview.js  | 107 --------
+ web/scripts/views/project.js   | 182 ------------
+ web/scripts/views/report.js    | 171 ------------
+ web/scripts/views/stage.js     |  79 ------
+ 13 files changed, 1 insertion(+), 2453 deletions(-)
+
+说明：
+- 11 个文件与 §5.1 删除清单一一对应；§5.2 保留清单（content/search.ts、content/index.ts、
+  web/generated/、视觉基线、styles、content）未删除。
+- tsconfig.json 删除 allowJs、checkJs 与 *.js include；.prettierignore 删除 web/scripts/**/*.js。
+- 回滚：`git revert <T-E5.3 提交>` 同时恢复以上删除与配置改动。

@@ -1,0 +1,6 @@
+$ npm run typecheck
+
+> advanced-fullstack-web-tutorial@0.0.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit
+
+exit=0

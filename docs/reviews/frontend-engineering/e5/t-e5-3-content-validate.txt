@@ -1,0 +1,7 @@
+$ npm run content:validate
+
+> advanced-fullstack-web-tutorial@0.0.0 content:validate
+> tsx tools/validate-content.ts
+
+content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+exit=0

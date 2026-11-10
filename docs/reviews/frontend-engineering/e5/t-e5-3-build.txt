@@ -1,0 +1,51 @@
+$ npm run build
+
+> advanced-fullstack-web-tutorial@0.0.0 build
+> npm run content:validate && npm run content:build && npm run typecheck && vite build
+
+
+> advanced-fullstack-web-tutorial@0.0.0 content:validate
+> tsx tools/validate-content.ts
+
+content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+
+> advanced-fullstack-web-tutorial@0.0.0 content:build
+> tsx tools/build-content.ts
+
+catalog bytes=73160 gzip=15282 sha256=d2ab730dba911068947fa6fa73f2886ae02a6fcc47067b289c46db86e3e63dec
+search bytes=509581 gzip=199467 sha256=c824dce44f71b2227eb36df02dcbf5de3019e80aa8b3e6ef3865a754780b6dbe
+
+> advanced-fullstack-web-tutorial@0.0.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit
+
+[36mvite v7.3.8 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 184 modules transformed.
+rendering chunks...
+computing gzip size...
+[2m../dist/[22m[32mindex.html                       [39m[1m[2m  1.35 kB[22m[1m[22m[2m │ gzip:   0.94 kB[22m
+[2m../dist/[22m[32massets/js.worker-C9tqQ_5J.js     [39m[1m[2m  2.55 kB[22m[1m[22m
+[2m../dist/[22m[32m.vite/manifest.json              [39m[1m[2m  2.69 kB[22m[1m[22m[2m │ gzip:   0.51 kB[22m
+[2m../dist/[22m[35massets/index-BqIDEzqA.css        [39m[1m[2m 42.67 kB[22m[1m[22m[2m │ gzip:   8.68 kB[22m
+[2m../dist/[22m[36massets/graduation-CRBd9dd5.js    [39m[1m[2m 24.29 kB[22m[1m[22m[2m │ gzip:  10.61 kB[22m
+[2m../dist/[22m[36massets/s0-xX3Chzul.js            [39m[1m[2m 71.04 kB[22m[1m[22m[2m │ gzip:  25.32 kB[22m
+[2m../dist/[22m[36massets/s4-DTzXEQkl.js            [39m[1m[2m109.16 kB[22m[1m[22m[2m │ gzip:  33.27 kB[22m
+[2m../dist/[22m[36massets/s2-hDabEVSh.js            [39m[1m[2m117.70 kB[22m[1m[22m[2m │ gzip:  36.45 kB[22m
+[2m../dist/[22m[36massets/s1-B0vKTgQ9.js            [39m[1m[2m118.02 kB[22m[1m[22m[2m │ gzip:  34.16 kB[22m
+[2m../dist/[22m[36massets/s3-NiPcLAVK.js            [39m[1m[2m119.97 kB[22m[1m[22m[2m │ gzip:  34.07 kB[22m
+[2m../dist/[22m[36massets/s5-Cx8jGftZ.js            [39m[1m[2m123.42 kB[22m[1m[22m[2m │ gzip:  35.46 kB[22m
+[2m../dist/[22m[36massets/s6-CrkyoUzX.js            [39m[1m[2m144.34 kB[22m[1m[22m[2m │ gzip:  42.31 kB[22m
+[2m../dist/[22m[36massets/s7-CRWnCbm-.js            [39m[1m[2m210.11 kB[22m[1m[22m[2m │ gzip:  58.07 kB[22m
+[2m../dist/[22m[36massets/appendix-DxFFXbYb.js      [39m[1m[2m283.17 kB[22m[1m[22m[2m │ gzip:  87.23 kB[22m
+[2m../dist/[22m[36massets/index-C20GHETo.js         [39m[1m[2m478.15 kB[22m[1m[22m[2m │ gzip: 151.28 kB[22m
+[2m../dist/[22m[36massets/search-index-BwozhHnn.js  [39m[1m[33m507.07 kB[39m[22m[2m │ gzip: 199.34 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 1.39s[39m
+exit=0
+$ find dist -maxdepth 1 -name "index*.html"
+dist/index.html
+count=1

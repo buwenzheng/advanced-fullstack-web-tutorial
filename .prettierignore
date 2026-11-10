@@ -4,6 +4,5 @@ coverage/
 playwright-report/
 test-results/
 docs/
-web/scripts/**/*.js
 web/scripts/content/**
 web/styles/**

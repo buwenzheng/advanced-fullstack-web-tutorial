@@ -1,0 +1,11 @@
+$ grep -R "index.next.html\|scripts/app.js\|scripts/ui.js\|engine/exercise\|dev_server" web e2e tools package.json vite.config.ts playwright.config.ts README.md
+（无匹配行）
+exit=1  # grep 无匹配，符合预期「无输出」
+
+$ find web/scripts -type f -name "*.js"
+（无输出）
+exit=0
+
+$ test ! -d web/scripts/views
+（无输出）
+exit=0

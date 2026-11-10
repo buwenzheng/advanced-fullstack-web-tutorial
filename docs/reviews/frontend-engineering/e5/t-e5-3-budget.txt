@@ -1,0 +1,13 @@
+$ npm run budget
+
+> advanced-fullstack-web-tutorial@0.0.0 budget
+> tsx tools/bundle-budget.ts
+
+PASS entry (index.html)                   147.4KB / 180.0KB
+PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+PASS search index                         194.7KB / 300.0KB
+INFO css (entry)                         8.4KB
+INFO total js (12 files)              729.2KB
+INFO entry closure (1 files)
+  closure assets/index-C20GHETo.js
+exit=0

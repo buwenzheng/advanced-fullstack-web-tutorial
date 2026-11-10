@@ -11,12 +11,10 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": false,
     "skipLibCheck": true,
     "noEmit": true,
     "types": ["vite/client"]
   },
-  "include": ["web/scripts/**/*.ts", "web/scripts/**/*.tsx", "web/scripts/**/*.js"],
+  "include": ["web/scripts/**/*.ts", "web/scripts/**/*.tsx"],
   "exclude": ["node_modules", "dist", "web/generated"]
 }

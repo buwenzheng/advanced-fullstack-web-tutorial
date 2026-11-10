@@ -1,0 +1,6 @@
+$ npm run lint
+
+> advanced-fullstack-web-tutorial@0.0.0 lint
+> eslint "web/scripts/**/*.{ts,tsx}" "tools/**/*.ts" "e2e/**/*.ts" "*.config.{ts,js}" --no-error-on-unmatched-pattern
+
+exit=0
