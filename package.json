@@ -9,8 +9,10 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:next": "vite --open /index.next.html",
     "build": "npm run content:validate && npm run typecheck && vite build",
     "preview": "vite preview",
+    "preview:next": "vite preview --open /index.next.html",
     "lint": "eslint \"web/scripts/**/*.{ts,tsx}\" \"tools/**/*.ts\" \"e2e/**/*.ts\" \"*.config.{ts,js}\" --no-error-on-unmatched-pattern",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
