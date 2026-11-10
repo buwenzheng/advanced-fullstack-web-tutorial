@@ -30,6 +30,10 @@ get_site_access（本会话早前多次调用）
   get_publish_status { actionId: v2 的 aa4fa5cb-... } 返回 sites_action_unavailable
     （旧 action 已不可读；不构成站点被删除的证据）
 
+第三次重试（22:01）
+  get_context 仍返回 unavailableSites: sites_request_failed
+  get_site { siteId } 仍返回 sites_request_failed
+
 ## 站点 HTTP 可达性（非 API）
 
 curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/
