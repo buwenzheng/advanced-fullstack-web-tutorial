@@ -1,0 +1,362 @@
+Listing tests:
+  [chromium] › content.spec.ts:19:3 › lesson 正文与检查题渲染：/lesson/s0-l1
+  [chromium] › content.spec.ts:19:3 › lesson 正文与检查题渲染：/lesson/s7-l5
+  [chromium] › content.spec.ts:19:3 › lesson 正文与检查题渲染：/lesson/a1
+  [chromium] › content.spec.ts:30:1 › lesson 双轨切换与 MCQ 作答反馈
+  [chromium] › content.spec.ts:51:1 › project 页渲染毕业项目里程碑与模板，勾选后进度更新
+  [chromium] › content.spec.ts:70:1 › lab 实验台 10 个场景、429 限流与幂等重放
+  [chromium] › content.spec.ts:108:1 › lazy 阶段内容按阶段加载，跨阶段才新增 chunk
+  [chromium] › content.spec.ts:130:1 › search 索引在聚焦搜索框后才按需下载并可用
+  [chromium] › content.spec.ts:150:1 › report 报告页展示统计与错题列表
+  [chromium] › interactions.spec.ts:61:3 › React 入口交互清单 › MCQ：答错反馈、重试后可再次作答
+  [chromium] › interactions.spec.ts:81:3 › React 入口交互清单 › 代码题：标准答案通过全部测试，重置恢复 starter
+  [chromium] › interactions.spec.ts:100:3 › React 入口交互清单 › SQL 题：标准答案返回正确结果
+  [chromium] › interactions.spec.ts:112:3 › React 入口交互清单 › 方案题：勾满自检清单并刷新保持
+  [chromium] › interactions.spec.ts:133:3 › React 入口交互清单 › 草稿：刷新保留输入，重置恢复 starter
+  [chromium] › interactions.spec.ts:149:3 › React 入口交互清单 › 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node
+  [chromium] › interactions.spec.ts:169:3 › React 入口交互清单 › 项目：里程碑进度 +1 且刷新保持，毕业项目笔记刷新保持
+  [chromium] › interactions.spec.ts:192:3 › React 入口交互清单 › 模板：复制模板写剪贴板并弹出提示
+  [chromium] › interactions.spec.ts:211:3 › React 入口交互清单 › 实验台：429 连发、幂等重放与重置清空历史
+  [chromium] › interactions.spec.ts:243:3 › React 入口交互清单 › 报告：预置进度后统计与进度条正确
+  [chromium] › interactions.spec.ts:265:3 › React 入口交互清单 › 搜索：Enter 打开毕业项目，Esc 关闭结果
+  [chromium] › interactions.spec.ts:289:3 › React 入口交互清单 › 重置进度：确认后清空记录并删除草稿
+  [chromium] › interactions.spec.ts:322:3 › 旧进度夹具 › s6 旧课时 ID 迁移后 a1 显示本讲已掌握
+  [chromium] › interactions.spec.ts:349:3 › 旧进度夹具 › 种子草稿显示在编辑器，旧 s6 草稿键迁移为 a1
+  [chromium] › interactions.spec.ts:365:3 › 旧进度夹具 › 种子错误作答显示上次答错
+  [chromium] › parity.spec.ts:28:3 › text parity #/
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s0
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s1
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s2
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s3
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s4
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s5
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s6
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/s7
+  [chromium] › parity.spec.ts:28:3 › text parity #/stage/appendix
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s0-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s0-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s0-cli
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s1-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s1-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s1-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s1-schema
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s2-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s2-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s2-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s2-l4
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s3-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s3-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s3-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s3-resilience
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s4-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s4-perf
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s4-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s4-l4
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s5-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s5-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s5-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s5-data-scale
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s6-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s6-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s6-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s6-l4
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s7-l1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s7-l2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s7-l3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s7-l4
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/s7-l5
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a1
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a2
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a3
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a4
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a5
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a6
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a7
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a8
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a9
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a10
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a11
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a12
+  [chromium] › parity.spec.ts:28:3 › text parity #/lesson/a13
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p0
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p1
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p2
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p3
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p4
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p5
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p6
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p7
+  [chromium] › parity.spec.ts:28:3 › text parity #/project/p-graduation
+  [chromium] › parity.spec.ts:28:3 › text parity #/lab
+  [chromium] › parity.spec.ts:28:3 › text parity #/report
+  [chromium] › shell.spec.ts:10:3 › React shell › 66 条路由可解析且无控制台错误
+  [chromium] › shell.spec.ts:24:3 › React shell › 侧栏、搜索与语言轨道
+  [chromium] › shell.spec.ts:48:3 › 移动端抽屉 › 菜单打开、scrim 关闭
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s0
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s5
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s6
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s7
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/appendix
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s0-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s0-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s0-cli
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-schema
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-resilience
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-perf
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-l4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-data-scale
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l5
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a5
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a6
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a7
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a8
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a9
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a10
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a11
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a12
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a13
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p0
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p1
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p2
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p3
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p4
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p5
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p6
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p7
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p-graduation
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/lab
+  [chromium] › smoke.spec.ts:8:5 › v2 route smoke › #/report
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual stage-s0 @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s0-l1 @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s7-l5 @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual project-p-graduation @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 1440x900
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual stage-s0 @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s0-l1 @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s7-l5 @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual project-p-graduation @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 768x1024
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 390x844
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual stage-s0 @ 390x844
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s0-l1 @ 390x844
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s7-l5 @ 390x844
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual project-p-graduation @ 390x844
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 390x844
+  [chromium] › visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 390x844
+  [mobile] › content.spec.ts:19:3 › lesson 正文与检查题渲染：/lesson/s0-l1
+  [mobile] › content.spec.ts:19:3 › lesson 正文与检查题渲染：/lesson/s7-l5
+  [mobile] › content.spec.ts:19:3 › lesson 正文与检查题渲染：/lesson/a1
+  [mobile] › content.spec.ts:30:1 › lesson 双轨切换与 MCQ 作答反馈
+  [mobile] › content.spec.ts:51:1 › project 页渲染毕业项目里程碑与模板，勾选后进度更新
+  [mobile] › content.spec.ts:70:1 › lab 实验台 10 个场景、429 限流与幂等重放
+  [mobile] › content.spec.ts:108:1 › lazy 阶段内容按阶段加载，跨阶段才新增 chunk
+  [mobile] › content.spec.ts:130:1 › search 索引在聚焦搜索框后才按需下载并可用
+  [mobile] › content.spec.ts:150:1 › report 报告页展示统计与错题列表
+  [mobile] › interactions.spec.ts:61:3 › React 入口交互清单 › MCQ：答错反馈、重试后可再次作答
+  [mobile] › interactions.spec.ts:81:3 › React 入口交互清单 › 代码题：标准答案通过全部测试，重置恢复 starter
+  [mobile] › interactions.spec.ts:100:3 › React 入口交互清单 › SQL 题：标准答案返回正确结果
+  [mobile] › interactions.spec.ts:112:3 › React 入口交互清单 › 方案题：勾满自检清单并刷新保持
+  [mobile] › interactions.spec.ts:133:3 › React 入口交互清单 › 草稿：刷新保留输入，重置恢复 starter
+  [mobile] › interactions.spec.ts:149:3 › React 入口交互清单 › 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node
+  [mobile] › interactions.spec.ts:169:3 › React 入口交互清单 › 项目：里程碑进度 +1 且刷新保持，毕业项目笔记刷新保持
+  [mobile] › interactions.spec.ts:192:3 › React 入口交互清单 › 模板：复制模板写剪贴板并弹出提示
+  [mobile] › interactions.spec.ts:211:3 › React 入口交互清单 › 实验台：429 连发、幂等重放与重置清空历史
+  [mobile] › interactions.spec.ts:243:3 › React 入口交互清单 › 报告：预置进度后统计与进度条正确
+  [mobile] › interactions.spec.ts:265:3 › React 入口交互清单 › 搜索：Enter 打开毕业项目，Esc 关闭结果
+  [mobile] › interactions.spec.ts:289:3 › React 入口交互清单 › 重置进度：确认后清空记录并删除草稿
+  [mobile] › interactions.spec.ts:322:3 › 旧进度夹具 › s6 旧课时 ID 迁移后 a1 显示本讲已掌握
+  [mobile] › interactions.spec.ts:349:3 › 旧进度夹具 › 种子草稿显示在编辑器，旧 s6 草稿键迁移为 a1
+  [mobile] › interactions.spec.ts:365:3 › 旧进度夹具 › 种子错误作答显示上次答错
+  [mobile] › parity.spec.ts:28:3 › text parity #/
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s0
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s1
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s2
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s3
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s4
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s5
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s6
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/s7
+  [mobile] › parity.spec.ts:28:3 › text parity #/stage/appendix
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s0-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s0-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s0-cli
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s1-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s1-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s1-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s1-schema
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s2-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s2-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s2-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s2-l4
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s3-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s3-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s3-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s3-resilience
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s4-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s4-perf
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s4-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s4-l4
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s5-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s5-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s5-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s5-data-scale
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s6-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s6-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s6-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s6-l4
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s7-l1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s7-l2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s7-l3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s7-l4
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/s7-l5
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a1
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a2
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a3
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a4
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a5
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a6
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a7
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a8
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a9
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a10
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a11
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a12
+  [mobile] › parity.spec.ts:28:3 › text parity #/lesson/a13
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p0
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p1
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p2
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p3
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p4
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p5
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p6
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p7
+  [mobile] › parity.spec.ts:28:3 › text parity #/project/p-graduation
+  [mobile] › parity.spec.ts:28:3 › text parity #/lab
+  [mobile] › parity.spec.ts:28:3 › text parity #/report
+  [mobile] › shell.spec.ts:10:3 › React shell › 66 条路由可解析且无控制台错误
+  [mobile] › shell.spec.ts:24:3 › React shell › 侧栏、搜索与语言轨道
+  [mobile] › shell.spec.ts:48:3 › 移动端抽屉 › 菜单打开、scrim 关闭
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s0
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s5
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s6
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/s7
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/stage/appendix
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s0-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s0-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s0-cli
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s1-schema
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s2-l4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s3-resilience
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-perf
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s4-l4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s5-data-scale
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s6-l4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/s7-l5
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a5
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a6
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a7
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a8
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a9
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a10
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a11
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a12
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lesson/a13
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p0
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p1
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p2
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p3
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p4
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p5
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p6
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p7
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/project/p-graduation
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/lab
+  [mobile] › smoke.spec.ts:8:5 › v2 route smoke › #/report
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual stage-s0 @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s0-l1 @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s7-l5 @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual project-p-graduation @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 1440x900
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual stage-s0 @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s0-l1 @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s7-l5 @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual project-p-graduation @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 768x1024
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 390x844
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual stage-s0 @ 390x844
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s0-l1 @ 390x844
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-s7-l5 @ 390x844
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual project-p-graduation @ 390x844
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 390x844
+  [mobile] › visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 390x844
+Total: 360 tests in 6 files

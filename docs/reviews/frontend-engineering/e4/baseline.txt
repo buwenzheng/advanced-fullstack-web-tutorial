@@ -1,0 +1,69 @@
+E4 基线测量（T-E4.0）
+测量时间：2026-11-10
+环境：Windows 10.0.22631 x64 / Node v22.15.0（.nvmrc 22.15.0，本次一致）/ npm 10.9.2
+仓库：main @ 0a50a98（T-E3.7），标签 e3-parity → 0a50a98，工作区干净
+说明：本文件只记录 E4 改造前的基线，不重新生成视觉基线、不改任何代码。
+
+[路由]
+- e2e/routes.json: 66 条
+- React 入口: /index.next.html#<route>（默认入口仍为 v2 /index.html，E5 切换）
+- v2 冒烟: e2e/smoke.spec.ts 66 条 × 2 projects
+- 正文对等: e2e/parity.spec.ts 66 条 × 2 projects
+
+[视觉基线]
+- 数量: 21，全部 git 跟踪（git ls-files e2e/__screenshots__ | wc -l = 21）
+- 页面 × 视口: 7 页（home、stage-s0、lesson-s0-l1、lesson-s7-l5、project-p-graduation、lab、report）
+  × 3 视口（1440x900、768x1024、390x844）
+- 生成环境: Windows 本机；CI 排除 @visual（T-E4.4 固化）
+- E3 结论: v2 基线 21/21、React 21/21，基线零改动
+
+[Playwright]
+- 版本: @playwright/test 1.65.0，chromium
+- 现状: 360 tests / 6 files（content 18、interactions 30、parity 132、shell 6、smoke 132、visual 42）
+- 配置: baseURL http://127.0.0.1:4173，webServer npm run preview，2 projects（chromium/mobile 均为 chromium 设备描述）
+- 说明: --list 清单见 e4/specs.txt
+
+[构建与产物体积]
+- 命令: npm run build（content:validate → content:build → typecheck → vite build），退出码 0
+- dist 总体积: 2.4M
+- dist/assets: 16 JS + 1 CSS
+- 入口: dist/index.html、dist/index.next.html
+- 关键 chunk（min / gzip）:
+  next 400.43 kB / 126.81 kB
+  appendix 283.17 kB / 87.23 kB
+  search-index 507.07 kB / 199.34 kB
+  s7 210.11 kB / 58.07 kB
+  s6 144.34 kB / 42.31 kB
+  s5 123.42 kB / 35.46 kB
+  s3 119.97 kB / 34.07 kB
+  s1 118.02 kB / 34.16 kB
+  s2 117.70 kB / 36.45 kB
+  s4 109.16 kB / 33.27 kB
+  s0 71.04 kB / 25.32 kB
+  main 71.48 kB / 23.94 kB
+  catalog 52.03 kB / 14.49 kB
+  harness 26.34 kB / 9.86 kB
+  graduation 24.29 kB / 10.61 kB
+  js.worker 2.55 kB / —
+  CSS harness 42.55 kB / 8.64 kB
+- 已知警告: search-index 507.07 kB 超过 Vite 500 kB 提示（KI-9，T-E4.6 处理）
+
+[axe]
+- @axe-core/playwright@4.14.0（devDependency，已在 E2 引入）
+- E4 前尚无 axe 扫描 spec；T-E4.3 新增 14 次扫描（7 页 × 1440/390）
+
+[运行时依赖]
+- dependencies: react、react-dom、react-router
+- E4 不新增任何依赖；不升级既有依赖
+
+[E4 预算目标（来自阶段文档）]
+- 入口静态闭包 ≤180KB gzip
+- 最大懒加载 chunk ≤150KB gzip
+- 搜索索引 ≤300KB gzip
+- 覆盖率: engine/state/content ≥85% 行，app ≥60% 行
+- 视觉: 双入口各 21/21，无 mask、maxDiffPixels 0
+- CI: 仅调用 npm run verify，排除 @visual|@python
+
+[备注]
+- Node 已符合 .nvmrc（v22.15.0）；E3 报告中记录的 v24.22.1 为当时实测，不追溯修改。
+- 本任务只测量，不修改代码，不重新生成基线。

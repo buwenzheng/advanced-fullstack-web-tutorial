@@ -1,0 +1,72 @@
+E4 门禁冻结清单（T-E4.0）
+测量时间：2026-11-10
+环境：Windows 10.0.22631 x64 / Node v22.15.0（与 .nvmrc 一致）/ npm 10.9.2 / Playwright 1.65.0（chromium）
+基线：HEAD 0a50a98（T-E3.7），标签 e3-parity 指向 0a50a98；工作区干净（仅新增 e4/ 证据目录）
+
+1. 现有 Playwright spec 与用例数（npx playwright test --list，360 tests / 6 files）
+   spec            用例数（2 projects 合计）  说明
+   content.spec.ts      18   9 个 test × 2（含 3 条课时渲染、lazy、search、report、lab、project、双轨 MCQ）
+   interactions.spec.ts 30  15 个 test × 2（12 项交互清单 + 3 项旧数据夹具）
+   parity.spec.ts      132  66 路由 × 2（v2 与 React 正文逐字对等）
+   shell.spec.ts         6   3 个 test × 2（66 路由循环、侧栏/搜索/语言轨道、移动端抽屉）
+   smoke.spec.ts       132  66 路由 × 2（v2 冒烟）
+   visual.spec.ts       42  21 基线 × 2（7 页 × 3 视口）
+   合计                360 tests / 6 files
+
+   详细清单：docs/reviews/frontend-engineering/e4/specs.txt
+
+2. 路由与视觉基线
+   - 路由：e2e/routes.json 共 66 条 hash 路由
+   - 视觉基线：e2e/__screenshots__ 共 21 张，全部已跟踪（git ls-files）
+     7 页：home、stage-s0、lesson-s0-l1、lesson-s7-l5、project-p-graduation、lab、report
+     3 视口：1440x900、768x1024、390x844
+
+3. 当前 dist（npm run build 退出码 0）
+   - 总体积：2.4M
+   - dist/assets：16 个 .js + 1 个 .css
+   - 产物入口：dist/index.html（v2 默认）、dist/index.next.html（React）
+   - 主要 chunk（minified / gzip）：
+     next-CwT_Gl4P.js            400.43 kB / 126.81 kB（React 运行时共享）
+     appendix-DxFFXbYb.js        283.17 kB / 87.23 kB
+     search-index-BwozhHnn.js    507.07 kB / 199.34 kB（>500 kB 提示，KI-9）
+     s7-CRWnCbm-.js              210.11 kB / 58.07 kB
+     s6-CrkyoUzX.js              144.34 kB / 42.31 kB
+     s5-Cx8jGftZ.js              123.42 kB / 35.46 kB
+     s3-NiPcLAVK.js              119.97 kB / 34.07 kB
+     s1-B0vKTgQ9.js              118.02 kB / 34.16 kB
+     s2-hDabEVSh.js              117.70 kB / 36.45 kB
+     s4-DTzXEQkl.js              109.16 kB / 33.27 kB
+     s0-xX3Chzul.js               71.04 kB / 25.32 kB
+     main-Dca6gcnt.js             71.48 kB / 23.94 kB
+     catalog-DALFsimK.js          52.03 kB / 14.49 kB
+     harness-CQf13NWK.js          26.34 kB / 9.86 kB
+     graduation-CRBd9dd5.js       24.29 kB / 10.61 kB
+     js.worker-C9tqQ_5J.js         2.55 kB /  —
+     harness-C7C4HMlC.css         42.55 kB / 8.64 kB
+
+4. 重复门禁与合并计划
+   - shell.spec.ts「66 条路由可解析且无控制台错误」与 parity/smoke 的 66 路由覆盖重复：
+     * T-E4.1 新增 routes.spec.ts 独占 React 66 路由 200/h1/控制台门禁；
+     * 从 shell.spec.ts 删除该 66 循环，保留侧栏/搜索/语言轨道/抽屉等外壳行为；
+     * parity.spec.ts（66 对等）与 smoke.spec.ts（v2 66 冒烟）保留到 E5 单入口收敛时处理。
+   - content.spec.ts 当前不含 66 路由循环（仅 3 条代表课时 + 内容标记 + lazy/search），无需删除路由循环；
+     其内容标记与懒加载断言保留并将在 T-E4.6 升级为 manifest 闭包强断言。
+   - T-E4.6 另将 lazy/search 的文件名正则断言替换为基于 dist/.vite/manifest.json 的闭包断言。
+
+5. 运行时依赖与 axe
+   - dependencies：react、react-dom、react-router（无新增；E4 不新增运行时依赖）
+   - devDependencies 25 项，含 @axe-core/playwright@4.14.0（E2 引入，已在 lockfile）
+   - axe 版本确认：advanced-fullstack-web-tutorial@0.0.0 └── @axe-core/playwright@4.14.0
+
+6. Windows 视觉基线策略（既定约束）
+   - 21 张基线在 Windows 本机生成并冻结，CI（ubuntu-latest）不运行视觉对比；
+   - 视觉门禁通过 @visual 标签在本地发布前执行（双入口各 21/21）；
+   - T-E4.4 将固化 toHaveScreenshot 参数（animations disabled、caret hide、maxDiffPixels 0、reducedMotion reduce）；
+   - 不新增 mask、不放宽阈值、不重新生成基线（除非有审阅过的变更并双入口重采样）。
+
+7. E4 门禁范围提醒
+   - 新增：routes（66 路由）、responsive（21 布局 + 4 抽屉）、keyboard、a11y（14 次 axe）、
+     覆盖率目录阈值（engine/state/content ≥85%，app ≥60%）、包体预算（entry ≤180KB、lazy ≤150KB、search ≤300KB gzip）、
+     verify 与 CI 整合；
+   - 不改课程内容、ID、hash 路由、localStorage 键、functions/、v2 默认入口；
+   - 当前 Node 已切换为 v22.15.0（E3 报告记录的 v24.22.1 为当时实测，E4 起以 22.15.0 为准）。
