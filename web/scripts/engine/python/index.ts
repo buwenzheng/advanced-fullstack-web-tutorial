@@ -83,41 +83,69 @@ self.onmessage = function (event) {
 };
 `;
 
-let worker = null;
-let objectUrl = null;
-let ready = false;
-let fatal = null;
-let seq = 0;
-let status = 'idle';
-const pending = new Map();
-const statusListeners = new Set();
+export type PythonStatus = 'idle' | 'loading' | 'ready' | 'error';
 
-function setStatus(next, error = null) {
+export interface PythonCaseResult {
+  name: string;
+  ok: boolean;
+  error?: string;
+}
+
+export interface PythonRunResult {
+  ok: true;
+  results: PythonCaseResult[];
+  logs: Array<{ level: 'log'; text: string }>;
+}
+
+interface PendingTask {
+  resolve: (result: PythonRunResult) => void;
+  reject: (error: Error) => void;
+  timer: ReturnType<typeof setTimeout>;
+}
+
+interface WorkerMessage {
+  type?: string;
+  error?: string;
+  id?: number;
+  ok?: boolean;
+  payload?: string;
+}
+
+let worker: Worker | null = null;
+let objectUrl: string | null = null;
+let ready = false;
+let fatal: string | null = null;
+let seq = 0;
+let status: PythonStatus = 'idle';
+const pending = new Map<number, PendingTask>();
+const statusListeners = new Set<(status: PythonStatus) => void>();
+
+function setStatus(next: PythonStatus, error: string | null = null): void {
   fatal = next === 'error' ? (error || fatal) : fatal;
   if (status === next) return;
   status = next;
   statusListeners.forEach((fn) => fn(status));
 }
 
-export function pythonStatus() {
+export function pythonStatus(): PythonStatus {
   return status;
 }
 
-export function onPythonStatus(fn) {
+export function onPythonStatus(fn: (status: PythonStatus) => void): () => void {
   statusListeners.add(fn);
   fn(status);
   return () => statusListeners.delete(fn);
 }
 
-export function pythonReady() {
+export function pythonReady(): boolean {
   return ready;
 }
 
-export function pythonLoadError() {
+export function pythonLoadError(): string | null {
   return fatal;
 }
 
-function resetWorker() {
+function resetWorker(): void {
   if (worker) worker.terminate();
   if (objectUrl) URL.revokeObjectURL(objectUrl);
   worker = null;
@@ -125,7 +153,7 @@ function resetWorker() {
   ready = false;
 }
 
-function failAll(message) {
+function failAll(message: string): void {
   pending.forEach((task) => {
     clearTimeout(task.timer);
     task.reject(new Error(message));
@@ -133,12 +161,13 @@ function failAll(message) {
   pending.clear();
 }
 
-function ensureWorker() {
+function ensureWorker(): Worker {
   if (worker) return worker;
   objectUrl = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: 'text/javascript' }));
-  worker = new Worker(objectUrl);
+  const created = new Worker(objectUrl);
+  worker = created;
   setStatus('loading');
-  worker.onmessage = (event) => {
+  created.onmessage = (event: MessageEvent<WorkerMessage>) => {
     const data = event.data || {};
     if (data.type === 'ready') {
       ready = true;
@@ -148,20 +177,20 @@ function ensureWorker() {
     if (data.type === 'fatal') {
       failAll(`Python 运行时加载失败：${data.error}`);
       resetWorker();
-      setStatus('error', data.error);
+      setStatus('error', data.error ?? null);
       return;
     }
-    const task = pending.get(data.id);
+    const task = pending.get(data.id!);
     if (!task) return;
-    pending.delete(data.id);
+    pending.delete(data.id!);
     clearTimeout(task.timer);
     if (!data.ok) {
       task.reject(new Error(data.error || 'Python 执行失败'));
       return;
     }
-    let payload;
+    let payload: { results?: PythonCaseResult[]; logs?: string };
     try {
-      payload = JSON.parse(data.payload);
+      payload = JSON.parse(data.payload ?? '');
     } catch {
       task.reject(new Error('Python 返回结果无法解析'));
       return;
@@ -172,27 +201,36 @@ function ensureWorker() {
       logs: String(payload.logs || '')
         .split('\n')
         .filter((line) => line.length)
-        .map((text) => ({ level: 'log', text })),
+        .map((text) => ({ level: 'log' as const, text })),
     });
   };
-  worker.onerror = (event) => {
+  created.onerror = (event: ErrorEvent) => {
     failAll(`Python 沙箱异常：${event.message || '未知错误'}`);
     resetWorker();
     setStatus('error', event.message || 'Worker 异常');
   };
-  return worker;
+  return created;
 }
 
-export function warmPython() {
+export function warmPython(): void {
   if (worker || fatal) return;
   try {
     ensureWorker();
   } catch (err) {
-    setStatus('error', (err && err.message) || String(err));
+    setStatus('error', (err as Error | null)?.message || String(err));
   }
 }
 
-export function runPythonTests(code, tests, options = {}) {
+export interface PythonRunOptions {
+  timeout?: number;
+  loadTimeout?: number;
+}
+
+export function runPythonTests(
+  code: string,
+  tests: string,
+  options: PythonRunOptions = {},
+): Promise<PythonRunResult> {
   const timeout = options.timeout || 8000;
   const loadTimeout = options.loadTimeout || 90000;
   return new Promise((resolve, reject) => {
@@ -200,11 +238,11 @@ export function runPythonTests(code, tests, options = {}) {
       reject(new Error(`Python 运行时不可用：${fatal}`));
       return;
     }
-    let target;
+    let target: Worker;
     try {
       target = ensureWorker();
     } catch (err) {
-      reject(new Error(`当前浏览器无法创建 Python 沙箱：${(err && err.message) || err}`));
+      reject(new Error(`当前浏览器无法创建 Python 沙箱：${(err as Error | null)?.message || err}`));
       return;
     }
     const id = ++seq;

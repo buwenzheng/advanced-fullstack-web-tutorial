@@ -1,9 +1,10 @@
 import { h, toast } from '../ui.js';
 import { store } from '../state/store';
-import { runTests } from './runner.js';
-import { createDatabase, runQuery, rowsEqual } from './sql.js';
+import { runTests } from './runner/index';
+import { createDatabase, runQuery, rowsEqual } from './sql/index';
 import { lang, languageLabel, languageMeta } from '../state/lang';
-import { runPythonTests, pythonReady, pythonLoadError, warmPython, onPythonStatus } from './python.js';
+import { runPythonTests, pythonReady, pythonLoadError, warmPython, onPythonStatus } from './python/index';
+import { pythonHarness } from './python/harness';
 
 const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
@@ -183,18 +184,6 @@ function renderCode(task) {
     if (current && typeof current.__dispose === 'function') current.__dispose();
   };
   return wrap;
-}
-
-function pythonHarness(tests) {
-  return tests.map((test, index) => {
-    const fn = `__lab_test_${index}`;
-    const name = JSON.stringify(test.name || `测试 ${index + 1}`);
-    const body = String(test.code || '')
-      .split('\n')
-      .map((line) => (line ? `    ${line}` : ''))
-      .join('\n');
-    return `async def ${fn}():\n${body || '    pass'}\n__run(${name}, ${fn})`;
-  }).join('\n\n');
 }
 
 function renderCodeTrack(task, track, statusSlot) {

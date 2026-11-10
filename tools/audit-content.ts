@@ -3,7 +3,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { ROOT, content, manifest, EXPECTED, LESSON_ID_RE, stripHtml } from './lib/content.js';
 import { runSourceSuite } from './lib/js-runner.js';
-import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql.js';
+import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql/index.js';
 import type { Lesson } from '../web/scripts/content/types.js';
 
 const allowDrafts = process.argv.includes('--drafts');
@@ -15,7 +15,7 @@ const ALLOWED_BLOCKS = new Set([
 ]);
 const CASE_FIELDS = ['title', 'context', 'symptom', 'cause', 'fix', 'prevention'];
 const BAD_CONTENT = [/<script\b/i, /<img[^>]+src=["']https?:/i, /!\[[^\]]*\]\((?:https?:)?\/\//i, /\bTODO\b/i, /待补充|占位|lorem ipsum/i];
-// 浏览器 worker（web/scripts/engine/runner.js）只实现这些断言方法，CLI 不得放宽。
+// 浏览器 worker（web/scripts/engine/runner/core.ts）只实现这些断言方法，CLI 不得放宽。
 const BROWSER_ASSERT_METHODS = new Set(['equal', 'deepEqual', 'deepStrictEqual', 'strictEqual', 'throws', 'rejects', 'ok']);
 
 function error(message: string) { errors.push(message); }

@@ -2,6 +2,33 @@
  * 教学用迷你 SQL 引擎：支持 CREATE TABLE / INSERT / SELECT / UPDATE / DELETE。
  * 只实现课程与练习需要到的子集，语义贴近 SQLite。
  */
+/* eslint-disable @typescript-eslint/no-explicit-any -- tokenizer/parser 处理动态 AST 与行结构；公共 API 已提供强类型 */
+
+export type SqlValue = string | number | boolean | null | undefined;
+export type SqlRow = Record<string, SqlValue>;
+
+export interface SqlColumn {
+  name: string;
+  type: string;
+  primaryKey: boolean;
+}
+
+export interface SqlTable {
+  columns: SqlColumn[];
+  rows: SqlRow[];
+}
+
+export interface Database {
+  tables: Record<string, SqlTable>;
+}
+
+export interface QueryOutcome {
+  kind: string;
+  message: string;
+  columns: string[];
+  rows: SqlRow[];
+  affected?: number;
+}
 
 const KEYWORDS = new Set([
   'SELECT', 'FROM', 'WHERE', 'ORDER', 'BY', 'ASC', 'DESC', 'LIMIT', 'OFFSET',
@@ -14,11 +41,11 @@ const PUNCT = new Set(['(', ')', ',', ';', '*', '.']);
 
 const AGGREGATES = new Set(['COUNT', 'SUM', 'MIN', 'MAX', 'AVG']);
 
-function tokenize(sql) {
-  const tokens = [];
+function tokenize(sql: string): any[] {
+  const tokens: any[] = [];
   let i = 0;
   while (i < sql.length) {
-    const ch = sql[i];
+    const ch = sql[i] ?? '';
     if (/\s/.test(ch)) { i += 1; continue; }
     if (ch === '-' && sql[i + 1] === '-') {
       while (i < sql.length && sql[i] !== '\n') i += 1;
@@ -48,13 +75,13 @@ function tokenize(sql) {
     }
     if (/[0-9]/.test(ch) || (ch === '.' && /[0-9]/.test(sql[i + 1] || ''))) {
       let raw = '';
-      while (i < sql.length && /[0-9.]/.test(sql[i])) { raw += sql[i]; i += 1; }
+      while (i < sql.length && /[0-9.]/.test(sql[i]!)) { raw += sql[i]; i += 1; }
       tokens.push({ type: 'num', value: Number(raw) });
       continue;
     }
     if (/[A-Za-z_]/.test(ch)) {
       let raw = '';
-      while (i < sql.length && /[A-Za-z0-9_]/.test(sql[i])) { raw += sql[i]; i += 1; }
+      while (i < sql.length && /[A-Za-z0-9_]/.test(sql[i]!)) { raw += sql[i]; i += 1; }
       const upper = raw.toUpperCase();
       if (KEYWORDS.has(upper)) tokens.push({ type: 'kw', value: upper });
       else tokens.push({ type: 'ident', value: raw });
@@ -73,13 +100,13 @@ function tokenize(sql) {
   return tokens;
 }
 
-function isNumericLike(value) {
+function isNumericLike(value: any): boolean {
   if (typeof value === 'number') return true;
   if (typeof value !== 'string') return false;
   return value.trim() !== '' && !Number.isNaN(Number(value));
 }
 
-function compareValues(a, b) {
+function compareValues(a: any, b: any): number {
   if (a === null || a === undefined) return b === null || b === undefined ? 0 : -1;
   if (b === null || b === undefined) return 1;
   if (isNumericLike(a) && isNumericLike(b)) {
@@ -92,7 +119,7 @@ function compareValues(a, b) {
   return sa < sb ? -1 : sa > sb ? 1 : 0;
 }
 
-function lookupValue(row, col) {
+function lookupValue(row: any, col: any): any {
   if (!row || typeof row !== 'object') return undefined;
   const lower = String(col).toLowerCase();
   const exact = Object.keys(row).find((name) => name.toLowerCase() === lower);
@@ -100,26 +127,29 @@ function lookupValue(row, col) {
   const suffix = `.${lower}`;
   const matches = Object.keys(row).filter((name) => name.toLowerCase().endsWith(suffix));
   if (matches.length > 1) throw new Error(`列 ${col} 有歧义，请使用表别名限定`);
-  return matches.length === 1 ? row[matches[0]] : undefined;
+  return matches.length === 1 ? row[matches[0]!] : undefined;
 }
 
 class Parser {
-  constructor(tokens) {
+  tokens: any[];
+  pos: number;
+
+  constructor(tokens: any[]) {
     this.tokens = tokens;
     this.pos = 0;
   }
 
-  peek(offset = 0) {
+  peek(offset: number = 0): any {
     return this.tokens[this.pos + offset] || null;
   }
 
-  next() {
+  next(): any {
     const token = this.tokens[this.pos];
     this.pos += 1;
     return token || null;
   }
 
-  expect(type, value) {
+  expect(type: string, value?: any): any {
     const token = this.next();
     if (!token || token.type !== type || (value && token.value !== value)) {
       throw new Error(`语法错误：期望 ${value || type}，实际得到 ${token ? token.value : '结尾'}`);
@@ -127,7 +157,7 @@ class Parser {
     return token;
   }
 
-  eat(type, value) {
+  eat(type: string, value?: any): boolean {
     const token = this.peek();
     if (token && token.type === type && (!value || token.value === value)) {
       this.pos += 1;
@@ -321,7 +351,7 @@ class Parser {
       }
       let primaryKey = false;
       if (this.eat('kw', 'ON')) {
-        this.expect('kw', 'NOT') && null;
+        this.expect('kw', 'NOT');
       }
       while (this.peek() && this.peek().type === 'kw') {
         const kw = this.peek().value;
@@ -352,12 +382,12 @@ class Parser {
     return { type: 'drop', table: this.expect('ident').value };
   }
 
-  parseExpression() {
+  parseExpression(): any {
     return this.parseOr();
   }
 
-  parseOr() {
-    let left = this.parseAnd();
+  parseOr(): any {
+    let left: any = this.parseAnd();
     while (this.eat('kw', 'OR')) {
       const right = this.parseAnd();
       left = { kind: 'logic', op: 'OR', left, right };
@@ -365,8 +395,8 @@ class Parser {
     return left;
   }
 
-  parseAnd() {
-    let left = this.parseNot();
+  parseAnd(): any {
+    let left: any = this.parseNot();
     while (this.eat('kw', 'AND')) {
       const right = this.parseNot();
       left = { kind: 'logic', op: 'AND', left, right };
@@ -374,16 +404,16 @@ class Parser {
     return left;
   }
 
-  parseNot() {
+  parseNot(): any {
     if (this.eat('kw', 'NOT')) {
-      const operand = this.parseNot();
+      const operand: any = this.parseNot();
       return { kind: 'not', operand };
     }
     return this.parseComparison();
   }
 
-  parseComparison() {
-    const left = this.parsePrimary();
+  parseComparison(): any {
+    const left: any = this.parsePrimary();
     const token = this.peek();
     if (token && token.type === 'op' && ['=', '!=', '<>', '<', '<=', '>', '>='].includes(token.value)) {
       this.next();
@@ -399,7 +429,7 @@ class Parser {
     return left;
   }
 
-  parsePrimary() {
+  parsePrimary(): any {
     const token = this.next();
     if (!token) throw new Error('语法错误：表达式意外结束');
     if (token.type === 'num' || token.type === 'str') return { kind: 'literal', value: token.value };
@@ -414,7 +444,7 @@ class Parser {
       return { kind: 'column', name };
     }
     if (token.type === 'punc' && token.value === '(') {
-      const inner = this.parseExpression();
+      const inner: any = this.parseExpression();
       this.expect('punc', ')');
       return inner;
     }
@@ -422,7 +452,7 @@ class Parser {
   }
 }
 
-function evalExpr(node, row) {
+function evalExpr(node: any, row: any): any {
   switch (node.kind) {
     case 'literal': return node.value;
     case 'column': return lookupValue(row, node.name) ?? null;
@@ -456,18 +486,18 @@ function evalExpr(node, row) {
   }
 }
 
-function truthy(value) {
+function truthy(value: any): boolean {
   if (value === null || value === undefined) return false;
   if (typeof value === 'boolean') return value;
   if (typeof value === 'number') return value !== 0;
   return Boolean(value);
 }
 
-export function createDatabase(seed = {}) {
-  const tables = {};
+export function createDatabase(seed: Record<string, SqlRow[]> = {}): Database {
+  const tables: Record<string, SqlTable> = {};
   Object.entries(seed).forEach(([name, rows]) => {
-    const columns = [];
-    const seen = new Set();
+    const columns: SqlColumn[] = [];
+    const seen = new Set<string>();
     rows.forEach((row) => {
       Object.keys(row).forEach((key) => {
         if (!seen.has(key)) { seen.add(key); columns.push({ name: key, type: 'TEXT', primaryKey: false }); }
@@ -478,32 +508,32 @@ export function createDatabase(seed = {}) {
   return { tables };
 }
 
-function tableOf(db, name) {
+function tableOf(db: Database, name: string): SqlTable {
   const table = db.tables[name];
   if (!table) throw new Error(`表 ${name} 不存在`);
   return table;
 }
 
-function qualifiedRow(alias, row) {
-  const out = {};
+function qualifiedRow(alias: string, row: SqlRow): SqlRow {
+  const out: SqlRow = {};
   Object.keys(row).forEach((key) => { out[`${alias}.${key}`] = row[key]; });
   return out;
 }
 
-function emptyQualifiedRow(alias, columns) {
-  const out = {};
+function emptyQualifiedRow(alias: string, columns: SqlColumn[]): SqlRow {
+  const out: SqlRow = {};
   columns.forEach((column) => { out[`${alias}.${column.name}`] = null; });
   return out;
 }
 
-function buildFromRows(db, from, joins) {
+function buildFromRows(db: Database, from: any, joins: any[]): { rows: SqlRow[]; sources: Array<{ alias: string; columns: SqlColumn[] }> } {
   const base = tableOf(db, from.table);
-  const sources = [{ alias: from.alias, columns: base.columns }];
-  let rows = base.rows.map((row) => qualifiedRow(from.alias, row));
+  const sources: Array<{ alias: string; columns: SqlColumn[] }> = [{ alias: from.alias, columns: base.columns }];
+  let rows: SqlRow[] = base.rows.map((row) => qualifiedRow(from.alias, row));
   for (const join of joins) {
     const right = tableOf(db, join.table);
     sources.push({ alias: join.alias, columns: right.columns });
-    const joined = [];
+    const joined: SqlRow[] = [];
     rows.forEach((leftRow) => {
       let matched = false;
       right.rows.forEach((rightRow) => {
@@ -522,7 +552,7 @@ function buildFromRows(db, from, joins) {
   return { rows, sources };
 }
 
-function computeAggregate(column, rows) {
+function computeAggregate(column: any, rows: SqlRow[]): SqlValue {
   if (column.agg === 'COUNT') {
     if (column.arg === '*') return rows.length;
     const values = rows
@@ -558,11 +588,11 @@ function computeAggregate(column, rows) {
   return best;
 }
 
-export function runQuery(db, sql) {
+export function runQuery(db: Database, sql: string): QueryOutcome {
   const text = String(sql || '').trim().replace(/;\s*$/, '');
   if (!text) throw new Error('请输入要执行的 SQL');
   const parser = new Parser(tokenize(text));
-  const stmt = parser.parseStatement();
+  const stmt: any = parser.parseStatement();
   if (parser.pos < parser.tokens.length) {
     const rest = parser.tokens.slice(parser.pos).map((token) => token.value).join(' ');
     throw new Error(`无法解析的内容：${rest}（迷你引擎不支持该语法）`);
@@ -571,7 +601,7 @@ export function runQuery(db, sql) {
   if (stmt.type === 'create') {
     if (db.tables[stmt.table]) throw new Error(`表 ${stmt.table} 已存在`);
     db.tables[stmt.table] = { columns: stmt.columns, rows: [] };
-    return { kind: 'create', message: `已创建表 ${stmt.table}`, columns: stmt.columns.map((c) => c.name), rows: [] };
+    return { kind: 'create', message: `已创建表 ${stmt.table}`, columns: stmt.columns.map((c: any) => c.name), rows: [] };
   }
 
   if (stmt.type === 'drop') {
@@ -582,14 +612,14 @@ export function runQuery(db, sql) {
 
   if (stmt.type === 'insert') {
     const table = tableOf(db, stmt.table);
-    const cols = stmt.columns || table.columns.map((c) => c.name);
-    stmt.rows.forEach((values) => {
+    const cols: any[] = stmt.columns || table.columns.map((c) => c.name);
+    stmt.rows.forEach((values: any[]) => {
       if (values.length !== cols.length) {
         throw new Error(`列数不匹配：期望 ${cols.length} 个，实际 ${values.length} 个`);
       }
-      const row = {};
+      const row: Record<string, any> = {};
       table.columns.forEach((c) => { row[c.name] = null; });
-      cols.forEach((name, index) => {
+      cols.forEach((name: any, index: number) => {
         const target = table.columns.find((c) => c.name.toLowerCase() === name.toLowerCase());
         if (!target) throw new Error(`未知列 ${name}`);
         row[target.name] = values[index];
@@ -604,7 +634,7 @@ export function runQuery(db, sql) {
     let affected = 0;
     table.rows.forEach((row) => {
       if (stmt.where && !truthy(evalExpr(stmt.where, row))) return;
-      stmt.sets.forEach((set) => {
+      stmt.sets.forEach((set: any) => {
         const target = table.columns.find((c) => c.name.toLowerCase() === set.column.toLowerCase());
         if (!target) throw new Error(`未知列 ${set.column}`);
         row[target.name] = evalExpr(set.value, row);
@@ -627,13 +657,13 @@ export function runQuery(db, sql) {
     ? fromRows.rows.filter((row) => truthy(evalExpr(stmt.where, row)))
     : fromRows.rows;
 
-  const grouped = stmt.columns.some((column) => column.agg) || stmt.groupBy.length > 0;
-  let columns = [];
-  let projected = [];
-  let sourceRows = [];
+  const grouped = stmt.columns.some((column: any) => column.agg) || stmt.groupBy.length > 0;
+  let columns: any[] = [];
+  let projected: any[] = [];
+  let sourceRows: any[] = [];
 
   if (grouped) {
-    stmt.columns.forEach((column) => {
+    stmt.columns.forEach((column: any) => {
       if (column.star) {
         fromRows.sources.forEach((source) => {
           source.columns.forEach((col) => columns.push(`${source.alias}.${col.name}`));
@@ -643,12 +673,12 @@ export function runQuery(db, sql) {
       }
     });
 
-    const groups = new Map();
+    const groups = new Map<string, any[]>();
     if (stmt.groupBy.length) {
       candidates.forEach((row) => {
-        const key = JSON.stringify(stmt.groupBy.map((name) => lookupValue(row, name) ?? null));
+        const key = JSON.stringify(stmt.groupBy.map((name: any) => lookupValue(row, name) ?? null));
         if (!groups.has(key)) groups.set(key, []);
-        groups.get(key).push(row);
+        groups.get(key)!.push(row);
       });
     } else {
       groups.set('__all__', candidates);
@@ -656,9 +686,9 @@ export function runQuery(db, sql) {
 
     groups.forEach((group) => {
       const representative = group[0] || null;
-      const context = representative ? { ...representative } : {};
-      const output = {};
-      stmt.columns.forEach((column) => {
+      const context: Record<string, any> = representative ? { ...representative } : {};
+      const output: Record<string, any> = {};
+      stmt.columns.forEach((column: any) => {
         if (column.star) {
           fromRows.sources.forEach((source) => {
             source.columns.forEach((col) => {
@@ -678,34 +708,34 @@ export function runQuery(db, sql) {
       projected.push(output);
       sourceRows.push(representative);
     });
-  } else if (stmt.columns.some((column) => column.star)) {
+  } else if (stmt.columns.some((column: any) => column.star)) {
     if (fromRows.sources.length === 1) {
-      columns = fromRows.sources[0].columns.map((col) => col.name);
+      columns = fromRows.sources[0]!.columns.map((col) => col.name);
     } else {
       columns = fromRows.sources.flatMap((source) =>
         source.columns.map((col) => `${source.alias}.${col.name}`),
       );
     }
     projected = candidates.map((row) => {
-      const copy = {};
-      columns.forEach((name) => { copy[name] = lookupValue(row, name) ?? null; });
+      const copy: Record<string, any> = {};
+      columns.forEach((name: any) => { copy[name] = lookupValue(row, name) ?? null; });
       return copy;
     });
     sourceRows = candidates.slice();
   } else {
-    columns = stmt.columns.map((column) => column.alias);
+    columns = stmt.columns.map((column: any) => column.alias);
     projected = candidates.map((row) => {
-      const copy = {};
-      stmt.columns.forEach((column) => { copy[column.alias] = lookupValue(row, column.name) ?? null; });
+      const copy: Record<string, any> = {};
+      stmt.columns.forEach((column: any) => { copy[column.alias] = lookupValue(row, column.name) ?? null; });
       return copy;
     });
     sourceRows = candidates.slice();
   }
 
   if (stmt.distinct) {
-    const seen = new Set();
-    const keep = [];
-    projected.forEach((row, index) => {
+    const seen = new Set<string>();
+    const keep: number[] = [];
+    projected.forEach((row, index: number) => {
       const key = JSON.stringify(row);
       if (seen.has(key)) return;
       seen.add(key);
@@ -716,7 +746,7 @@ export function runQuery(db, sql) {
   }
 
   if (stmt.orderBy.length) {
-    const order = projected.map((_, index) => index);
+    const order: number[] = projected.map((_: any, index: number) => index);
     order.sort((x, y) => {
       for (const { col, dir } of stmt.orderBy) {
         let left = lookupValue(projected[x], col);
@@ -737,17 +767,17 @@ export function runQuery(db, sql) {
   return { kind: 'select', columns, rows: projected, message: `返回 ${projected.length} 行` };
 }
 
-export function rowsEqual(actual, expected, columns) {
-  const expectedRows = Array.isArray(expected) ? expected : [];
-  const actualRows = Array.isArray(actual) ? actual : [];
+export function rowsEqual(actual: unknown, expected: unknown, columns?: string[]): boolean {
+  const expectedRows: any[] = Array.isArray(expected) ? expected : [];
+  const actualRows: any[] = Array.isArray(actual) ? actual : [];
   const expectedCols = Object.keys(expectedRows[0] || {});
   const actualCols = (columns && columns.length) ? columns : Object.keys(actualRows[0] || {});
 
   const missing = expectedCols.filter((col) => !actualCols.some((name) => name.toLowerCase() === col.toLowerCase()));
   if (missing.length) return false;
 
-  const norm = (rows) => rows.map((row) => {
-    const obj = {};
+  const norm = (rows: any[]) => rows.map((row) => {
+    const obj: Record<string, any> = {};
     expectedCols.forEach((col) => {
       const key = Object.keys(row).find((name) => name.toLowerCase() === col.toLowerCase());
       obj[col] = key === undefined ? null : row[key];

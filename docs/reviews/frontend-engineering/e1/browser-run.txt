@@ -1,0 +1,26 @@
+# T-E1.5 浏览器手动验证记录
+
+- 日期：2026-11-10
+- 环境：`npm run preview`（http://127.0.0.1:4173），Chromium（Qoder 内置浏览器）
+- 构建产物：`dist/assets/js.worker-C9tqQ_5J.js`（Vite 将 module worker 单独打包）
+
+## JS 练习（Node 轨道）
+
+- 路由：`#/lesson/s0-l2`，练习 `s0-l2-ex-1`（带并发上限的任务调度器）
+- 操作：查看参考答案 → 运行测试
+- 结果：6/6 通过
+  - ✓ 峰值并发不超过上限
+  - ✓ 结果顺序与完成顺序解耦
+  - ✓ 任务拒绝时整体拒绝
+  - ✓ limit=0 按 1 处理
+  - ✓ limit 大于任务数时全部启动
+  - ✓ 空数组立即返回空结果
+
+## Python 练习（Python 轨道，Pyodide 0.29.5 CDN）
+
+- 同一练习切换 Python 轨道（`bff-lab-lang-v1=python`），textarea 换成 Python 版本。
+- 参考解运行结果：6/6 通过（约 1s，Pyodide 已由 warmPython 预热）。
+- 活性探针：把代码换为缺少 `import asyncio` 的 starter 后重跑，6/6 失败，错误为
+  `name 'asyncio' is not defined`，证明结果来自真实 Pyodide 执行而非缓存的 DOM 结果。
+- 探针后恢复参考解，最终 6/6 通过。
+- 页面控制台无错误；Blob Worker（Python）与 `js.worker-*.js`（JS）请求均 200/正常加载。

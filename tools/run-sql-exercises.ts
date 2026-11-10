@@ -1,5 +1,5 @@
 import { eachExercise } from './lib/content.js';
-import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql.js';
+import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql/index.js';
 
 let exercises = 0;
 let failing = 0;
