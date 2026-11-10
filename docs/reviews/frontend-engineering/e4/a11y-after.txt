@@ -1,0 +1,19 @@
+
+Running 14 tests using 8 workers
+
+  ok  1 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/ (2.0s)
+  ok  4 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/stage/s0 (1.8s)
+  ok  2 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/stage/s0 (2.0s)
+  ok  5 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/ (1.9s)
+  ok  3 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/lesson/s0-l1 (2.3s)
+  ok  7 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/lesson/s0-l1 (2.4s)
+  ok  6 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/lesson/s7-l5 (2.3s)
+  ok  8 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/lesson/s7-l5 (2.4s)
+  ok 12 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/lab (1.4s)
+  ok 11 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/lab (1.6s)
+  ok  9 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/project/p-graduation (2.1s)
+  ok 13 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/report (1.5s)
+  ok 10 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/project/p-graduation (2.0s)
+  ok 14 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/report (1.4s)
+
+  14 passed (5.9s)

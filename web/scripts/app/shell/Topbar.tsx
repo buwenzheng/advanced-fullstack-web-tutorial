@@ -25,7 +25,7 @@ export default function Topbar({ drawerOpen, onToggleDrawer }: TopbarProps) {
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" /></svg>
       </button>
 
-      <a className="brand" href="#/" aria-label="返回学习总览">
+      <a className="brand" href="#/" aria-label="后端进阶实验室 Backend for Frontend Engineers（返回学习总览）">
         <span className="brand__mark" aria-hidden="true">
           <svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5" /><path d="M16 21h8" /></svg>
         </span>

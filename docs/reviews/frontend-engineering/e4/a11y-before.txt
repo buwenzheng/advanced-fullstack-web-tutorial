@@ -1,0 +1,182 @@
+axe-core scan before fixes
+date: 2026-11-10T12:01:48.019Z
+entry: /index.next.html
+tags: wcag2a, wcag2aa, wcag21a, wcag21aa
+
+===== 1440x900 #/ =====
+violations: 1
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+
+===== 1440x900 #/stage/s0 =====
+violations: 1
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+
+===== 1440x900 #/lesson/s0-l1 =====
+violations: 3
+- color-contrast [serious] Elements must meet minimum color contrast ratio thresholds
+  target: .tok-com:nth-child(16)
+  html: <span class="tok-com">//, '');</span>
+  failure: Fix any of the following: |   Element has insufficient color contrast of 3.23 (foreground color: #5a6b87, background color: #101a29, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1
+  target: .tok-com:nth-child(24)
+  html: <span class="tok-com">// 302 表示临时跳转：目标可以修改，浏览器不会像 301 那样长期缓存</span>
+  failure: Fix any of the following: |   Element has insufficient color contrast of 3.23 (foreground color: #5a6b87, background color: #101a29, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+- list [serious] <ul> and <ol> must only directly contain <li>, <script> or <template> elements
+  target: .quiz:nth-child(3) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(4) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(5) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+
+===== 1440x900 #/lesson/s7-l5 =====
+violations: 2
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+- list [serious] <ul> and <ol> must only directly contain <li>, <script> or <template> elements
+  target: .quiz:nth-child(3) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(4) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(5) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+
+===== 1440x900 #/project/p-graduation =====
+violations: 2
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+- scrollable-region-focusable [serious] Scrollable region must have keyboard access
+  target: article:nth-child(1) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(2) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(3) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(4) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(5) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(6) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+
+===== 1440x900 #/lab =====
+violations: 2
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+- select-name [critical] Select element must have an accessible name
+  target: select
+  html: <select style="background: var(--ink-900); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-family: var(--font-code); font-size: 12.5px;">
+  failure: Fix any of the following: |   Element does not have an implicit (wrapped) <label> |   Element does not have an explicit <label> |   aria-label attribute does not exist or is empty |   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty |   Element has no title attribute |   Element's default semantics were not overridden with role="none" or role="presentation"
+
+===== 1440x900 #/report =====
+violations: 1
+- label-content-name-mismatch [serious] Elements must have their visible text as part of their accessible name
+  target: .brand
+  html: <a class="brand" href="#/" aria-label="返回学习总览"><span class="brand__mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5"></path><path d="M16 21h8"></path></svg></span><span class="brand__text"><strong>后端进阶实验室</strong><em>Backend for Frontend Engineers</em></span></a>
+  failure: Fix any of the following: |   Text inside the element is not included in the accessible name
+
+===== 390x844 #/ =====
+violations: 0
+
+===== 390x844 #/stage/s0 =====
+violations: 0
+
+===== 390x844 #/lesson/s0-l1 =====
+violations: 3
+- color-contrast [serious] Elements must meet minimum color contrast ratio thresholds
+  target: .tok-com:nth-child(16)
+  html: <span class="tok-com">//, '');</span>
+  failure: Fix any of the following: |   Element has insufficient color contrast of 3.23 (foreground color: #5a6b87, background color: #101a29, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1
+  target: .tok-com:nth-child(24)
+  html: <span class="tok-com">// 302 表示临时跳转：目标可以修改，浏览器不会像 301 那样长期缓存</span>
+  failure: Fix any of the following: |   Element has insufficient color contrast of 3.23 (foreground color: #5a6b87, background color: #101a29, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1
+- list [serious] <ul> and <ol> must only directly contain <li>, <script> or <template> elements
+  target: .quiz:nth-child(3) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(4) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(5) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+- scrollable-region-focusable [serious] Scrollable region must have keyboard access
+  target: .codeblock:nth-child(2) > pre
+  html: <pre>
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+
+===== 390x844 #/lesson/s7-l5 =====
+violations: 2
+- list [serious] <ul> and <ol> must only directly contain <li>, <script> or <template> elements
+  target: .quiz:nth-child(3) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(4) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+  target: .quiz:nth-child(5) > .quiz__body > .opt-list
+  html: <ul class="opt-list">
+  failure: Fix all of the following: |   List element has direct children that are not allowed: button
+- scrollable-region-focusable [serious] Scrollable region must have keyboard access
+  target: pre
+  html: <pre>
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+
+===== 390x844 #/project/p-graduation =====
+violations: 1
+- scrollable-region-focusable [serious] Scrollable region must have keyboard access
+  target: article:nth-child(1) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(2) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(3) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(4) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(5) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+  target: article:nth-child(6) > pre
+  html: <pre class="template-card__body">
+  failure: Fix any of the following: |   Element should have focusable content |   Element should be focusable
+
+===== 390x844 #/lab =====
+violations: 1
+- select-name [critical] Select element must have an accessible name
+  target: select
+  html: <select style="background: var(--ink-900); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-family: var(--font-code); font-size: 12.5px;">
+  failure: Fix any of the following: |   Element does not have an implicit (wrapped) <label> |   Element does not have an explicit <label> |   aria-label attribute does not exist or is empty |   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty |   Element has no title attribute |   Element's default semantics were not overridden with role="none" or role="presentation"
+
+===== 390x844 #/report =====
+violations: 0

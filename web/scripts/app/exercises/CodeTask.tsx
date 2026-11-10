@@ -228,7 +228,8 @@ function CodeTrack({ task, track }: { task: CodeExercise; track: Track }) {
           ))
         ) : null}
       </ul>
-      <div className="console-out">
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable） */}
+      <div className="console-out" tabIndex={0} aria-label="运行日志">
         {result && result.logs.length
           ? result.logs.map((log, index) => (
               <span key={index} className={`log-${log.level}`}>

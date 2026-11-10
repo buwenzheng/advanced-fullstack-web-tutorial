@@ -231,7 +231,7 @@ table.tbl td code { color: var(--teal); }
 }
 .codeblock pre .tok-key { color: #F5B544; }
 .codeblock pre .tok-str { color: #7EE0B8; }
-.codeblock pre .tok-com { color: #5A6B87; font-style: italic; }
+.codeblock pre .tok-com { color: var(--code-comment); font-style: italic; }
 .codeblock pre .tok-num { color: #F0A5C0; }
 .codeblock pre .tok-fn { color: #8FC7FF; }
 

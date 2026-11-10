@@ -7,7 +7,8 @@ export function TableBlock({ block }: { block: TableBlockData }) {
   return (
     <section className="lblock">
       {block.title ? <h3 className="lblock__title">{block.title}</h3> : null}
-      <div className="tbl-wrap">
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable） */}
+      <div className="tbl-wrap" tabIndex={0} aria-label={block.title ? `表格：${block.title}` : '数据表格'}>
         <table className="tbl">
           <thead>
             <tr>

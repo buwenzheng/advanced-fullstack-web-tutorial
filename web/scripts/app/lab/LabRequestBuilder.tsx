@@ -51,6 +51,7 @@ export function LabRequestBuilder({
       <div className="panel__body">
         <div className="lab-request-line" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <select
+            aria-label="HTTP 方法"
             style={{
               background: 'var(--ink-900)',
               border: '1px solid var(--line)',

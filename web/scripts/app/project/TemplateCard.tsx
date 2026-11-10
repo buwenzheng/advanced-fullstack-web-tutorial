@@ -36,7 +36,8 @@ export function TemplateCard({ template }: { template: Template }) {
       </div>
       <p className="template-card__purpose">{template.purpose}</p>
       <p className="template-card__when">使用时机：{template.when}</p>
-      <pre className="template-card__body"><code>{template.body}</code></pre>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable） */}
+      <pre className="template-card__body" tabIndex={0} aria-label={`模板代码：${template.title}`}><code>{template.body}</code></pre>
     </article>
   );
 }

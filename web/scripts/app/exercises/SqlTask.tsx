@@ -213,7 +213,8 @@ function SqlResult({ outcome }: { outcome: QueryOutcome }) {
     );
   }
   return (
-    <div className="tbl-wrap" style={{ marginTop: 12 }}>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable）
+    <div className="tbl-wrap" style={{ marginTop: 12 }} tabIndex={0} aria-label="查询结果表格">
       <table className="tbl">
         <thead>
           <tr>

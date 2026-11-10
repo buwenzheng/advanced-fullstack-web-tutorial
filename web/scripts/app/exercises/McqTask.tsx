@@ -70,18 +70,19 @@ export function McqTask({ task }: { task: Check }) {
             if (marked && option.correct) classes.push('is-right');
             if (marked && !option.correct && chosen) classes.push('is-wrong');
             return (
-              <button
-                key={index}
-                className={classes.join(' ')}
-                type="button"
-                disabled={locked}
-                onClick={() => choose(index)}
-              >
-                <span className="opt__key">{OPTION_KEYS[index]}</span>
-                <RichText as="span" html={option.text} />
-                {marked && option.correct ? <span className="opt__mark">✓ 正确</span> : null}
-                {marked && !option.correct && chosen ? <span className="opt__mark">✗ 你的选择</span> : null}
-              </button>
+              <li key={index}>
+                <button
+                  className={classes.join(' ')}
+                  type="button"
+                  disabled={locked}
+                  onClick={() => choose(index)}
+                >
+                  <span className="opt__key">{OPTION_KEYS[index]}</span>
+                  <RichText as="span" html={option.text} />
+                  {marked && option.correct ? <span className="opt__mark">✓ 正确</span> : null}
+                  {marked && !option.correct && chosen ? <span className="opt__mark">✗ 你的选择</span> : null}
+                </button>
+              </li>
             );
           })}
         </ul>

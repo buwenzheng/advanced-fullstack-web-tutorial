@@ -15,7 +15,8 @@ export function LabResponse({ result }: { result: LabResult | null }) {
         ) : null}
       </div>
       {entries.length ? (
-        <div className="tbl-wrap" style={{ marginTop: 14 }}>
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable）
+        <div className="tbl-wrap" style={{ marginTop: 14 }} tabIndex={0} aria-label="响应头表格">
           <table className="tbl">
             <thead>
               <tr>
@@ -38,7 +39,8 @@ export function LabResponse({ result }: { result: LabResult | null }) {
           </table>
         </div>
       ) : null}
-      <div className="console-out" style={{ maxHeight: 'none', marginTop: 14 }}>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable） */}
+      <div className="console-out" style={{ maxHeight: 'none', marginTop: 14 }} tabIndex={0} aria-label="响应体">
         {result.body || '(空响应体)'}
       </div>
     </>

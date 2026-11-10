@@ -61,3 +61,16 @@
 - **现象**：`search-index-*.js` 507.07 kB（gzip 199.34 kB），Vite 构建提示超过 500 kB；仅在搜索框聚焦后加载。
 - **影响**：未搜索用户无下载；首次搜索有一次约 199 kB gzip 请求。
 - **计划**：T-E4.6 包体预算与懒加载强断言统一评估，不在 E3 调整。
+
+## KI-10 axe 非阻塞问题为零（E4 记录）
+
+- **现象**：14 次扫描（7 页 × 1440/390，tags `wcag2a/wcag2aa/wcag21a/wcag21aa`）中，serious/critical 修复后，moderate/minor 违规数同样为 0。
+- **证据**：`docs/reviews/frontend-engineering/e4/a11y-moderate.txt`（`NON_BLOCKING_COUNT=0`）。
+- **计划**：无需处理；后续新增页面若出现 moderate/minor，继续在此登记。
+
+## KI-11 可滚动区域 `tabIndex` 与 lint 规则冲突（E4 记录，已接受）
+
+- **现象**：E4 §3.4 要求为 `.codeblock pre`、`.tbl-wrap`、`.console-out` 增加 `tabIndex={0}`（axe `scrollable-region-focusable` 的标准修复），但 `jsx-a11y/no-noninteractive-tabindex` 会把 `<pre>/<div>` 上的 `tabIndex` 判为错误，两条规则直接冲突。
+- **处理**：仅在 7 处滚动容器上加行级 `eslint-disable-next-line` 并附原因注释；未修改全局 ESLint 配置，未禁用任何 axe 规则，未缩小扫描页面集合。
+- **依据**：可滚动容器需要键盘聚焦，axe 门禁反映真实可访问性结果；lint 规则不识别滚动容器语义。
+- **计划**：若 eslint-plugin-jsx-a11y 后续支持滚动容器识别，移除行级豁免。

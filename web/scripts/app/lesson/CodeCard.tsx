@@ -16,7 +16,8 @@ export function CodeCard({ code, lang = 'javascript', title = '', note, hidden }
         <span className="codeblock__lang">{lang}</span>
         {title ? <span>{title}</span> : null}
       </div>
-      <pre>
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- 可滚动区域需键盘聚焦（axe scrollable-region-focusable） */}
+      <pre tabIndex={0} aria-label={title ? `代码块：${title}` : '代码块'}>
         <code dangerouslySetInnerHTML={{ __html: highlightCode(code, lang) }} />
       </pre>
       {note ? (
