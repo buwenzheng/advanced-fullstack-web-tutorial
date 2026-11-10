@@ -1,8 +1,8 @@
 import { h, clear, toast } from './ui.js';
-import { store } from './store.js';
-import { lang, LANGUAGES } from './lang.js';
+import { store } from './state/store';
+import { lang, LANGUAGES } from './state/lang';
 import { curriculum, allLessons, lessonById, stageById, stageLabel, graduationProject } from './content/index';
-import { isLessonMastered, courseMastery, stageMastery } from './progress.js';
+import { isLessonMastered, courseMastery, stageMastery } from './state/progress';
 import { renderOverview } from './views/overview.js';
 import { renderStage } from './views/stage.js';
 import { renderLesson } from './views/lesson.js';

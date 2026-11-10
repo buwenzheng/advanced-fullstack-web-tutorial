@@ -1,7 +1,7 @@
 import { h } from '../ui.js';
-import { store } from '../store.js';
+import { store } from '../state/store';
 import { curriculum, allLessons, graduationProject, stageLabel } from '../content/index';
-import { courseMastery, isLessonMastered, trackSolved } from '../progress.js';
+import { courseMastery, isLessonMastered, trackSolved } from '../state/progress';
 
 function taskLabel(task) {
   if (task.kind === 'mcq') return task.prompt || task.question || '概念检查';

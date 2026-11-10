@@ -3,7 +3,31 @@ import { migrateLegacyIds, migrateDraftMap } from './migrate.js';
 const STORAGE_KEY = 'bff-lab-progress-v1';
 const DRAFT_KEY = 'bff-lab-drafts-v1';
 
-function blankState() {
+export interface AnswerRecord {
+  picked: number[] | null;
+  correct: boolean;
+  attempts: number;
+  solved: boolean;
+}
+
+export interface LessonRecord {
+  done: boolean;
+}
+
+export interface ProjectRecord {
+  m: Record<string, boolean>;
+  note?: string;
+  notes?: Record<string, string>;
+}
+
+export interface ProgressState {
+  q: Record<string, AnswerRecord>;
+  l: Record<string, LessonRecord>;
+  p: Record<string, ProjectRecord>;
+  meta: { version: 2; startedAt: number };
+}
+
+function blankState(): ProgressState {
   return {
     q: {},
     l: {},
@@ -12,13 +36,13 @@ function blankState() {
   };
 }
 
-function read() {
+function read(): ProgressState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return blankState();
-    const parsed = JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return blankState();
-    const migrated = migrateLegacyIds(parsed);
+    const migrated = migrateLegacyIds(parsed as ProgressState);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
     return { ...blankState(), ...migrated, meta: { ...blankState().meta, ...migrated.meta } };
   } catch {
@@ -26,11 +50,11 @@ function read() {
   }
 }
 
-function migrateDrafts() {
+function migrateDrafts(): void {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
     if (!raw) return;
-    const parsed = JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw);
     const migrated = migrateDraftMap(parsed);
     if (migrated !== parsed) localStorage.setItem(DRAFT_KEY, JSON.stringify(migrated));
   } catch {
@@ -40,9 +64,9 @@ function migrateDrafts() {
 
 migrateDrafts();
 let state = read();
-const listeners = new Set();
+const listeners = new Set<(state: ProgressState) => void>();
 
-function persist() {
+function persist(): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
@@ -50,22 +74,22 @@ function persist() {
   }
 }
 
-function emit() {
+function emit(): void {
   persist();
   listeners.forEach((fn) => fn(state));
 }
 
 export const store = {
-  subscribe(fn) {
+  subscribe(fn: (state: ProgressState) => void): () => void {
     listeners.add(fn);
     return () => listeners.delete(fn);
   },
 
-  get() {
+  get(): ProgressState {
     return state;
   },
 
-  recordAnswer(questionId, picked, correct) {
+  recordAnswer(questionId: string, picked: number[], correct: boolean): void {
     const prev = state.q[questionId];
     state.q[questionId] = {
       picked,
@@ -76,7 +100,7 @@ export const store = {
     emit();
   },
 
-  recordChecklist(questionId, checked, total) {
+  recordChecklist(questionId: string, checked: number[], total: number): void {
     const prev = state.q[questionId];
     const complete = total > 0 && checked.length === total;
     state.q[questionId] = {
@@ -88,50 +112,50 @@ export const store = {
     emit();
   },
 
-  setLessonDone(lessonId, done) {
+  setLessonDone(lessonId: string, done: boolean): void {
     state.l[lessonId] = { done: Boolean(done) };
     emit();
   },
 
-  toggleMilestone(projectId, milestoneId) {
+  toggleMilestone(projectId: string, milestoneId: string): boolean {
     const project = state.p[projectId] || (state.p[projectId] = { m: {} });
     project.m[milestoneId] = !project.m[milestoneId];
     emit();
     return project.m[milestoneId];
   },
 
-  setProjectNote(projectId, note) {
+  setProjectNote(projectId: string, note: string): void {
     const project = state.p[projectId] || (state.p[projectId] = { m: {}, note: '' });
     project.note = note;
     emit();
   },
 
-  reset() {
+  reset(): void {
     state = blankState();
     emit();
   },
 
-  answerOf(questionId) {
+  answerOf(questionId: string): AnswerRecord | null {
     return state.q[questionId] || null;
   },
 
-  lessonDone(lessonId) {
+  lessonDone(lessonId: string): boolean {
     return Boolean(state.l[lessonId]?.done);
   },
 
-  milestoneDone(projectId, milestoneId) {
+  milestoneDone(projectId: string, milestoneId: string): boolean {
     return Boolean(state.p[projectId]?.m?.[milestoneId]);
   },
 
-  projectNote(projectId) {
+  projectNote(projectId: string): string {
     return state.p[projectId]?.note || '';
   },
 
-  milestoneNote(projectId, milestoneId) {
+  milestoneNote(projectId: string, milestoneId: string): string {
     return state.p[projectId]?.notes?.[milestoneId] || '';
   },
 
-  setMilestoneNote(projectId, milestoneId, note) {
+  setMilestoneNote(projectId: string, milestoneId: string, note: string): void {
     const project = state.p[projectId] || (state.p[projectId] = { m: {} });
     if (!project.notes) project.notes = {};
     project.notes[milestoneId] = note;
@@ -139,7 +163,7 @@ export const store = {
   },
 };
 
-export function formatDuration(minutes) {
+export function formatDuration(minutes: number): string {
   if (!minutes) return '';
   if (minutes < 60) return `${minutes} 分钟`;
   const h = Math.floor(minutes / 60);

@@ -1,6 +1,6 @@
 import { h } from '../ui.js';
 import { curriculum, allLessons } from '../content/index';
-import { courseMastery, stageMastery, nextLesson } from '../progress.js';
+import { courseMastery, stageMastery, nextLesson } from '../state/progress';
 
 const ACCENT_VAR = {
   teal: 'var(--teal)',

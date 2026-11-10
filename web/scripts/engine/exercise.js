@@ -1,8 +1,8 @@
 import { h, toast } from '../ui.js';
-import { store } from '../store.js';
+import { store } from '../state/store';
 import { runTests } from './runner.js';
 import { createDatabase, runQuery, rowsEqual } from './sql.js';
-import { lang, languageLabel, languageMeta } from '../lang.js';
+import { lang, languageLabel, languageMeta } from '../state/lang';
 import { runPythonTests, pythonReady, pythonLoadError, warmPython, onPythonStatus } from './python.js';
 
 const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E', 'F'];

@@ -1,7 +1,7 @@
 import { h } from '../ui.js';
-import { store, formatDuration } from '../store.js';
+import { store, formatDuration } from '../state/store';
 import { lessonById, stageById, stageLabel } from '../content/index';
-import { isLessonMastered, lessonTasks, taskSolved } from '../progress.js';
+import { isLessonMastered, lessonTasks, taskSolved } from '../state/progress';
 import { renderBlock } from './blocks.js';
 import { renderTask } from '../engine/exercise.js';
 

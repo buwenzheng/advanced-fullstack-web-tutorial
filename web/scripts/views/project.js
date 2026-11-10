@@ -1,5 +1,5 @@
 import { h, toast } from '../ui.js';
-import { store } from '../store.js';
+import { store } from '../state/store';
 import { findProject } from '../content/index';
 
 async function copyText(text) {

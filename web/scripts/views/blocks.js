@@ -1,5 +1,5 @@
 import { h, codeBlock } from '../ui.js';
-import { lang, languageLabel } from '../lang.js';
+import { lang, languageLabel } from '../state/lang';
 
 function callout(variant, icon, title, bodyHtml) {
   return h('div', { class: `callout callout--${variant}` },

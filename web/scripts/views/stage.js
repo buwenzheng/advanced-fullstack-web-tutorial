@@ -1,7 +1,7 @@
 import { h } from '../ui.js';
-import { formatDuration } from '../store.js';
+import { formatDuration } from '../state/store';
 import { stageById } from '../content/index';
-import { isLessonMastered, stageMastery } from '../progress.js';
+import { isLessonMastered, stageMastery } from '../state/progress';
 
 const ACCENT_VAR = {
   teal: 'var(--teal)',

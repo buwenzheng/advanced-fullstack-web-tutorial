@@ -1,13 +1,23 @@
 const STORAGE_KEY = 'bff-lab-lang-v1';
 
-export const LANGUAGES = [
+export type LanguageId = 'javascript' | 'python';
+
+export interface LanguageMeta {
+  id: LanguageId;
+  label: string;
+  short: string;
+  file: string;
+  runtime: string;
+}
+
+export const LANGUAGES: ReadonlyArray<LanguageMeta> = [
   { id: 'javascript', label: 'Node.js', short: 'Node', file: 'solution.js', runtime: 'JavaScript · Node 风格' },
   { id: 'python', label: 'Python', short: 'Python', file: 'solution.py', runtime: 'Python 3.13 · 标准库' },
 ];
 
-const LABELS = Object.fromEntries(LANGUAGES.map((item) => [item.id, item.label]));
+const LABELS: Record<string, string> = Object.fromEntries(LANGUAGES.map((item) => [item.id, item.label]));
 
-function read() {
+function read(): LanguageId {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved === 'python' ? 'python' : 'javascript';
@@ -17,22 +27,22 @@ function read() {
 }
 
 let current = read();
-const listeners = new Set();
+const listeners = new Set<(value: LanguageId) => void>();
 
-export function languageLabel(id) {
+export function languageLabel(id: string): string {
   return LABELS[id] || id;
 }
 
-export function languageMeta(id) {
-  return LANGUAGES.find((item) => item.id === id) || LANGUAGES[0];
+export function languageMeta(id: string): LanguageMeta {
+  return LANGUAGES.find((item) => item.id === id) || LANGUAGES[0]!;
 }
 
 export const lang = {
-  get() {
+  get(): LanguageId {
     return current;
   },
 
-  set(value) {
+  set(value: LanguageId): void {
     if (!LABELS[value] || value === current) return;
     current = value;
     try {
@@ -43,7 +53,7 @@ export const lang = {
     listeners.forEach((fn) => fn(current));
   },
 
-  subscribe(fn) {
+  subscribe(fn: (value: LanguageId) => void): () => void {
     listeners.add(fn);
     return () => listeners.delete(fn);
   },

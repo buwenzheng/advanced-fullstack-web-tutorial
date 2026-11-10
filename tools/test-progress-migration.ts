@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { migrateLegacyIds, migrateDraftMap } from '../web/scripts/migrate.js';
+import { migrateLegacyIds, migrateDraftMap } from '../web/scripts/state/migrate.js';
 
 const state = {
   q: {
@@ -35,7 +35,7 @@ const collision = migrateLegacyIds({
   p: {},
   meta: {},
 });
-assert.equal(collision.q['a1-c1'].solved, false, '新键优先，不被旧键覆盖');
+assert.equal(collision.q['a1-c1']!.solved, false, '新键优先，不被旧键覆盖');
 
 const drafts = migrateDraftMap({
   's6-l1': { code: 'old' },
