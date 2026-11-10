@@ -1,0 +1,88 @@
+{
+  "generatedAt": "2026-11-10T12:39:14.674Z",
+  "budgets": {
+    "entry": {
+      "label": "entry (index.next.html)",
+      "limit": 184320,
+      "gzip": 151364,
+      "pass": true,
+      "files": [
+        "assets/harness-BMG4catt.js",
+        "assets/next-D6WjBgW_.js"
+      ]
+    },
+    "lazyMax": {
+      "label": "lazy max",
+      "limit": 153600,
+      "gzip": 87116,
+      "pass": true,
+      "file": "assets/appendix-DxFFXbYb.js",
+      "chunks": [
+        {
+          "file": "assets/appendix-DxFFXbYb.js",
+          "gzip": 87116
+        },
+        {
+          "file": "assets/s7-CRWnCbm-.js",
+          "gzip": 57980
+        },
+        {
+          "file": "assets/s6-CrkyoUzX.js",
+          "gzip": 42262
+        },
+        {
+          "file": "assets/s2-hDabEVSh.js",
+          "gzip": 36411
+        },
+        {
+          "file": "assets/s5-Cx8jGftZ.js",
+          "gzip": 35419
+        },
+        {
+          "file": "assets/s1-B0vKTgQ9.js",
+          "gzip": 34141
+        },
+        {
+          "file": "assets/s3-NiPcLAVK.js",
+          "gzip": 33988
+        },
+        {
+          "file": "assets/s4-DTzXEQkl.js",
+          "gzip": 33227
+        },
+        {
+          "file": "assets/s0-xX3Chzul.js",
+          "gzip": 25312
+        },
+        {
+          "file": "assets/main-BkP0pRB8.js",
+          "gzip": 23851
+        },
+        {
+          "file": "assets/graduation-CRBd9dd5.js",
+          "gzip": 10606
+        }
+      ]
+    },
+    "search": {
+      "label": "search index",
+      "limit": 307200,
+      "gzip": 199335,
+      "pass": true,
+      "file": "assets/search-index-BwozhHnn.js"
+    }
+  },
+  "reportOnly": {
+    "entryCss": {
+      "gzip": 8616,
+      "files": [
+        "assets/harness-BqIDEzqA.css"
+      ]
+    },
+    "totalJs": {
+      "gzip": 771012,
+      "files": 14
+    }
+  },
+  "pass": true
+}

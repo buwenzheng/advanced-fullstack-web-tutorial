@@ -1,4 +1,5 @@
 import { assembleProject, assembleStage } from '../../content/assemble';
+import catalogData from '../../../generated/catalog.json';
 import type { Catalog } from '../../content/catalog';
 import type { Project, Stage, StageInput } from '../../content/types';
 import type { SearchDocument } from '../shell/search-docs';
@@ -102,9 +103,7 @@ let catalogPromise: Promise<Catalog> | null = null;
 
 export function loadCatalog(): Promise<Catalog> {
   if (!catalogPromise) {
-    catalogPromise = import('../../../generated/catalog.json').then(
-      (module) => module.default as unknown as Catalog,
-    );
+    catalogPromise = Promise.resolve(catalogData as unknown as Catalog);
   }
   return catalogPromise;
 }

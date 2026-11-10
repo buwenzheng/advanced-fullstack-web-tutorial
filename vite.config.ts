@@ -13,6 +13,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
     target: 'baseline-widely-available',
+    manifest: true,
     rollupOptions: {
       input: {
         main: htmlEntry('./web/index.html'),

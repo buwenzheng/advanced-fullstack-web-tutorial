@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { entryClosure } from './lib/manifest';
 
 const lessons = [
   { route: '/lesson/s0-l1', title: '从 URL 到响应：请求的四段旅程' },
@@ -97,51 +98,70 @@ test('lab 实验台 10 个场景、429 限流与幂等重放', async ({ page }) 
   expect(errors).toEqual([]);
 });
 
-function isStageChunk(name: string): boolean {
-  return /\/assets\/(?:s[0-7]|appendix)-[^/]+\.js$/.test(name);
+function collectJsResponses(page: import('@playwright/test').Page): string[] {
+  const files: string[] = [];
+  page.on('response', (response) => {
+    const pathname = new URL(response.url()).pathname;
+    if (!pathname.endsWith('.js')) return;
+    files.push(pathname.split('/').pop() ?? '');
+  });
+  return files;
 }
 
-async function resourceNames(page: import('@playwright/test').Page): Promise<string[]> {
-  return page.evaluate(() => performance.getEntriesByType('resource').map((entry) => entry.name));
+function outsideClosure(responses: string[], closure: Set<string>): Set<string> {
+  const entryNames = new Set([...closure].map((file) => file.split('/').pop() ?? ''));
+  return new Set(responses.filter((file) => !entryNames.has(file)));
 }
 
-test('lazy 阶段内容按阶段加载，跨阶段才新增 chunk', async ({ page }) => {
+async function settle(page: import('@playwright/test').Page): Promise<void> {
+  await page.waitForLoadState('networkidle');
+}
+
+test('lazy 入口闭包与阶段 chunk 强断言', async ({ page }) => {
+  const closure = entryClosure();
   const errors = collectErrors(page);
+  const jsResponses = collectJsResponses(page);
+
   await page.goto('/index.next.html#/');
   await expect(page.locator('main h1')).toHaveText('把前端的手感，接后端的世界');
-  expect((await resourceNames(page)).filter(isStageChunk)).toEqual([]);
+  await settle(page);
+  expect(outsideClosure(jsResponses, closure), '首页只应请求入口闭包内 JS').toEqual(new Set());
 
   await page.getByRole('link', { name: '从第一讲开始' }).click();
   await expect(page.locator('main h1')).toHaveText('从 URL 到响应：请求的四段旅程');
-  await expect.poll(async () => (await resourceNames(page)).filter(isStageChunk)).toHaveLength(1);
+  await settle(page);
+  const firstOutside = outsideClosure(jsResponses, closure);
+  expect(firstOutside.size, '进入课时应出现闭包外 JS').toBeGreaterThanOrEqual(1);
 
-  const sameStage = (await resourceNames(page)).filter(isStageChunk);
   await page.locator('.lesson-nav a').filter({ hasText: '下一讲' }).click();
   await expect(page.locator('main h1')).toHaveText('Node.js/Python 运行时：事件循环与并发模型');
-  expect((await resourceNames(page)).filter(isStageChunk)).toEqual(sameStage);
+  await settle(page);
+  expect(outsideClosure(jsResponses, closure), '同阶段切换不应新增 chunk').toEqual(firstOutside);
 
   await page.locator('.stage-node[data-stage="s1"] .stage-node__head').click();
   await page.locator('.lesson-link[data-lesson="s1-l1"]').click();
   await expect(page.locator('main h1')).toHaveText('关系模型与 SQL：从对象到表');
-  await expect.poll(async () => (await resourceNames(page)).filter(isStageChunk).length).toBe(sameStage.length + 1);
+  await settle(page);
+  expect(outsideClosure(jsResponses, closure).size, '跨阶段应新增 1 个 chunk').toBe(
+    firstOutside.size + 1,
+  );
   expect(errors).toEqual([]);
 });
 
 test('search 索引在聚焦搜索框后才按需下载并可用', async ({ page }) => {
   const errors = collectErrors(page);
+  const indexRequests: string[] = [];
+  page.on('response', (response) => {
+    if (response.url().includes('/search-index')) indexRequests.push(response.url());
+  });
+
   await page.goto('/index.next.html#/');
   await expect(page.locator('main h1')).toHaveText('把前端的手感，接后端的世界');
-  const isIndexChunk = (name: string) => name.includes('/search-index-');
-  expect((await resourceNames(page)).filter(isIndexChunk)).toEqual([]);
+  await settle(page);
+  expect(indexRequests, '首页不应请求 search-index 产物').toEqual([]);
 
   await page.locator('#search-input').focus();
-  await expect.poll(async () => page.evaluate(() => {
-    const found = performance.getEntriesByType('resource')
-      .find((item) => item.name.includes('/search-index-')) as
-      { decodedBodySize?: number; encodedBodySize?: number } | undefined;
-    return found ? found.decodedBodySize || found.encodedBodySize || 0 : 0;
-  })).toBeGreaterThan(300_000);
-
+  await expect.poll(() => indexRequests.length, '聚焦后应请求 search-index').toBeGreaterThan(0);
   await page.locator('#search-input').fill('LinkHub');
   await expect(page.getByRole('option').first()).toBeVisible();
   expect(errors).toEqual([]);

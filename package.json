@@ -32,7 +32,8 @@
     "e2e": "npm run build && playwright test",
     "e2e:update": "npm run build && playwright test --update-snapshots",
     "verify": "npm run lint && npm run typecheck && npm run test && npm run e2e",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "budget": "tsx tools/bundle-budget.ts"
   },
   "dependencies": {
     "react": "19.3.1",

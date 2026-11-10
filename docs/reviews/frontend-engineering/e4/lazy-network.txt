@@ -1,0 +1,55 @@
+# T-E4.6 懒加载网络请求记录 · 证据
+
+evidence-meta:
+- date: 2026-11-10
+- node: v22.15.0 (.nvmrc 一致)
+- build: npm run build (exit 0)，preview: vite preview 127.0.0.1:4173
+- probe command: node test-results/network-probe.mjs（临时探针，跑完即删，未入库）
+- probe exit: 0
+- 采集方式: page.on('response') 记录 .js 响应 basename，对照 dist/.vite/manifest.json 的入口静态闭包；每步 waitForLoadState('networkidle')
+- 对照用例: e2e/content.spec.ts › lazy 入口闭包与阶段 chunk 强断言 / search 索引在聚焦搜索框后才按需下载并可用
+
+## 输出
+
+```
+manifest closure (2 files):
+  assets/next-D6WjBgW_.js
+  assets/harness-BMG4catt.js
+
+[home] cumulative JS responses: 2, outside closure: 0
+  closure  harness-BMG4catt.js (200)
+  closure  next-D6WjBgW_.js (200)
+
+[s0-l1] cumulative JS responses: 3, outside closure: 1
+  closure  harness-BMG4catt.js (200)
+  closure  next-D6WjBgW_.js (200)
+  outside  s0-xX3Chzul.js (200)
+
+[s0-l2] cumulative JS responses: 3, outside closure: 1
+  closure  harness-BMG4catt.js (200)
+  closure  next-D6WjBgW_.js (200)
+  outside  s0-xX3Chzul.js (200)
+
+[s1-l1] cumulative JS responses: 4, outside closure: 2
+  closure  harness-BMG4catt.js (200)
+  closure  next-D6WjBgW_.js (200)
+  outside  s0-xX3Chzul.js (200)
+  outside  s1-B0vKTgQ9.js (200)
+
+[search] homepage search-index requests before focus: 0
+[search] after focus + fill("LinkHub"): 1 request(s): search-index-BwozhHnn.js
+
+PASS home all in closure
+PASS s0-l1 has >=1 outside closure
+PASS s0-l2 outside set equals s0-l1
+PASS s1-l1 adds exactly 1 new outside closure chunk
+PASS no search-index on homepage
+PASS search-index requested after focus
+```
+
+结论：§6.5 六条断言全部 PASS。同阶段内切换课时不重复下载阶段 chunk；跨阶段仅新增对应阶段 chunk；搜索索引仅在聚焦输入框后下载。
+
+## 说明
+
+- 探针首版将 s0-l2 阶段误用「本阶段新增请求」对照上一阶段「累计请求」而误报 FAIL；§6.5 规定比较的是响应集合（累计），修正探针后 6/6 PASS。应用代码未改动。
+- 哈希文件名随构建变化；断言比较 basename 集合并与当次 manifest 同源，不依赖固定哈希。

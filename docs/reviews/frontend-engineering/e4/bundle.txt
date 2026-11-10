@@ -1,0 +1,70 @@
+# T-E4.6 包体预算与懒加载强断言 · 证据
+
+evidence-meta:
+- date: 2026-11-10
+- node: v22.15.0 (.nvmrc 一致)
+- build: npm run build (exit 0，含 content:validate / content:build / typecheck / vite build)
+- budget command: npm run budget -- --json
+- budget exit: 0
+- report: docs/reviews/frontend-engineering/e4/bundle.json
+- manifest: dist/.vite/manifest.json
+
+## 1. 预算输出
+
+```
+> advanced-fullstack-web-tutorial@0.0.0 budget
+> tsx tools/bundle-budget.ts --json
+
+PASS entry (index.next.html)              147.8KB / 180.0KB
+PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+PASS search index                         194.7KB / 300.0KB
+INFO css (entry)                         8.4KB
+INFO total js (14 files)              752.9KB
+INFO entry closure (2 files)
+  closure assets/harness-BMG4catt.js
+  closure assets/next-D6WjBgW_.js
+INFO wrote docs/reviews/frontend-engineering/e4/bundle.json
+```
+
+结论：三项预算全部 PASS（entry 151364B / 184320B；lazy max 87116B / 153600B；search 199335B / 307200B）。
+
+## 2. Manifest 条目计数（任务卡命令）
+
+```
+$ node -e "const m=require('./dist/.vite/manifest.json'); console.log(Object.keys(m).length)"
+15
+```
+
+manifest 含 2 个 HTML 入口、14 个 JS 产物与 1 个 CSS 的键集合，与 bundle.json reportOnly.totalJs.files=14 一致。
+
+## 3. 懒加载与搜索 e2e
+
+```
+$ npx playwright test e2e/content.spec.ts --project=chromium -g "lazy|search"
+Running 2 tests using 2 workers
+
+  ok 2 [chromium] › e2e\content.spec.ts:151:1 › search 索引在聚焦搜索框后才按需下载并可用 (952ms)
+  ok 1 [chromium] › e2e\content.spec.ts:120:1 › lazy 入口闭包与阶段 chunk 强断言 (2.2s)
+
+  2 passed (3.3s)
+```
+
+覆盖 §6.5 六条断言：
+1. 打开 `#/` 所有 JS 响应 basename 均在 entryClosure() 内；
+2. 进入 `#/lesson/s0-l1` 出现 ≥1 个闭包外 JS；
+3. 同阶段下一讲 `#/lesson/s0-l2` 闭包外集合不变；
+4. 切到 `#/lesson/s1-l1` 新增 1 个闭包外 JS；
+5. 首页无 search-index 产物请求；
+6. 聚焦 `#search-input` 并输入后出现 search-index 请求且结果渲染。
+
+完整 e2e/content.spec.ts chromium：9 passed (4.3s)；npm run lint exit 0。
+
+## 4. 问题与修复
+
+- 首跑 budget FAIL：search-index-BwozhHnn.js（194.7KB）被计入懒加载 JS 上限。依据 §6.3「CSS 与 JSON 不计入 JS chunk」与 §6.1 搜索索引单列 300KB，将 search-index 从 lazy 预算剔除并单列计量；预算数字未调整。
+- 首跑 lazy e2e FAIL：首页请求 catalog-DALFsimK.js 不在入口闭包。根因为 loadCatalog() 使用动态 import；与 §6.5「首页只请求入口闭包」冲突。将 web/scripts/app/data/resources.ts 中 catalog 改为静态 import 纳入入口闭包（entry 133.3KB → 147.8KB，仍 < 180KB；阶段内容与搜索索引仍按需加载）。修复后 lazy/search 2/2、完整 content.spec 9/9 通过。
+
+## 5. 残余风险
+
+- entry 闭包余量 32.2KB；后续新增入口静态依赖需复跑 npm run budget。
+- 网络断言依赖哈希文件名与 manifest，构建后文件名变化不影响断言（比较 basename 集合）。
