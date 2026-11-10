@@ -37,7 +37,6 @@ test.describe('v2 visual baseline', () => {
 
         await expect(page).toHaveScreenshot(`${pageDef.slug}-${viewport.name}.png`, {
           fullPage: true,
-          animations: 'disabled',
         });
       });
     }

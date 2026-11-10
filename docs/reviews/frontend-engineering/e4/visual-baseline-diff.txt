@@ -1,0 +1,72 @@
+视觉基线重采样与 diff 审阅（T-E4.4，2026-11-10）
+====================================================
+
+背景
+----
+T-E4.3 修复 axe color-contrast：课时代码注释 .tok-com 由 #5A6B87 改为 --code-comment: #7689A6（黑底对比度 3.23:1 → 4.91:1）。
+该 token 同时作用于 v2 与 React 入口。旧基线仍含 #5A6B87。
+
+关键发现：默认 update 模式不会重写基线
+------------------------------------
+命令（默认 --update-snapshots=changed）：
+  npx playwright test e2e/visual.spec.ts --project=chromium -g "lesson-s0-l1|lesson-s7-l5" --update-snapshots
+结果：6 passed，exit 0，但 6 张基线 mtime 未变、旧/新逐像素零差异。
+原因：Playwright/pixelmatch 默认逐像素颜色阈值 0.2，注释色 #5A6B87 → #7689A6 的单像素色差
+低于该阈值，测试被视为通过，快照不被认定为 changed，因此不落盘。
+这正说明旧基线的“绿灯”不能证明基线已冻结当前渲染。
+
+实际重采样命令
+--------------
+  npx playwright test e2e/visual.spec.ts --project=chromium -g "lesson-s0-l1|lesson-s7-l5" --update-snapshots=all
+输出（节选）：
+  ...\e2e\__screenshots__\lesson-s0-l1-1440x900.png is re-generated, writing actual.
+  ...（6 张均 re-generated，其中 lesson-s7-l5 重写后字节相同）
+  6 passed (4.5s)
+退出码：0
+
+逐像素 diff（旧基线备份 vs 重采样后）
+------------------------------------
+方法：PIL 读取 RGB，逐通道差 >8 记为变化像素；按行聚合成 band。
+
+lesson-s0-l1-1440x900.png  尺寸 1440×7217
+  bbox=(460,1558,915,1747)
+  band y1558-1571 x701-757  px154
+  band y1734-1746 x461-914  px1467
+  变化像素合计 1621
+  变化前 top 颜色：(90,107,135)=#5A6B87 ×1154（其余为抗锯齿边）
+  变化后 top 颜色：(118,137,166)=#7689A6 ×1154
+  新基线精确 #5A6B87=0 px，#7689A6=1154 px
+
+lesson-s0-l1-768x1024.png  尺寸 768×7671
+  bbox=(48,1642,503,1831)
+  band y1642-1655 x289-345  px154
+  band y1818-1830 x49-502   px1467
+  变化像素合计 1621；#5A6B87 ×1154 → #7689A6 ×1154
+
+lesson-s0-l1-390x844.png   尺寸 390×10107
+  bbox=(48,2253,373,2442)
+  band y2253-2266 x289-345  px154
+  band y2429-2441 x49-372   px996
+  变化像素合计 1150；#5A6B87 ×802 → #7689A6 ×802
+
+lesson-s7-l5-1440x900.png / 768x1024 / 390x844
+  ImageChops.difference(...).getbbox() = None（重采样后与旧基线逐字节等价，无颜色差异）
+
+人工审阅
+--------
+裁剪合成图（旧|新，2x 放大）：
+  docs/reviews/frontend-engineering/e4/resample-diff-s0-l1-1440x900.png
+包含两处变化带：
+  y1540-1590：代码行注释（`// ...`）
+  y1715-1765：代码注释行「// 302 表示临时跳转；目标可以修改，浏览器不会像 301 那样长期缓存」
+审阅结论：仅代码注释文字颜色由灰蓝变为更亮的灰蓝；字形位置、行高、背景、布局、内容均为像素级不变。
+不存在布局位移、组件缺失、抗锯齿以外的结构性差异。
+
+处置结论
+--------
+1. 允许的重采样情形：§4.4 第 1 条（axe 颜色 token 调整，T-E4.3）。
+2. 实际被改写的基线：lesson-s0-l1 × 3 视口；lesson-s7-l5 × 3 视口重采样后字节不变，git 无改动。
+3. 未使用 mask；maxDiffPixels 仍为 0；未删除任何基线条目。
+4. 重采样后的基线由双入口全量运行验证：
+   - v2：21 passed（visual-v2-after.txt）
+   - React：21 passed（visual-react-after.txt）
