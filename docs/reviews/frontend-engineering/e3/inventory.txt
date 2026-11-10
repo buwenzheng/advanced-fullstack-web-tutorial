@@ -1,0 +1,13 @@
+s0: lessons=3 minutes=170 checks=9 code=3 sql=0 design=3
+s1: lessons=4 minutes=320 checks=12 code=3 sql=2 design=4
+s2: lessons=4 minutes=300 checks=12 code=4 sql=0 design=4
+s3: lessons=4 minutes=340 checks=12 code=4 sql=0 design=4
+s4: lessons=4 minutes=310 checks=12 code=4 sql=0 design=4
+s5: lessons=4 minutes=340 checks=12 code=4 sql=0 design=4
+s6: lessons=4 minutes=330 checks=12 code=4 sql=0 design=4
+s7: lessons=5 minutes=400 checks=15 code=4 sql=0 design=5
+appendix: lessons=13 minutes=890 checks=39 code=8 sql=0 design=7
+blocks: text=91 analogy=45 pitfall=45 note=45 tip=3 list=0 steps=47 code=74 table=66 compare=21 flow=28 case=26
+tasks: mcq=135 code=38 sql=2 design=39
+lessons draft=0 projects=9 milestones=54 templates=6
+lessons: 45 core: 32 2510 appendix: 13 890 total: 3400

@@ -55,6 +55,33 @@ if (appendix.lessons !== EXPECTED.appendix) errors.push(`appendix lessons ${appe
 if (core.minutes !== EXPECTED.coreMinutes) errors.push(`core minutes ${core.minutes} != ${EXPECTED.coreMinutes}`);
 if (appendix.minutes !== EXPECTED.appendixMinutes) errors.push(`appendix minutes ${appendix.minutes} != ${EXPECTED.appendixMinutes}`);
 
+const blockCounts = new Map<string, number>();
+const taskCounts = new Map<string, number>();
+let drafts = 0;
+let milestones = 0;
+let templates = 0;
+let projects = 0;
+for (const stage of content.curriculum) {
+  for (const lesson of stage.lessons) {
+    if (lesson.status !== 'ready') drafts += 1;
+    for (const block of lesson.blocks) blockCounts.set(block.type, (blockCounts.get(block.type) || 0) + 1);
+    for (const task of [...lesson.checks, ...lesson.exercises]) taskCounts.set(task.kind, (taskCounts.get(task.kind) || 0) + 1);
+  }
+  if (stage.project) {
+    projects += 1;
+    milestones += stage.project.milestones.length;
+    templates += stage.project.templates?.length || 0;
+  }
+}
+projects += 1;
+milestones += content.graduationProject.milestones.length;
+templates += content.graduationProject.templates?.length || 0;
+
+const blockOrder = ['text', 'analogy', 'pitfall', 'note', 'tip', 'list', 'steps', 'code', 'table', 'compare', 'flow', 'case'];
+console.log(`blocks: ${blockOrder.map((type) => `${type}=${blockCounts.get(type) || 0}`).join(' ')}`);
+console.log(`tasks: mcq=${taskCounts.get('mcq') || 0} code=${taskCounts.get('code') || 0} sql=${taskCounts.get('sql') || 0} design=${taskCounts.get('design') || 0}`);
+console.log(`lessons draft=${drafts} projects=${projects} milestones=${milestones} templates=${templates}`);
+
 if (errors.length) console.error(errors.join('\n'));
 console.log(`lessons: ${totals.lessons} core: ${core.lessons} ${core.minutes} appendix: ${appendix.lessons} ${appendix.minutes} total: ${totals.minutes}`);
 process.exit(errors.length ? 1 : 0);

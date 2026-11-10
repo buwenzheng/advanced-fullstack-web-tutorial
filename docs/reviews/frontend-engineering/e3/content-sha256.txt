@@ -1,0 +1,2 @@
+sha256=f53ef3709599e7801fae93133bec6f9c3434ece3fb54b7491853c963ea24bab3
+stages=9 lessons=45 projects=9 checks=135 exercises=79
