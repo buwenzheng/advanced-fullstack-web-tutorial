@@ -1,0 +1,1 @@
+progress migration ok: q/l/drafts mapped, graduation preserved, idempotent

@@ -1,0 +1,1 @@
+duplication lessons=45 pairs=0 failing=0
