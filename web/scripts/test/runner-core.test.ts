@@ -183,4 +183,27 @@ describe('runner worker bridge', () => {
     const result = await promise;
     expect(result.results[0]!.error).toBe('未知错误');
   });
+
+  it('js.worker 入口执行套件并回传完整结果', async () => {
+    const posted: unknown[] = [];
+    vi.stubGlobal('postMessage', (message: unknown) => posted.push(message));
+    vi.resetModules();
+    await import('../engine/runner/js.worker.js');
+    const scope = self as unknown as {
+      onmessage: (event: { data: { code: string; tests: string } }) => Promise<void>;
+    };
+    await scope.onmessage({
+      data: {
+        code: 'console.log("worker");',
+        tests: '__run("ok", () => assert.ok(true));',
+      },
+    });
+    expect(posted).toEqual([
+      {
+        ok: true,
+        results: [{ name: 'ok', ok: true }],
+        logs: [{ level: 'log', text: 'worker' }],
+      },
+    ]);
+  });
 });

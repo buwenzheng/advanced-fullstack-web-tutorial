@@ -1,0 +1,187 @@
+
+> advanced-fullstack-web-tutorial@0.0.0 test:coverage
+> vitest run --coverage
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/jm014254/Desktop/temporary/site/算法学习[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [32m✓[39m web/scripts/test/overview-page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 422[2mms[22m[39m
+ [32m✓[39m web/scripts/test/search-docs.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-validate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 192[2mms[22m[39m
+ [32m✓[39m web/scripts/test/blocks.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 464[2mms[22m[39m
+ [32m✓[39m web/scripts/test/stage-page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 384[2mms[22m[39m
+[90mstderr[2m | web/scripts/test/shell.test.tsx[2m > [22m[2mReact shell[2m > [22m[2m搜索键盘：↓ + Enter 打开毕业项目并清空输入
+[22m[39mA component suspended inside an `act` scope, but the `act` call was not awaited. When testing React components that depend on asynchronous data, you must await the result:
+
+await act(() => ...)
+
+ [32m✓[39m web/scripts/test/tasks-mcq.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 939[2mms[22m[39m
+ [32m✓[39m web/scripts/test/tasks-design.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 785[2mms[22m[39m
+   [32m✓[39m DesignTask [2m(5)[22m
+     [33m[2m✓[22m[39m 勾选清单写入进度并在全选时标记完成[33m 303[2mms[22m[39m
+ [32m✓[39m web/scripts/test/report.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 541[2mms[22m[39m
+   [32m✓[39m ReportPage [2m(3)[22m
+     [33m[2m✓[22m[39m 空进度展示零统计、空错题与 9 条阶段进度[33m 341[2mms[22m[39m
+ [32m✓[39m web/scripts/test/tasks-code.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1566[2mms[22m[39m
+   [32m✓[39m CodeTask [2m(13)[22m
+     [33m[2m✓[22m[39m 渲染头部与语言元信息，切换轨道时按轨道读写草稿[33m 431[2mms[22m[39m
+     [33m[2m✓[22m[39m 提示、参考答案与重置代码按 v2 文案切换[33m 479[2mms[22m[39m
+ [32m✓[39m web/scripts/test/project-page.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 2291[2mms[22m[39m
+   [32m✓[39m ProjectPage [2m(7)[22m
+     [33m[2m✓[22m[39m 毕业里程碑笔记持久化并在重渲染后恢复[33m 1240[2mms[22m[39m
+ [32m✓[39m web/scripts/test/shell.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 2556[2mms[22m[39m
+   [32m✓[39m React shell [2m(10)[22m
+     [33m[2m✓[22m[39m 搜索键盘：↓ + Enter 打开毕业项目并清空输入[33m 494[2mms[22m[39m
+ [32m✓[39m web/scripts/test/tasks-sql.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 3097[2mms[22m[39m
+   [32m✓[39m SqlTask [2m(9)[22m
+     [33m[2m✓[22m[39m 结果不一致时展示差异与预期结果[33m 623[2mms[22m[39m
+     [33m[2m✓[22m[39m 非 SELECT 语句展示执行完成但不判对[33m 607[2mms[22m[39m
+     [33m[2m✓[22m[39m SELECT 返回 0 行时展示查询成功但不判对[33m 740[2mms[22m[39m
+     [33m[2m✓[22m[39m 按题目 id 读写草稿，重置恢复初始查询并清理结果[33m 438[2mms[22m[39m
+ [32m✓[39m web/scripts/test/lab.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 2823[2mms[22m[39m
+   [32m✓[39m LabPage 场景与交互 [2m(7)[22m
+     [33m[2m✓[22m[39m 左侧渲染 10 个场景并逐项填入请求[33m 1011[2mms[22m[39m
+     [33m[2m✓[22m[39m 发送请求后渲染状态、响应头与历史，历史最多 6 条[33m 732[2mms[22m[39m
+     [33m[2m✓[22m[39m 三次导出触发 429 并展示 retry-after[33m 302[2mms[22m[39m
+ [32m✓[39m web/scripts/test/lesson-page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2615[2mms[22m[39m
+   [32m✓[39m LessonPage [2m(5)[22m
+     [33m[2m✓[22m[39m 无效课时渲染空状态与返回总览[33m 397[2mms[22m[39m
+     [33m[2m✓[22m[39m s0-l1 渲染 meta、目标、12 类块区域、检查题与翻页[33m 791[2mms[22m[39m
+     [33m[2m✓[22m[39m 掌握按钮写入进度并展示已掌握徽标[33m 510[2mms[22m[39m
+     [33m[2m✓[22m[39m 语言切换整页重挂载：代码轨道重置且已答状态保留[33m 714[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-assemble.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m web/scripts/test/state-store.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m web/scripts/test/sql-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m web/scripts/test/runner-core.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m web/scripts/test/mastery.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m web/scripts/test/python-runtime.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m web/scripts/test/state-progress.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m web/scripts/test/search.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m web/scripts/test/router.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-catalog.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m web/scripts/test/state-migrate.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m web/scripts/test/python-harness.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m27 passed[39m[22m[90m (27)[39m
+[2m      Tests [22m [1m[32m287 passed[39m[22m[90m (287)[39m
+[2m   Start at [22m 20:29:43
+[2m   Duration [22m 16.71s[2m (environment 70%, setup 13%, tests 10%, import 3%, transform 3%, worker 1%)[22m
+
+[2mEnvironment [22m [33mjsdom was created 27 times[39m[2m · 137.41s total, 70% of tracked time[22m
+[2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-environments[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   91.28 |    79.66 |   93.53 |   93.92 |                   
+ app               |      40 |        0 |       0 |      40 |                   
+  ...ErrorPage.tsx |       0 |        0 |       0 |       0 | 4-7               
+  router.tsx       |     100 |      100 |     100 |     100 |                   
+ app/data          |   97.36 |    64.81 |     100 |     100 |                   
+  content.ts       |   96.15 |       50 |     100 |     100 | 58,91             
+  labels.ts        |   66.66 |       50 |     100 |     100 | 4-5               
+  mastery.ts       |     100 |    77.27 |     100 |     100 | 11,26,48-50       
+  resources.ts     |   97.64 |    63.51 |     100 |     100 | ...43-150,168-171 
+  types.ts         |       0 |        0 |       0 |       0 |                   
+ app/exercises     |    98.1 |    84.53 |   98.48 |    98.9 |                   
+  CodeTask.tsx     |     100 |    86.84 |     100 |     100 | ...77,236,243,249 
+  DesignTask.tsx   |     100 |    83.87 |     100 |     100 | 10,28-31,46,107   
+  McqTask.tsx      |   95.91 |    91.66 |   92.85 |     100 | 25,27,59-63,92    
+  SqlTask.tsx      |     100 |       76 |     100 |     100 | ...72,181,230-231 
+  TaskRenderer.tsx |   66.66 |       60 |     100 |   66.66 | 14,18             
+  drafts.ts        |     100 |      100 |     100 |     100 |                   
+ app/hooks         |   66.66 |      100 |      50 |     100 |                   
+  useLang.ts       |   66.66 |      100 |      50 |     100 |                   
+  useProgress.ts   |   66.66 |      100 |      50 |     100 |                   
+ app/lab           |   73.28 |    70.76 |   54.83 |   74.61 |                   
+  ...stBuilder.tsx |   33.33 |       50 |   23.07 |   35.71 | ...,64,81,102-155 
+  LabResponse.tsx  |     100 |    66.66 |     100 |     100 | 6-12,17-44        
+  curl.ts          |     100 |       75 |     100 |     100 | 9                 
+  lab-data.ts      |   83.33 |       60 |     100 |   92.85 | 176               
+  live.ts          |       0 |        0 |       0 |       0 | 4-41              
+  mock-server.ts   |    96.1 |     84.7 |     100 |   97.14 | 90,102            
+ app/lesson        |     100 |    79.31 |     100 |     100 |                   
+  CodeBlock.tsx    |     100 |       75 |     100 |     100 | 17,25-26          
+  CodeCard.tsx     |     100 |     62.5 |     100 |     100 | 17-23             
+  RichText.tsx     |     100 |      100 |     100 |     100 |                   
+  highlight.ts     |     100 |      100 |     100 |     100 |                   
+ app/lesson/blocks |     100 |    78.72 |     100 |     100 |                   
+  CalloutBlock.tsx |     100 |       50 |     100 |     100 | 22                
+  CaseBlock.tsx    |     100 |       50 |     100 |     100 | 29                
+  CompareBlock.tsx |     100 |       50 |     100 |     100 | 9                 
+  FlowBlock.tsx    |     100 |       90 |     100 |     100 | 36                
+  ListBlock.tsx    |     100 |       75 |     100 |     100 | 10                
+  StepsBlock.tsx   |     100 |    83.33 |     100 |     100 | 9                 
+  TableBlock.tsx   |     100 |       50 |     100 |     100 | 9-11              
+  TextBlock.tsx    |     100 |       50 |     100 |     100 | 9                 
+  index.tsx        |     100 |    93.33 |     100 |     100 | 31                
+ app/pages         |      94 |    78.87 |   96.29 |   94.32 |                   
+  EmptyState.tsx   |     100 |      100 |     100 |     100 |                   
+  LabPage.tsx      |   89.06 |       70 |   93.75 |   89.83 | 75-81             
+  LessonPage.tsx   |     100 |    85.71 |     100 |     100 | ...93-103,122-130 
+  OverviewPage.tsx |     100 |    72.22 |     100 |     100 | 24,38,50-67,136   
+  ProjectPage.tsx  |   90.47 |     64.7 |    90.9 |   89.47 | 33-34             
+  ReportPage.tsx   |     100 |       75 |     100 |     100 | 58,158-168        
+  StagePage.tsx    |     100 |    86.95 |     100 |     100 | 25,53,71          
+ app/project       |   95.83 |    88.88 |   94.11 |     100 |                   
+  ...stoneList.tsx |     100 |     87.5 |     100 |     100 | 75,86,99          
+  TemplateCard.tsx |   88.23 |    91.66 |      80 |     100 | 23                
+  copy-text.ts     |     100 |      100 |     100 |     100 |                   
+ app/report        |   98.46 |    72.41 |     100 |     100 |                   
+  report-model.ts  |   98.46 |    72.41 |     100 |     100 | ...02,147,162-173 
+ app/shell         |   81.57 |    77.47 |   73.33 |   85.97 |                   
+  AppShell.tsx     |   78.94 |       75 |   85.71 |   83.33 | 31-33             
+  LangSwitch.tsx   |    87.5 |       75 |     100 |     100 | 18                
+  ...tProgress.tsx |   85.71 |       50 |     100 |     100 | 15                
+  SearchBox.tsx    |   88.57 |    86.66 |   88.23 |    91.8 | 26-27,75,125-126  
+  Sidebar.tsx      |   69.38 |    71.73 |   57.14 |   70.45 | 38-53,84          
+  ...tProvider.tsx |   72.72 |       25 |   53.84 |   86.66 | 21,24             
+  Topbar.tsx       |     100 |      100 |     100 |     100 |                   
+  search-docs.ts   |     100 |      100 |     100 |     100 |                   
+  toast-context.ts |     100 |      100 |       0 |     100 |                   
+  useToast.ts      |     100 |      100 |     100 |     100 |                   
+ content           |   89.62 |    78.34 |     100 |    95.5 |                   
+  assemble.ts      |     100 |    72.91 |     100 |     100 | 7-18,35,51-69     
+  build.ts         |     100 |    83.33 |     100 |     100 | 97-105,126        
+  catalog.ts       |       0 |        0 |       0 |       0 |                   
+  graduation.ts    |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  schema.ts        |     100 |      100 |     100 |     100 |                   
+  search.ts        |   97.22 |    89.47 |     100 |     100 | 19,26,39-41       
+  sources.ts       |     100 |      100 |     100 |     100 |                   
+  types.ts         |       0 |        0 |       0 |       0 |                   
+  validate.ts      |   84.14 |    76.17 |     100 |   92.94 | ...94,398,405,424 
+ ...nt/fixtures/ai |      92 |      100 |     100 |      92 |                   
+  ai-diffs.ts      |     100 |      100 |     100 |     100 |                   
+  eval-set.ts      |     100 |      100 |     100 |     100 |                   
+  ...ion-corpus.ts |       0 |      100 |     100 |       0 | 1-114             
+  ...ider-cases.ts |     100 |      100 |     100 |     100 |                   
+  rag-docs.ts      |     100 |      100 |     100 |     100 |                   
+  sse-chunks.ts    |     100 |      100 |     100 |     100 |                   
+  tool-cases.ts    |     100 |      100 |     100 |     100 |                   
+ engine/python     |     100 |     87.5 |     100 |     100 |                   
+  harness.ts       |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |    85.71 |     100 |     100 | ...80,193,220,245 
+ engine/runner     |   94.69 |    83.14 |     100 |     100 |                   
+  core.ts          |   93.69 |    81.25 |     100 |     100 | ...18,134-140,166 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  js.worker.ts     |     100 |      100 |     100 |     100 |                   
+  protocol.ts      |       0 |        0 |       0 |       0 |                   
+ engine/sql        |    89.8 |    80.81 |   94.89 |   91.61 |                   
+  index.ts         |    89.8 |    80.81 |   94.89 |   91.61 | ...68-669,693-699 
+ state             |    99.3 |     92.7 |     100 |     100 |                   
+  lang.ts          |     100 |       90 |     100 |     100 | 23                
+  mastery-core.ts  |     100 |    85.71 |     100 |     100 | 55-59             
+  migrate.ts       |      95 |       92 |     100 |     100 | 15,30             
+  progress.ts      |     100 |      100 |     100 |     100 |                   
+  store.ts         |     100 |     97.5 |     100 |     100 | 59                
+-------------------|---------|----------|---------|---------|-------------------
+evidence-meta
+command: npm run test:coverage
+exit: 0
+node: v22.15.0
+summary: 27 files / 287 tests passed; all directory thresholds passed
