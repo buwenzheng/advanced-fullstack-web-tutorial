@@ -1,0 +1,12 @@
+$ npx playwright test --project=chromium --grep @python
+
+Running 1 test using 1 worker
+
+  ok 1 [chromium] › e2e\interactions.spec.ts:150:3 › React 入口交互清单 › @python 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node (12.9s)
+
+  1 passed (14.1s)
+exit=0
+
+$ npx tsx tools/run-python-exercises.ts
+python exercises=38 failing=0 starterFailing=38
+exit=0

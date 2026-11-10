@@ -1,0 +1,418 @@
+$ npm run verify
+
+> advanced-fullstack-web-tutorial@0.0.0 verify
+> npm run lint && npm run typecheck && npm run test:coverage && npm run content:validate && npm run audit:content && npm run audit:exercises && npm run build && npm run budget && playwright test --project=chromium --grep-invert "@visual|@python"
+
+
+> advanced-fullstack-web-tutorial@0.0.0 lint
+> eslint "web/scripts/**/*.{ts,tsx}" "tools/**/*.ts" "e2e/**/*.ts" "*.config.{ts,js}" --no-error-on-unmatched-pattern
+
+
+> advanced-fullstack-web-tutorial@0.0.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit
+
+
+> advanced-fullstack-web-tutorial@0.0.0 test:coverage
+> vitest run --coverage
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.0 [39m[90mC:/Users/jm014254/Desktop/temporary/site/算法学习[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [32m✓[39m web/scripts/test/overview-page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 417[2mms[22m[39m
+ [32m✓[39m web/scripts/test/search-docs.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32m✓[39m web/scripts/test/blocks.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 416[2mms[22m[39m
+ [32m✓[39m web/scripts/test/tasks-mcq.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 970[2mms[22m[39m
+   [32m✓[39m McqTask [2m(6)[22m
+     [33m[2m✓[22m[39m 单选答错：标记、反馈、记录与重试后答对[33m 306[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 112[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-validate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 174[2mms[22m[39m
+ [32m✓[39m web/scripts/test/tasks-design.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 661[2mms[22m[39m
+ [32m✓[39m web/scripts/test/stage-page.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 316[2mms[22m[39m
+ [32m✓[39m web/scripts/test/report.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 602[2mms[22m[39m
+   [32m✓[39m ReportPage [2m(3)[22m
+     [33m[2m✓[22m[39m 空进度展示零统计、空错题与 9 条阶段进度[33m 348[2mms[22m[39m
+[90mstderr[2m | web/scripts/test/shell.test.tsx[2m > [22m[2mReact shell[2m > [22m[2m搜索键盘：↓ + Enter 打开毕业项目并清空输入
+[22m[39mA component suspended inside an `act` scope, but the `act` call was not awaited. When testing React components that depend on asynchronous data, you must await the result:
+
+await act(() => ...)
+
+ [32m✓[39m web/scripts/test/tasks-code.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 2127[2mms[22m[39m
+   [32m✓[39m CodeTask [2m(13)[22m
+     [33m[2m✓[22m[39m 渲染头部与语言元信息，切换轨道时按轨道读写草稿[33m 536[2mms[22m[39m
+     [33m[2m✓[22m[39m 提示、参考答案与重置代码按 v2 文案切换[33m 743[2mms[22m[39m
+ [32m✓[39m web/scripts/test/project-page.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 3145[2mms[22m[39m
+   [32m✓[39m ProjectPage [2m(7)[22m
+     [33m[2m✓[22m[39m 毕业里程碑笔记持久化并在重渲染后恢复[33m 1439[2mms[22m[39m
+     [33m[2m✓[22m[39m 模板复制成功后按钮进入已复制并弹出 toast[33m 620[2mms[22m[39m
+     [33m[2m✓[22m[39m 模板复制失败时显示复制失败[33m 506[2mms[22m[39m
+ [32m✓[39m web/scripts/test/tasks-sql.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 3314[2mms[22m[39m
+   [32m✓[39m SqlTask [2m(9)[22m
+     [33m[2m✓[22m[39m 结果不一致时展示差异与预期结果[33m 641[2mms[22m[39m
+     [33m[2m✓[22m[39m 非 SELECT 语句展示执行完成但不判对[33m 719[2mms[22m[39m
+     [33m[2m✓[22m[39m SELECT 返回 0 行时展示查询成功但不判对[33m 714[2mms[22m[39m
+     [33m[2m✓[22m[39m 按题目 id 读写草稿，重置恢复初始查询并清理结果[33m 564[2mms[22m[39m
+ [32m✓[39m web/scripts/test/lab.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 3427[2mms[22m[39m
+   [32m✓[39m LabPage 场景与交互 [2m(7)[22m
+     [33m[2m✓[22m[39m 左侧渲染 10 个场景并逐项填入请求[33m 930[2mms[22m[39m
+     [33m[2m✓[22m[39m 发送请求后渲染状态、响应头与历史，历史最多 6 条[33m 984[2mms[22m[39m
+     [33m[2m✓[22m[39m 三次导出触发 429 并展示 retry-after[33m 501[2mms[22m[39m
+     [33m[2m✓[22m[39m 重复幂等键两次响应均标记幂等重放，第二次值为 true[33m 412[2mms[22m[39m
+     [33m[2m✓[22m[39m 重置恢复默认请求、清空响应与历史并恢复教学文案[33m 309[2mms[22m[39m
+ [32m✓[39m web/scripts/test/shell.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 3503[2mms[22m[39m
+   [32m✓[39m React shell [2m(10)[22m
+     [33m[2m✓[22m[39m 搜索键盘：↓ + Enter 打开毕业项目并清空输入[33m 847[2mms[22m[39m
+     [33m[2m✓[22m[39m 搜索空态：没有匹配的课程内容[33m 522[2mms[22m[39m
+     [33m[2m✓[22m[39m 抽屉：菜单打开、scrim 关闭[33m 411[2mms[22m[39m
+     [33m[2m✓[22m[39m 重置：进度归零、草稿删除、toast 出现[33m 335[2mms[22m[39m
+ [32m✓[39m web/scripts/test/lesson-page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 3663[2mms[22m[39m
+   [32m✓[39m LessonPage [2m(5)[22m
+     [33m[2m✓[22m[39m 无效课时渲染空状态与返回总览[33m 409[2mms[22m[39m
+     [33m[2m✓[22m[39m s0-l1 渲染 meta、目标、12 类块区域、检查题与翻页[33m 1492[2mms[22m[39m
+     [33m[2m✓[22m[39m 掌握按钮写入进度并展示已掌握徽标[33m 937[2mms[22m[39m
+     [33m[2m✓[22m[39m 语言切换整页重挂载：代码轨道重置且已答状态保留[33m 583[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-assemble.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m web/scripts/test/python-runtime.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m web/scripts/test/runner-core.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m web/scripts/test/state-store.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m web/scripts/test/sql-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m web/scripts/test/content-catalog.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m web/scripts/test/mastery.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m web/scripts/test/search.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m web/scripts/test/router.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m web/scripts/test/state-migrate.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m web/scripts/test/python-harness.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m web/scripts/test/state-progress.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m27 passed[39m[22m[90m (27)[39m
+[2m      Tests [22m [1m[32m287 passed[39m[22m[90m (287)[39m
+[2m   Start at [22m 21:29:37
+[2m   Duration [22m 17.34s[2m (environment 69%, setup 12%, tests 11%, import 3%, transform 3%, worker 1%)[22m
+
+[2mEnvironment [22m [33mjsdom was created 27 times[39m[2m · 140.64s total, 69% of tracked time[22m
+[2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-environments[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   91.27 |    79.66 |   93.52 |   93.92 |                   
+ app               |      40 |        0 |       0 |      40 |                   
+  ...ErrorPage.tsx |       0 |        0 |       0 |       0 | 4-7               
+  router.tsx       |     100 |      100 |     100 |     100 |                   
+ app/data          |   97.35 |    64.81 |     100 |     100 |                   
+  content.ts       |   96.15 |       50 |     100 |     100 | 58,91             
+  labels.ts        |   66.66 |       50 |     100 |     100 | 4-5               
+  mastery.ts       |     100 |    77.27 |     100 |     100 | 11,26,48-50       
+  resources.ts     |   97.61 |    63.51 |     100 |     100 | ...42-149,167-170 
+  types.ts         |       0 |        0 |       0 |       0 |                   
+ app/exercises     |    98.1 |    84.53 |   98.48 |    98.9 |                   
+  CodeTask.tsx     |     100 |    86.84 |     100 |     100 | ...77,236,243,249 
+  DesignTask.tsx   |     100 |    83.87 |     100 |     100 | 10,28-31,46,107   
+  McqTask.tsx      |   95.91 |    91.66 |   92.85 |     100 | 25,27,59-63,92    
+  SqlTask.tsx      |     100 |       76 |     100 |     100 | ...72,181,230-231 
+  TaskRenderer.tsx |   66.66 |       60 |     100 |   66.66 | 14,18             
+  drafts.ts        |     100 |      100 |     100 |     100 |                   
+ app/hooks         |   66.66 |      100 |      50 |     100 |                   
+  useLang.ts       |   66.66 |      100 |      50 |     100 |                   
+  useProgress.ts   |   66.66 |      100 |      50 |     100 |                   
+ app/lab           |   73.28 |    70.76 |   54.83 |   74.61 |                   
+  ...stBuilder.tsx |   33.33 |       50 |   23.07 |   35.71 | ...,64,81,102-155 
+  LabResponse.tsx  |     100 |    66.66 |     100 |     100 | 6-12,17-44        
+  curl.ts          |     100 |       75 |     100 |     100 | 9                 
+  lab-data.ts      |   83.33 |       60 |     100 |   92.85 | 176               
+  live.ts          |       0 |        0 |       0 |       0 | 4-41              
+  mock-server.ts   |    96.1 |     84.7 |     100 |   97.14 | 90,102            
+ app/lesson        |     100 |    79.31 |     100 |     100 |                   
+  CodeBlock.tsx    |     100 |       75 |     100 |     100 | 17,25-26          
+  CodeCard.tsx     |     100 |     62.5 |     100 |     100 | 17-23             
+  RichText.tsx     |     100 |      100 |     100 |     100 |                   
+  highlight.ts     |     100 |      100 |     100 |     100 |                   
+ app/lesson/blocks |     100 |    78.72 |     100 |     100 |                   
+  CalloutBlock.tsx |     100 |       50 |     100 |     100 | 22                
+  CaseBlock.tsx    |     100 |       50 |     100 |     100 | 29                
+  CompareBlock.tsx |     100 |       50 |     100 |     100 | 9                 
+  FlowBlock.tsx    |     100 |       90 |     100 |     100 | 36                
+  ListBlock.tsx    |     100 |       75 |     100 |     100 | 10                
+  StepsBlock.tsx   |     100 |    83.33 |     100 |     100 | 9                 
+  TableBlock.tsx   |     100 |       50 |     100 |     100 | 9-11              
+  TextBlock.tsx    |     100 |       50 |     100 |     100 | 9                 
+  index.tsx        |     100 |    93.33 |     100 |     100 | 31                
+ app/pages         |      94 |    78.87 |   96.29 |   94.32 |                   
+  EmptyState.tsx   |     100 |      100 |     100 |     100 |                   
+  LabPage.tsx      |   89.06 |       70 |   93.75 |   89.83 | 75-81             
+  LessonPage.tsx   |     100 |    85.71 |     100 |     100 | ...93-103,122-130 
+  OverviewPage.tsx |     100 |    72.22 |     100 |     100 | 24,38,50-67,136   
+  ProjectPage.tsx  |   90.47 |     64.7 |    90.9 |   89.47 | 33-34             
+  ReportPage.tsx   |     100 |       75 |     100 |     100 | 58,158-168        
+  StagePage.tsx    |     100 |    86.95 |     100 |     100 | 25,53,71          
+ app/project       |   95.83 |    88.88 |   94.11 |     100 |                   
+  ...stoneList.tsx |     100 |     87.5 |     100 |     100 | 75,86,99          
+  TemplateCard.tsx |   88.23 |    91.66 |      80 |     100 | 23                
+  copy-text.ts     |     100 |      100 |     100 |     100 |                   
+ app/report        |   98.46 |    72.41 |     100 |     100 |                   
+  report-model.ts  |   98.46 |    72.41 |     100 |     100 | ...02,147,162-173 
+ app/shell         |   81.57 |    77.47 |   73.33 |   85.97 |                   
+  AppShell.tsx     |   78.94 |       75 |   85.71 |   83.33 | 31-33             
+  LangSwitch.tsx   |    87.5 |       75 |     100 |     100 | 18                
+  ...tProgress.tsx |   85.71 |       50 |     100 |     100 | 15                
+  SearchBox.tsx    |   88.57 |    86.66 |   88.23 |    91.8 | 26-27,75,125-126  
+  Sidebar.tsx      |   69.38 |    71.73 |   57.14 |   70.45 | 38-53,84          
+  ...tProvider.tsx |   72.72 |       25 |   53.84 |   86.66 | 21,24             
+  Topbar.tsx       |     100 |      100 |     100 |     100 |                   
+  search-docs.ts   |     100 |      100 |     100 |     100 |                   
+  toast-context.ts |     100 |      100 |       0 |     100 |                   
+  useToast.ts      |     100 |      100 |     100 |     100 |                   
+ content           |   89.62 |    78.34 |     100 |    95.5 |                   
+  assemble.ts      |     100 |    72.91 |     100 |     100 | 7-18,35,51-69     
+  build.ts         |     100 |    83.33 |     100 |     100 | 97-105,126        
+  catalog.ts       |       0 |        0 |       0 |       0 |                   
+  graduation.ts    |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  schema.ts        |     100 |      100 |     100 |     100 |                   
+  search.ts        |   97.22 |    89.47 |     100 |     100 | 19,26,39-41       
+  sources.ts       |     100 |      100 |     100 |     100 |                   
+  types.ts         |       0 |        0 |       0 |       0 |                   
+  validate.ts      |   84.14 |    76.17 |     100 |   92.94 | ...94,398,405,424 
+ ...nt/fixtures/ai |      92 |      100 |     100 |      92 |                   
+  ai-diffs.ts      |     100 |      100 |     100 |     100 |                   
+  eval-set.ts      |     100 |      100 |     100 |     100 |                   
+  ...ion-corpus.ts |       0 |      100 |     100 |       0 | 1-114             
+  ...ider-cases.ts |     100 |      100 |     100 |     100 |                   
+  rag-docs.ts      |     100 |      100 |     100 |     100 |                   
+  sse-chunks.ts    |     100 |      100 |     100 |     100 |                   
+  tool-cases.ts    |     100 |      100 |     100 |     100 |                   
+ engine/python     |     100 |     87.5 |     100 |     100 |                   
+  harness.ts       |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |    85.71 |     100 |     100 | ...80,193,220,245 
+ engine/runner     |   94.69 |    83.14 |     100 |     100 |                   
+  core.ts          |   93.69 |    81.25 |     100 |     100 | ...18,134-140,166 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  js.worker.ts     |     100 |      100 |     100 |     100 |                   
+  protocol.ts      |       0 |        0 |       0 |       0 |                   
+ engine/sql        |    89.8 |    80.81 |   94.89 |   91.61 |                   
+  index.ts         |    89.8 |    80.81 |   94.89 |   91.61 | ...68-669,693-699 
+ state             |    99.3 |     92.7 |     100 |     100 |                   
+  lang.ts          |     100 |       90 |     100 |     100 | 23                
+  mastery-core.ts  |     100 |    85.71 |     100 |     100 | 55-59             
+  migrate.ts       |      95 |       92 |     100 |     100 | 15,30             
+  progress.ts      |     100 |      100 |     100 |     100 |                   
+  store.ts         |     100 |     97.5 |     100 |     100 | 59                
+-------------------|---------|----------|---------|---------|-------------------
+
+> advanced-fullstack-web-tutorial@0.0.0 content:validate
+> tsx tools/validate-content.ts
+
+content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+
+> advanced-fullstack-web-tutorial@0.0.0 audit:content
+> tsx tools/audit-content.ts
+
+audit mode=ready lessons=45 draft=0 errors=0 warnings=0
+
+> advanced-fullstack-web-tutorial@0.0.0 audit:exercises
+> tsx tools/run-js-exercises.ts && tsx tools/run-sql-exercises.ts
+
+js code exercises=38 failing=0 starterFailing=38
+sql exercises=2 failing=0
+
+> advanced-fullstack-web-tutorial@0.0.0 build
+> npm run content:validate && npm run content:build && npm run typecheck && vite build
+
+
+> advanced-fullstack-web-tutorial@0.0.0 content:validate
+> tsx tools/validate-content.ts
+
+content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+
+> advanced-fullstack-web-tutorial@0.0.0 content:build
+> tsx tools/build-content.ts
+
+catalog bytes=73160 gzip=15282 sha256=d2ab730dba911068947fa6fa73f2886ae02a6fcc47067b289c46db86e3e63dec
+search bytes=509581 gzip=199467 sha256=c824dce44f71b2227eb36df02dcbf5de3019e80aa8b3e6ef3865a754780b6dbe
+
+> advanced-fullstack-web-tutorial@0.0.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit
+
+[36mvite v7.3.8 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 184 modules transformed.
+rendering chunks...
+computing gzip size...
+[2m../dist/[22m[32mindex.html                       [39m[1m[2m  1.35 kB[22m[1m[22m[2m │ gzip:   0.94 kB[22m
+[2m../dist/[22m[32massets/js.worker-C9tqQ_5J.js     [39m[1m[2m  2.55 kB[22m[1m[22m
+[2m../dist/[22m[32m.vite/manifest.json              [39m[1m[2m  2.69 kB[22m[1m[22m[2m │ gzip:   0.51 kB[22m
+[2m../dist/[22m[35massets/index-BqIDEzqA.css        [39m[1m[2m 42.67 kB[22m[1m[22m[2m │ gzip:   8.68 kB[22m
+[2m../dist/[22m[36massets/graduation-CRBd9dd5.js    [39m[1m[2m 24.29 kB[22m[1m[22m[2m │ gzip:  10.61 kB[22m
+[2m../dist/[22m[36massets/s0-xX3Chzul.js            [39m[1m[2m 71.04 kB[22m[1m[22m[2m │ gzip:  25.32 kB[22m
+[2m../dist/[22m[36massets/s4-DTzXEQkl.js            [39m[1m[2m109.16 kB[22m[1m[22m[2m │ gzip:  33.27 kB[22m
+[2m../dist/[22m[36massets/s2-hDabEVSh.js            [39m[1m[2m117.70 kB[22m[1m[22m[2m │ gzip:  36.45 kB[22m
+[2m../dist/[22m[36massets/s1-B0vKTgQ9.js            [39m[1m[2m118.02 kB[22m[1m[22m[2m │ gzip:  34.16 kB[22m
+[2m../dist/[22m[36massets/s3-NiPcLAVK.js            [39m[1m[2m119.97 kB[22m[1m[22m[2m │ gzip:  34.07 kB[22m
+[2m../dist/[22m[36massets/s5-Cx8jGftZ.js            [39m[1m[2m123.42 kB[22m[1m[22m[2m │ gzip:  35.46 kB[22m
+[2m../dist/[22m[36massets/s6-CrkyoUzX.js            [39m[1m[2m144.34 kB[22m[1m[22m[2m │ gzip:  42.31 kB[22m
+[2m../dist/[22m[36massets/s7-CRWnCbm-.js            [39m[1m[2m210.11 kB[22m[1m[22m[2m │ gzip:  58.07 kB[22m
+[2m../dist/[22m[36massets/appendix-DxFFXbYb.js      [39m[1m[2m283.17 kB[22m[1m[22m[2m │ gzip:  87.23 kB[22m
+[2m../dist/[22m[36massets/index-C20GHETo.js         [39m[1m[2m478.15 kB[22m[1m[22m[2m │ gzip: 151.28 kB[22m
+[2m../dist/[22m[36massets/search-index-BwozhHnn.js  [39m[1m[33m507.07 kB[39m[22m[2m │ gzip: 199.34 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 1.35s[39m
+
+> advanced-fullstack-web-tutorial@0.0.0 budget
+> tsx tools/bundle-budget.ts
+
+PASS entry (index.html)                   147.4KB / 180.0KB
+PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+PASS search index                         194.7KB / 300.0KB
+INFO css (entry)                         8.4KB
+INFO total js (12 files)              729.2KB
+INFO entry closure (1 files)
+  closure assets/index-C20GHETo.js
+
+Running 137 tests using 8 workers
+
+  ok   1 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/ (1.9s)
+  ok   2 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/ (1.9s)
+  ok   3 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/stage/s0 (1.9s)
+  ok   8 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/stage/s0 (1.8s)
+  ok   4 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/lesson/s0-l1 (2.5s)
+  ok   6 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/lesson/s0-l1 (2.2s)
+  ok   5 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/lesson/s7-l5 (2.4s)
+  ok   7 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/lesson/s7-l5 (2.3s)
+  ok  11 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/lab (1.6s)
+  ok  12 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/lab (1.5s)
+  ok  15 [chromium] › e2e\content.spec.ts:21:3 › lesson 正文与检查题渲染：/lesson/s0-l1 (1.1s)
+  ok  16 [chromium] › e2e\content.spec.ts:21:3 › lesson 正文与检查题渲染：/lesson/s7-l5 (1.1s)
+  ok   9 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/project/p-graduation (2.3s)
+  ok  10 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/project/p-graduation (2.2s)
+  ok  17 [chromium] › e2e\content.spec.ts:21:3 › lesson 正文与检查题渲染：/lesson/a1 (904ms)
+  ok  14 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 390 #/report (1.6s)
+  ok  13 [chromium] › e2e\a11y.spec.ts:22:5 › @a11y 1440 #/report (1.7s)
+  ok  18 [chromium] › e2e\content.spec.ts:32:1 › lesson 双轨切换与 MCQ 作答反馈 (1.0s)
+  ok  22 [chromium] › e2e\content.spec.ts:152:1 › search 索引在聚焦搜索框后才按需下载并可用 (885ms)
+  ok  20 [chromium] › e2e\content.spec.ts:72:1 › lab 实验台 10 个场景、429 限流与幂等重放 (1.1s)
+  ok  23 [chromium] › e2e\content.spec.ts:171:1 › report 报告页展示统计与错题列表 (783ms)
+  ok  19 [chromium] › e2e\content.spec.ts:53:1 › project 页渲染毕业项目里程碑与模板，勾选后进度更新 (1.4s)
+  ok  25 [chromium] › e2e\interactions.spec.ts:101:3 › React 入口交互清单 › SQL 题：标准答案返回正确结果 (2.0s)
+  ok  21 [chromium] › e2e\content.spec.ts:121:1 › lazy 入口闭包与阶段 chunk 强断言 (2.5s)
+  ok  28 [chromium] › e2e\interactions.spec.ts:244:3 › React 入口交互清单 › 报告：预置进度后统计与进度条正确 (1.4s)
+  ok  26 [chromium] › e2e\interactions.spec.ts:134:3 › React 入口交互清单 › 草稿：刷新保留输入，重置恢复 starter (1.9s)
+  ok  24 [chromium] › e2e\interactions.spec.ts:62:3 › React 入口交互清单 › MCQ：答错反馈、重试后可再次作答 (2.3s)
+  ok  30 [chromium] › e2e\interactions.spec.ts:350:3 › 旧进度夹具 › 种子草稿显示在编辑器，旧 s6 草稿键迁移为 a1 (1.4s)
+  ok  29 [chromium] › e2e\interactions.spec.ts:290:3 › React 入口交互清单 › 重置进度：确认后清空记录并删除草稿 (1.5s)
+  ok  27 [chromium] › e2e\interactions.spec.ts:193:3 › React 入口交互清单 › 模板：复制模板写剪贴板并弹出提示 (2.2s)
+  ok  32 [chromium] › e2e\keyboard.spec.ts:5:3 › 键盘路径门禁 › skip link 首个 Tab 可达，Enter 聚焦 #main 且不改变 hash (1.1s)
+  ok  33 [chromium] › e2e\interactions.spec.ts:266:3 › React 入口交互清单 › 搜索：Enter 打开毕业项目，Esc 关闭结果 (1.9s)
+  ok  39 [chromium] › e2e\keyboard.spec.ts:15:3 › 键盘路径门禁 › 路由切换后 #main 获焦且滚动复位 (1.4s)
+  ok  37 [chromium] › e2e\interactions.spec.ts:323:3 › 旧进度夹具 › s6 旧课时 ID 迁移后 a1 显示本讲已掌握 (2.4s)
+  ok  36 [chromium] › e2e\interactions.spec.ts:366:3 › 旧进度夹具 › 种子错误作答显示上次答错 (2.7s)
+  ok  38 [chromium] › e2e\interactions.spec.ts:212:3 › React 入口交互清单 › 实验台：429 连发、幂等重放与重置清空历史 (2.2s)
+  ok  35 [chromium] › e2e\interactions.spec.ts:82:3 › React 入口交互清单 › 代码题：标准答案通过全部测试，重置恢复 starter (2.7s)
+  ok  40 [chromium] › e2e\keyboard.spec.ts:25:3 › 键盘路径门禁 › 搜索键盘路径：展开、ArrowDown、Enter 跳转 (1.5s)
+  ok  41 [chromium] › e2e\keyboard.spec.ts:42:3 › 键盘路径门禁 › 搜索 Escape 关闭结果且焦点留在输入框 (1.1s)
+  ok  34 [chromium] › e2e\interactions.spec.ts:170:3 › React 入口交互清单 › 项目：里程碑进度 +1 且刷新保持，毕业项目笔记刷新保持 (3.5s)
+  ok  42 [chromium] › e2e\keyboard.spec.ts:54:3 › 键盘路径门禁 › 侧栏阶段折叠可用 Enter 操作，课时列表显隐一致 (997ms)
+  ok  31 [chromium] › e2e\interactions.spec.ts:113:3 › React 入口交互清单 › 方案题：勾满自检清单并刷新保持 (3.9s)
+  ok  44 [chromium] › e2e\keyboard.spec.ts:90:3 › 抽屉键盘可达性 › Tab 到菜单按钮后 Enter 打开抽屉 (932ms)
+  ok  45 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/ (950ms)
+  ok  43 [chromium] › e2e\keyboard.spec.ts:70:3 › 键盘路径门禁 › 选择题可用 Enter 与 Space 作答 (1.2s)
+  ok  48 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/stage/s0 (936ms)
+  ok  46 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/ (1.0s)
+  ok  49 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/stage/s0 (1.1s)
+  ok  47 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/ (1.2s)
+  ok  50 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/stage/s0 (1.1s)
+  ok  51 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/lesson/s0-l1 (1.2s)
+  ok  52 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/lesson/s0-l1 (1.3s)
+  ok  53 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/lesson/s0-l1 (1.4s)
+  ok  54 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/lesson/s7-l5 (1.1s)
+  ok  55 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/lesson/s7-l5 (1.2s)
+  ok  57 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/project/p-graduation (1.0s)
+  ok  58 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/project/p-graduation (1.1s)
+  ok  60 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/lab (917ms)
+  ok  56 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/lesson/s7-l5 (1.4s)
+  ok  59 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/project/p-graduation (1.3s)
+  ok  61 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/lab (910ms)
+  ok  62 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/lab (951ms)
+  ok  63 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 390 #/report (891ms)
+  ok  64 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 768 #/report (1.0s)
+  ok  65 [chromium] › e2e\responsive.spec.ts:21:5 › @responsive 1280 #/report (1.0s)
+  ok  66 [chromium] › e2e\responsive.spec.ts:47:3 › 移动端抽屉专项 › 菜单按钮打开抽屉，scrim 可见且 aria-expanded 同步 (970ms)
+  ok  67 [chromium] › e2e\responsive.spec.ts:55:3 › 移动端抽屉专项 › 点击 scrim 关闭抽屉并复位 aria-expanded (1.1s)
+  ok  68 [chromium] › e2e\responsive.spec.ts:65:3 › 移动端抽屉专项 › 从抽屉进入课时后自动关闭 (1.2s)
+  ok  69 [chromium] › e2e\responsive.spec.ts:75:3 › 移动端抽屉专项 › 代码块与表格在自身容器内滚动，文档无横向溢出 (1.2s)
+  ok  71 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s0 (933ms)
+  ok  70 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/ (1.0s)
+  ok  72 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s1 (989ms)
+  ok  73 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s2 (934ms)
+  ok  74 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s3 (997ms)
+  ok  75 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s4 (942ms)
+  ok  78 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s7 (1.0s)
+  ok  76 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s5 (1.1s)
+  ok  79 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/appendix (1.0s)
+  ok  77 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/stage/s6 (1.1s)
+  ok  80 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s0-l1 (1.1s)
+  ok  81 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s0-l2 (1.2s)
+  ok  82 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s0-cli (1.1s)
+  ok  83 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s1-l1 (1.1s)
+  ok  84 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s1-l2 (1.2s)
+  ok  87 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s2-l1 (1.2s)
+  ok  86 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s1-schema (1.2s)
+  ok  85 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s1-l3 (1.3s)
+  ok  88 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s2-l2 (1.2s)
+  ok  89 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s2-l3 (1.2s)
+  ok  90 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s2-l4 (1.2s)
+  ok  91 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s3-l1 (1.2s)
+  ok  92 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s3-l2 (1.2s)
+  ok  93 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s3-l3 (1.3s)
+  ok  94 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s3-resilience (1.2s)
+  ok  95 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s4-l1 (1.3s)
+  ok  96 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s4-perf (1.3s)
+  ok  97 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s4-l3 (1.3s)
+  ok  98 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s4-l4 (1.3s)
+  ok  99 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s5-l1 (1.2s)
+  ok 100 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s5-l2 (1.3s)
+  ok 101 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s5-l3 (1.3s)
+  ok 102 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s5-data-scale (1.3s)
+  ok 103 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s6-l1 (1.4s)
+  ok 104 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s6-l2 (1.1s)
+  ok 105 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s6-l3 (1.3s)
+  ok 106 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s6-l4 (1.2s)
+  ok 107 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s7-l1 (1.3s)
+  ok 110 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s7-l4 (1.2s)
+  ok 109 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s7-l3 (1.2s)
+  ok 108 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s7-l2 (1.3s)
+  ok 111 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/s7-l5 (1.2s)
+  ok 112 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a1 (1.2s)
+  ok 114 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a3 (1.0s)
+  ok 113 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a2 (1.2s)
+  ok 115 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a4 (1.2s)
+  ok 116 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a5 (1.2s)
+  ok 117 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a6 (1.2s)
+  ok 118 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a7 (1.3s)
+  ok 119 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a8 (1.3s)
+  ok 120 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a9 (1.4s)
+  ok 121 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a10 (1.4s)
+  ok 122 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a11 (1.3s)
+  ok 123 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a12 (1.3s)
+  ok 125 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p0 (1.0s)
+  ok 124 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lesson/a13 (1.3s)
+  ok 126 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p1 (1.1s)
+  ok 127 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p2 (1.1s)
+  ok 128 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p3 (960ms)
+  ok 129 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p4 (973ms)
+  ok 130 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p5 (1.0s)
+  ok 131 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p6 (1.0s)
+  ok 132 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p7 (926ms)
+  ok 134 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/lab (953ms)
+  ok 135 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/report (961ms)
+  ok 133 [chromium] › e2e\routes.spec.ts:11:5 › React 66 路由质量门禁 › @routes #/project/p-graduation (1.1s)
+  ok 137 [chromium] › e2e\shell.spec.ts:29:3 › 移动端抽屉 › 菜单打开、scrim 关闭 (1.0s)
+  ok 136 [chromium] › e2e\shell.spec.ts:5:3 › React shell › 侧栏、搜索与语言轨道 (1.8s)
+
+  137 passed (26.7s)
+exit=0
