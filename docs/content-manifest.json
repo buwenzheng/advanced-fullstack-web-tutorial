@@ -1,0 +1,226 @@
+{
+  "version": 2,
+  "stages": [
+    {
+      "id": "s0",
+      "index": 0,
+      "title": "地基：请求、运行时与排障",
+      "duration": 170,
+      "lessons": [
+        {
+          "id": "s0-l1",
+          "duration": 55
+        },
+        {
+          "id": "s0-l2",
+          "duration": 60
+        },
+        {
+          "id": "s0-cli",
+          "duration": 55
+        }
+      ]
+    },
+    {
+      "id": "s1",
+      "index": 1,
+      "title": "数据与持久化：从对象到可信任的数据",
+      "duration": 320,
+      "lessons": [
+        {
+          "id": "s1-l1",
+          "duration": 80
+        },
+        {
+          "id": "s1-l2",
+          "duration": 85
+        },
+        {
+          "id": "s1-l3",
+          "duration": 80
+        },
+        {
+          "id": "s1-schema",
+          "duration": 75
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "index": 2,
+      "title": "API 设计与契约：把实现藏起来",
+      "duration": 300,
+      "lessons": [
+        {
+          "id": "s2-l1",
+          "duration": 75
+        },
+        {
+          "id": "s2-l2",
+          "duration": 75
+        },
+        {
+          "id": "s2-l3",
+          "duration": 75
+        },
+        {
+          "id": "s2-l4",
+          "duration": 75
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "index": 3,
+      "title": "缓存、异步与韧性：让系统在压力下不崩",
+      "duration": 340,
+      "lessons": [
+        {
+          "id": "s3-l1",
+          "duration": 85
+        },
+        {
+          "id": "s3-l2",
+          "duration": 85
+        },
+        {
+          "id": "s3-l3",
+          "duration": 85
+        },
+        {
+          "id": "s3-resilience",
+          "duration": 85
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "index": 4,
+      "title": "生产化：可观测、性能与交付",
+      "duration": 310,
+      "lessons": [
+        {
+          "id": "s4-l1",
+          "duration": 80
+        },
+        {
+          "id": "s4-perf",
+          "duration": 75
+        },
+        {
+          "id": "s4-l3",
+          "duration": 80
+        },
+        {
+          "id": "s4-l4",
+          "duration": 75
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "index": 5,
+      "title": "架构与分布式：拆分的代价与数据的边界",
+      "duration": 340,
+      "lessons": [
+        {
+          "id": "s5-l1",
+          "duration": 85
+        },
+        {
+          "id": "s5-l2",
+          "duration": 85
+        },
+        {
+          "id": "s5-l3",
+          "duration": 85
+        },
+        {
+          "id": "s5-data-scale",
+          "duration": 85
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "index": 6,
+      "title": "全栈集成：把后端能力变成产品",
+      "duration": 330,
+      "lessons": [
+        {
+          "id": "s6-l1",
+          "duration": 85
+        },
+        {
+          "id": "s6-l2",
+          "duration": 85
+        },
+        {
+          "id": "s6-l3",
+          "duration": 80
+        },
+        {
+          "id": "s6-l4",
+          "duration": 80
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "index": 7,
+      "title": "AI 应用与 AI Coding：把模型接进产品与研发",
+      "duration": 400,
+      "lessons": [
+        {
+          "id": "s7-l1",
+          "duration": 80
+        },
+        {
+          "id": "s7-l2",
+          "duration": 85
+        },
+        {
+          "id": "s7-l3",
+          "duration": 80
+        },
+        {
+          "id": "s7-l4",
+          "duration": 80
+        },
+        {
+          "id": "s7-l5",
+          "duration": 75
+        }
+      ]
+    }
+  ],
+  "appendix": {
+    "id": "appendix",
+    "duration": 890,
+    "lessons": [
+      "a1",
+      "a2",
+      "a3",
+      "a4",
+      "a5",
+      "a6",
+      "a7",
+      "a8",
+      "a9",
+      "a10",
+      "a11",
+      "a12",
+      "a13"
+    ]
+  },
+  "graduation": {
+    "id": "p-graduation",
+    "milestones": 11
+  },
+  "totals": {
+    "lessons": 45,
+    "coreMinutes": 2510,
+    "appendixMinutes": 890,
+    "minutes": 3400
+  }
+}
