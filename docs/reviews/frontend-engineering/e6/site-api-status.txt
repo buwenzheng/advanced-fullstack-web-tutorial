@@ -1,0 +1,42 @@
+# T-E6.2 站点 API 读取记录
+
+时间：2026-11-10 22:00（本地，UTC+8）
+
+## 工具读取结果
+
+get_context
+  local.sites: []
+  local.developmentSites: []
+  local.unavailableSites:
+    [{ path: 'C:\\Users\\jm014254\\Desktop\\temporary\\site\\算法学习\\.后端进阶实验室.qoder.site',
+       error: 'sites_request_failed' }]
+  runtime.host.mode: desktop
+  runtime.host.filePreview: true
+
+get_site { siteId: '01a18744-0ffa-79fa-92d9-0ac6a3f812aa' }
+  sites_request_failed
+
+list_sites
+  scope: owned
+  total_size: 0
+  projects: []
+
+get_site_access（本会话早前多次调用）
+  sites_request_failed
+
+## 站点 HTTP 可达性（非 API）
+
+curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/
+  401（匿名不可读，私有性在 HTTP 层成立）
+
+curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/functions/v1/app/health
+  401（匿名不可读，函数存在但与前端同样受私有访问保护）
+
+## 结论
+
+- 站点与函数端点在线，匿名访问被拒绝；但 Sites OpenAPI 无法读取站点，
+  无法确认 get_site_access 的 private 值，也无法执行 prepare_site。
+- 按 E6 §4.2、§4.6 与 sites-hosting 技能：不绕过 API、不新建项目/站点、
+  不改访问策略、不以空列表推断站点被删除；保留请求等待 API 恢复后重试。
+- T-E6.2 未执行 prepare_site，未产生 prepare-status.json；
+  action-id.txt 中的 UUID 为待用值，仅在 API 恢复且用户确认后使用一次。
