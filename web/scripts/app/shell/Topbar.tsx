@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { useProgress } from '../hooks/useProgress';
 import LangSwitch from './LangSwitch';
+import SearchBox from './SearchBox';
 
 interface TopbarProps {
   drawerOpen: boolean;
@@ -35,7 +36,7 @@ export default function Topbar({ drawerOpen, onToggleDrawer }: TopbarProps) {
         </span>
       </Link>
 
-      <div className="topbar__search" aria-hidden="true" />
+      <SearchBox />
 
       <div className="topbar__actions">
         <LangSwitch />
