@@ -149,7 +149,7 @@ node tools/content-stats.mjs
 - [ ] `DEMO_SECRET` 仅存在于 `functions/handler.ts`，未出现在前端/文档；
 - [ ] 实验台请求不携带真实凭证；
 - [ ] 站点访问范围仍为私有；
-- [ ] 发布产物只包含 `web/` 静态文件，不包含 `docs/`、`backups/`、`.qoder.site` 描述文件。
+- [ ] 发布产物只包含构建目录（v2 为 `web/`，v3 为 `dist/`）的静态文件，不包含 `docs/`、`backups/`、`web/generated/`、`.qoder.site` 描述文件。
 
 ### R11 文案一致性
 
@@ -164,15 +164,20 @@ node tools/content-stats.mjs
 ## 4. 本地预览
 
 ```bash
-# 在项目根目录
-python dev_server.py 8124 web
-# 打开 http://127.0.0.1:8124/
+# 开发模式（自动生成内容目录与搜索索引）
+npm run dev
+# 打开 http://127.0.0.1:5173/
+
+# 生产构建预览
+npm run build
+npm run preview
+# 打开 http://127.0.0.1:4173/
 ```
 
-- 使用 `web/` 作为根目录，保证相对路径与线上一致；
-- 预览时禁用缓存（`dev_server.py` 已设置 `no-store`）；
-- 每次内容批次完成后重启服务，避免模块缓存；
-- 浏览器检查使用 390/768/1280 三档，记录截图与控制台。
+- 源码根目录是 `web/`，构建产物是 `dist/`，预览与线上使用同一份相对路径；
+- `npm run dev` / `npm run build` 会先执行 `content:build`，内容修改后无需手工生成；
+- 浏览器检查使用 390/768/1280 三档，记录截图与控制台；
+- 发布前的最终检查使用 `dist/` 的离线静态服务，见 `16-e5-switch-and-cleanup.md` §7.4。
 
 ---
 
@@ -188,6 +193,8 @@ python dev_server.py 8124 web
 - [ ] 发布产物无密钥、无 docs/backups。
 
 ### 5.2 发布步骤
+
+> v3.0.0 起发布输入改为 `webDirectory: "dist"`，完整流程见 `17-e6-release-v3.md`；本节保留为 v2 发布与回滚依据。
 
 1. `get_context`：确认当前项目、站点目录与运行环境。
 2. `get_site`：读取 projectId/siteId、当前 release、访问范围。

@@ -1,0 +1,2 @@
+$ grep -n "dev_server\|index.next.html\|dev:next\|preview:next" README.md docs/implementation/00-master-plan.md docs/implementation/09-qa-release.md
+exit=1

@@ -91,3 +91,16 @@
 - **影响**：workflow 语法、缓存与超时未经平台验证；视觉回归与 Python 轨在 CI 无覆盖。
 - **现状**：本地 Windows 已完整跑通 G-E4 与 `npm run verify`（exit 0）；`@visual`/`@python` 由本地专项命令覆盖。
 - **计划**：推送后确认 Actions 绿色并回填证据；E6 发布前本地手跑 `@python` 与双入口视觉。
+
+## E5 入口切换
+
+- 视觉基线为 Windows 基线，CI 不执行 `@visual`；单入口切换后仍在本地执行 21 张对比。
+- E2–E4 执行文档中的 `index.next.html`、`VISUAL_ENTRY`、`dev:next` 为历史命令，现行命令以本文件与 `package.json` 为准。
+- `web/scripts/content/**` 不在 Prettier 范围内，属于内容防漂移策略，不是遗漏。
+
+## KI-14 全仓 Prettier 检查存在既有格式债（E5 记录，不阻塞）
+
+- **现象**：T-E5.4 执行 `npm run format:check`，95 个文件不满足 `.prettierrc`（分布 e2e、tools、web/scripts 的非内容源码），这些文件在 E5 改动前即未格式化；`format:check` 从未进入 `verify` 或历史阶段门禁。
+- **处理**：本任务只格式化 README（T-E5.4 唯一在 Prettier 范围内且属于本任务产出的文件，`npx prettier --check README.md` exit 0）；未做全仓格式化（E5 §5.3 明确禁止），未扩大 `.prettierignore` 豁免，未修改门禁配置。
+- **影响**：`npm run format:check` 当前 exit 1，但 lint、typecheck、构建与全部 E5 门禁不依赖该命令；失败清单见 `e5/t-e5-4-format-check.txt`。
+- **计划**：v3.0.0 后单独提交一次纯格式化变更，并将 `format:check` 纳入 `verify`。

@@ -1,0 +1,213 @@
+$ git diff --stat -- README.md docs/implementation/00-master-plan.md docs/implementation/09-qa-release.md docs/reviews/frontend-engineering/known-issues.md
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/reviews/frontend-engineering/known-issues.md', LF will be replaced by CRLF the next time Git touches it
+ README.md                                         | 101 +++++++++++++++++++++-
+ docs/implementation/00-master-plan.md             |   6 +-
+ docs/implementation/09-qa-release.md              |  23 +++--
+ docs/reviews/frontend-engineering/known-issues.md |  13 +++
+ 4 files changed, 130 insertions(+), 13 deletions(-)
+
+$ git diff -- README.md docs/implementation/00-master-plan.md docs/implementation/09-qa-release.md docs/reviews/frontend-engineering/known-issues.md
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/reviews/frontend-engineering/known-issues.md', LF will be replaced by CRLF the next time Git touches it
+diff --git a/README.md b/README.md
+index 9b98837..f293525 100644
+--- a/README.md
++++ b/README.md
+@@ -1,2 +1,99 @@
+-# advanced-fullstack-web-tutorial
+-用于存放前端进阶与全栈 Web 开发教程项目。
++# 后端进阶实验室
++
++面向有前端基础工程师的体系化进阶课程站点：从请求、数据、API、缓存与韧性，到生产化、分布式、全栈集成与 AI 应用，配可自动验证的练习与递进式项目。
++
++## 内容规模
++
++- 8 个核心阶段 + 1 个附录，共 45 讲；
++- 9 个项目（p0–p7 + 毕业项目），54 个里程碑；
++- 214 个任务：检查题、代码题、SQL 题与方案题；
++- 12 类内容块；JavaScript / Python 双代码轨道；内置 HTTP 实验台与学习报告。
++
++## 技术栈
++
++- React 19 + React Router 7（hash 路由，旧链接不变）
++- Vite 7 + TypeScript 5.9（strict）
++- Zod 4 内容校验
++- Vitest + Testing Library；Playwright（含 axe 与视觉回归）
++
++## 环境
++
++Node.js 22.15.0（见 `.nvmrc`），npm。
++
++## 常用命令
++
++| 命令                       | 说明                                        |
++| -------------------------- | ------------------------------------------- |
++| `npm ci`                   | 安装依赖                                    |
++| `npm run dev`              | 开发服务器，http://127.0.0.1:5173/          |
++| `npm run build`            | 内容校验 + 生成 + 类型检查 + 构建到 `dist/` |
++| `npm run preview`          | 预览构建产物，http://127.0.0.1:4173/        |
++| `npm run verify`           | 本地完整门禁（不跑视觉与 Python CDN 用例）  |
++| `npm run test`             | 单元测试                                    |
++| `npm run test:coverage`    | 单元测试 + 覆盖率阈值                       |
++| `npm run e2e`              | 构建后运行 Playwright（chromium）           |
++| `npm run e2e:visual`       | 21 张视觉基线（Windows 本地）               |
++| `npm run e2e:python`       | Python 轨道（需要外网 CDN）                 |
++| `npm run content:validate` | 内容结构校验                                |
++| `npm run content:build`    | 生成 `web/generated/` 目录与搜索索引        |
++| `npm run audit:content`    | 课程内容审计                                |
++| `npm run audit:exercises`  | JS / SQL 答案级审计                         |
++| `npm run budget`           | 入口、懒加载与搜索索引包体预算              |
++
++`dev` 与 `build` 会自动执行 `content:build`；直接运行 `vite` 前请确保 `web/generated/` 存在。
++
++## 目录结构
++
++```text
++web/
++  index.html                 # 唯一 HTML 入口
++  styles/                    # 设计令牌与页面样式
++  scripts/
++    main.tsx                 # React 挂载
++    app/
++      router.tsx             # 路由表
++      shell/                 # 外壳、搜索、语言、抽屉、toast
++      pages/                 # 六个页面
++      data/                  # 数据门面与懒加载资源
++      lesson/                # 12 类内容块、高亮、代码块
++      exercises/             # MCQ / 代码 / SQL / 方案题
++      project/               # 里程碑与模板
++      lab/                   # HTTP 实验台
++      report/                # 报告模型
++    state/                   # 进度、草稿、语言、迁移
++    content/                 # 课程内容与 Zod 校验（单一事实源）
++    engine/                  # JS / Python / SQL 判题
++    test/                    # Vitest
++  generated/                 # catalog 与搜索索引（gitignored）
++e2e/                         # Playwright、路由清单、视觉基线
++tools/                       # 内容生成、审计、包体预算
++functions/                   # Qoder Sites 边缘函数
++docs/                        # 课程、实施、评审与发布文档
++```
++
++## 内容维护
++
++1. 修改 `web/scripts/content/**` 下的 TypeScript 内容；
++2. 运行 `npm run content:validate`；
++3. 运行 `npm run content:build`（`dev` / `build` 会代跑）；
++4. 运行 `npm run verify`。
++
++课程 ID、练习答案、hash URL、`localStorage` 键与旧进度迁移规则都是兼容契约，不要为了“整洁”改动。
++
++## 测试与平台
++
++- 视觉基线是 Windows 基线，CI 不执行 `@visual`；发布前在本地执行 `npm run e2e:visual`；
++- Python 题依赖 jsDelivr 的 Pyodide，CI 不执行 `@python`；发布前本地执行 `npm run e2e:python` 与 `npx tsx tools/run-python-exercises.ts`；
++- 其余门禁在 CI 与本地执行同一份 `npm run verify`。
++
++## 部署
++
++- `dist/` 是纯静态站点，可部署到任意静态服务器；
++- 正式发布使用 Qoder Sites 私有站点，`functions/` 为边缘函数目录，不涉及数据库；
++- 不提交 `dist/`、`web/generated/`、任何密钥；站点始终保持私有。
++
++## 文档
++
++- 课程与发布文档：`docs/`
++- 前端工程化迁移总纲：`docs/implementation/10-frontend-engineering.md`
++- 执行文档：E0–E6（`docs/implementation/11-*` 至 `17-*`）
+diff --git a/docs/implementation/00-master-plan.md b/docs/implementation/00-master-plan.md
+index 99ab3eb..658db1d 100644
+--- a/docs/implementation/00-master-plan.md
++++ b/docs/implementation/00-master-plan.md
+@@ -33,7 +33,7 @@
+ 
+ ### 1.3 不做的事
+ 
+-- 不引入构建工具、框架、数据库或付费 API；
++- 不引入数据库或付费 API；前端工程化自 v3 起由 React 19 + Vite + TypeScript 承担，详见 `10-frontend-engineering.md`；
+ - 不为课程新增后端服务；练习继续在浏览器沙箱内运行；
+ - 不改站点访问范围为公开；
+ - 不在实施中途发布；
+@@ -231,8 +231,8 @@ fixtures/                      # AI mock provider、评估集、注入用例（
+ ### 5.3 环境与命令
+ 
+ - Node.js 22+；Python 3.11+（本地校验用，站点运行时仍是 Pyodide 3.13）。
+-- 本地预览：`python dev_server.py`，默认端口以脚本输出为准。
+-- 所有工具必须零第三方依赖，只用 Node 标准库与 Python 标准库。
++- 本地预览：`npm run build && npm run preview`（默认 4173）；开发模式 `npm run dev`（5173）。
++- 运行时依赖仅 React、React Router 与 Zod；工具链依赖固定在 `package.json` 的 devDependencies；不引入付费 API。
+ - 不在仓库写入任何密钥；AI 练习只用 mock provider。
+ 
+ ## 6. 内容清单与进度迁移
+diff --git a/docs/implementation/09-qa-release.md b/docs/implementation/09-qa-release.md
+index 63f8460..3ff23aa 100644
+--- a/docs/implementation/09-qa-release.md
++++ b/docs/implementation/09-qa-release.md
+@@ -149,7 +149,7 @@ node tools/content-stats.mjs
+ - [ ] `DEMO_SECRET` 仅存在于 `functions/handler.ts`，未出现在前端/文档；
+ - [ ] 实验台请求不携带真实凭证；
+ - [ ] 站点访问范围仍为私有；
+-- [ ] 发布产物只包含 `web/` 静态文件，不包含 `docs/`、`backups/`、`.qoder.site` 描述文件。
++- [ ] 发布产物只包含构建目录（v2 为 `web/`，v3 为 `dist/`）的静态文件，不包含 `docs/`、`backups/`、`web/generated/`、`.qoder.site` 描述文件。
+ 
+ ### R11 文案一致性
+ 
+@@ -164,15 +164,20 @@ node tools/content-stats.mjs
+ ## 4. 本地预览
+ 
+ ```bash
+-# 在项目根目录
+-python dev_server.py 8124 web
+-# 打开 http://127.0.0.1:8124/
++# 开发模式（自动生成内容目录与搜索索引）
++npm run dev
++# 打开 http://127.0.0.1:5173/
++
++# 生产构建预览
++npm run build
++npm run preview
++# 打开 http://127.0.0.1:4173/
+ ```
+ 
+-- 使用 `web/` 作为根目录，保证相对路径与线上一致；
+-- 预览时禁用缓存（`dev_server.py` 已设置 `no-store`）；
+-- 每次内容批次完成后重启服务，避免模块缓存；
+-- 浏览器检查使用 390/768/1280 三档，记录截图与控制台。
++- 源码根目录是 `web/`，构建产物是 `dist/`，预览与线上使用同一份相对路径；
++- `npm run dev` / `npm run build` 会先执行 `content:build`，内容修改后无需手工生成；
++- 浏览器检查使用 390/768/1280 三档，记录截图与控制台；
++- 发布前的最终检查使用 `dist/` 的离线静态服务，见 `16-e5-switch-and-cleanup.md` §7.4。
+ 
+ ---
+ 
+@@ -189,6 +194,8 @@ python dev_server.py 8124 web
+ 
+ ### 5.2 发布步骤
+ 
++> v3.0.0 起发布输入改为 `webDirectory: "dist"`，完整流程见 `17-e6-release-v3.md`；本节保留为 v2 发布与回滚依据。
++
+ 1. `get_context`：确认当前项目、站点目录与运行环境。
+ 2. `get_site`：读取 projectId/siteId、当前 release、访问范围。
+ 3. `get_site_access`：确认私有；若发现公开，先停止发布并修正访问策略，发布动作不负责改权限。
+diff --git a/docs/reviews/frontend-engineering/known-issues.md b/docs/reviews/frontend-engineering/known-issues.md
+index c9ab319..b28e976 100644
+--- a/docs/reviews/frontend-engineering/known-issues.md
++++ b/docs/reviews/frontend-engineering/known-issues.md
+@@ -91,3 +91,16 @@
+ - **影响**：workflow 语法、缓存与超时未经平台验证；视觉回归与 Python 轨在 CI 无覆盖。
+ - **现状**：本地 Windows 已完整跑通 G-E4 与 `npm run verify`（exit 0）；`@visual`/`@python` 由本地专项命令覆盖。
+ - **计划**：推送后确认 Actions 绿色并回填证据；E6 发布前本地手跑 `@python` 与双入口视觉。
++
++## E5 入口切换
++
++- 视觉基线为 Windows 基线，CI 不执行 `@visual`；单入口切换后仍在本地执行 21 张对比。
++- E2–E4 执行文档中的 `index.next.html`、`VISUAL_ENTRY`、`dev:next` 为历史命令，现行命令以本文件与 `package.json` 为准。
++- `web/scripts/content/**` 不在 Prettier 范围内，属于内容防漂移策略，不是遗漏。
++
++## KI-14 全仓 Prettier 检查存在既有格式债（E5 记录，不阻塞）
++
++- **现象**：T-E5.4 执行 `npm run format:check`，95 个文件不满足 `.prettierrc`（分布 e2e、tools、web/scripts 的非内容源码），这些文件在 E5 改动前即未格式化；`format:check` 从未进入 `verify` 或历史阶段门禁。
++- **处理**：本任务只格式化 README（T-E5.4 唯一在 Prettier 范围内且属于本任务产出的文件，`npx prettier --check README.md` exit 0）；未做全仓格式化（E5 §5.3 明确禁止），未扩大 `.prettierignore` 豁免，未修改门禁配置。
++- **影响**：`npm run format:check` 当前 exit 1，但 lint、typecheck、构建与全部 E5 门禁不依赖该命令；失败清单见 `e5/t-e5-4-format-check.txt`。
++- **计划**：v3.0.0 后单独提交一次纯格式化变更，并将 `format:check` 纳入 `verify`。

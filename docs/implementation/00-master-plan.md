@@ -33,7 +33,7 @@
 
 ### 1.3 不做的事
 
-- 不引入构建工具、框架、数据库或付费 API；
+- 不引入数据库或付费 API；前端工程化自 v3 起由 React 19 + Vite + TypeScript 承担，详见 `10-frontend-engineering.md`；
 - 不为课程新增后端服务；练习继续在浏览器沙箱内运行；
 - 不改站点访问范围为公开；
 - 不在实施中途发布；
@@ -231,8 +231,8 @@ fixtures/                      # AI mock provider、评估集、注入用例（�
 ### 5.3 环境与命令
 
 - Node.js 22+；Python 3.11+（本地校验用，站点运行时仍是 Pyodide 3.13）。
-- 本地预览：`python dev_server.py`，默认端口以脚本输出为准。
-- 所有工具必须零第三方依赖，只用 Node 标准库与 Python 标准库。
+- 本地预览：`npm run build && npm run preview`（默认 4173）；开发模式 `npm run dev`（5173）。
+- 运行时依赖仅 React、React Router 与 Zod；工具链依赖固定在 `package.json` 的 devDependencies；不引入付费 API。
 - 不在仓库写入任何密钥；AI 练习只用 mock provider。
 
 ## 6. 内容清单与进度迁移

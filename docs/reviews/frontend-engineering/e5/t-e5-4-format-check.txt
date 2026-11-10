@@ -1,0 +1,108 @@
+$ npm run format:check
+
+> advanced-fullstack-web-tutorial@0.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+[[33mwarn[39m] .github/workflows/verify.yml
+[[33mwarn[39m] e2e/a11y.spec.ts
+[[33mwarn[39m] e2e/content.spec.ts
+[[33mwarn[39m] e2e/interactions.spec.ts
+[[33mwarn[39m] e2e/keyboard.spec.ts
+[[33mwarn[39m] e2e/responsive.spec.ts
+[[33mwarn[39m] e2e/routes.json
+[[33mwarn[39m] e2e/routes.spec.ts
+[[33mwarn[39m] e2e/shell.spec.ts
+[[33mwarn[39m] e2e/visual.spec.ts
+[[33mwarn[39m] functions/handler.ts
+[[33mwarn[39m] functions/index.ts
+[[33mwarn[39m] tools/audit-content.ts
+[[33mwarn[39m] tools/check-duplication.ts
+[[33mwarn[39m] tools/check-facts.ts
+[[33mwarn[39m] tools/content-dump.ts
+[[33mwarn[39m] tools/content-stats.ts
+[[33mwarn[39m] tools/lib/content.ts
+[[33mwarn[39m] tools/lib/js-runner.ts
+[[33mwarn[39m] tools/route-matrix.ts
+[[33mwarn[39m] tools/run-js-exercises.ts
+[[33mwarn[39m] tools/run-python-exercises.ts
+[[33mwarn[39m] tools/run-sql-exercises.ts
+[[33mwarn[39m] tools/test-progress-migration.ts
+[[33mwarn[39m] web/index.html
+[[33mwarn[39m] web/scripts/app/data/content.ts
+[[33mwarn[39m] web/scripts/app/data/labels.ts
+[[33mwarn[39m] web/scripts/app/data/mastery.ts
+[[33mwarn[39m] web/scripts/app/data/resources.ts
+[[33mwarn[39m] web/scripts/app/exercises/CodeTask.tsx
+[[33mwarn[39m] web/scripts/app/exercises/DesignTask.tsx
+[[33mwarn[39m] web/scripts/app/exercises/McqTask.tsx
+[[33mwarn[39m] web/scripts/app/exercises/SqlTask.tsx
+[[33mwarn[39m] web/scripts/app/lab/curl.ts
+[[33mwarn[39m] web/scripts/app/lab/lab-data.ts
+[[33mwarn[39m] web/scripts/app/lab/LabRequestBuilder.tsx
+[[33mwarn[39m] web/scripts/app/lab/LabResponse.tsx
+[[33mwarn[39m] web/scripts/app/lab/mock-server.ts
+[[33mwarn[39m] web/scripts/app/lesson/blocks/CalloutBlock.tsx
+[[33mwarn[39m] web/scripts/app/lesson/blocks/TableBlock.tsx
+[[33mwarn[39m] web/scripts/app/lesson/CodeBlock.tsx
+[[33mwarn[39m] web/scripts/app/lesson/highlight.ts
+[[33mwarn[39m] web/scripts/app/pages/EmptyState.tsx
+[[33mwarn[39m] web/scripts/app/pages/LabPage.tsx
+[[33mwarn[39m] web/scripts/app/pages/LessonPage.tsx
+[[33mwarn[39m] web/scripts/app/pages/OverviewPage.tsx
+[[33mwarn[39m] web/scripts/app/pages/ProjectPage.tsx
+[[33mwarn[39m] web/scripts/app/pages/ReportPage.tsx
+[[33mwarn[39m] web/scripts/app/pages/StagePage.tsx
+[[33mwarn[39m] web/scripts/app/project/MilestoneList.tsx
+[[33mwarn[39m] web/scripts/app/project/TemplateCard.tsx
+[[33mwarn[39m] web/scripts/app/report/report-model.ts
+[[33mwarn[39m] web/scripts/app/RouteErrorPage.tsx
+[[33mwarn[39m] web/scripts/app/shell/AppShell.tsx
+[[33mwarn[39m] web/scripts/app/shell/search-docs.ts
+[[33mwarn[39m] web/scripts/app/shell/SearchBox.tsx
+[[33mwarn[39m] web/scripts/app/shell/Sidebar.tsx
+[[33mwarn[39m] web/scripts/app/shell/ToastProvider.tsx
+[[33mwarn[39m] web/scripts/app/shell/Topbar.tsx
+[[33mwarn[39m] web/scripts/engine/python/harness.ts
+[[33mwarn[39m] web/scripts/engine/python/index.ts
+[[33mwarn[39m] web/scripts/engine/runner/core.ts
+[[33mwarn[39m] web/scripts/engine/runner/index.ts
+[[33mwarn[39m] web/scripts/engine/sql/index.ts
+[[33mwarn[39m] web/scripts/main.tsx
+[[33mwarn[39m] web/scripts/state/lang.ts
+[[33mwarn[39m] web/scripts/state/mastery-core.ts
+[[33mwarn[39m] web/scripts/state/migrate.ts
+[[33mwarn[39m] web/scripts/state/progress.ts
+[[33mwarn[39m] web/scripts/state/store.ts
+[[33mwarn[39m] web/scripts/test/blocks.test.tsx
+[[33mwarn[39m] web/scripts/test/content-assemble.test.ts
+[[33mwarn[39m] web/scripts/test/content-catalog.test.ts
+[[33mwarn[39m] web/scripts/test/content-schema.test.ts
+[[33mwarn[39m] web/scripts/test/content-validate.test.ts
+[[33mwarn[39m] web/scripts/test/lab.test.tsx
+[[33mwarn[39m] web/scripts/test/lesson-page.test.tsx
+[[33mwarn[39m] web/scripts/test/mastery.test.ts
+[[33mwarn[39m] web/scripts/test/overview-page.test.tsx
+[[33mwarn[39m] web/scripts/test/project-page.test.tsx
+[[33mwarn[39m] web/scripts/test/python-harness.test.ts
+[[33mwarn[39m] web/scripts/test/python-runtime.test.ts
+[[33mwarn[39m] web/scripts/test/report.test.tsx
+[[33mwarn[39m] web/scripts/test/runner-core.test.ts
+[[33mwarn[39m] web/scripts/test/search-curriculum.ts
+[[33mwarn[39m] web/scripts/test/search-docs.test.ts
+[[33mwarn[39m] web/scripts/test/search.test.ts
+[[33mwarn[39m] web/scripts/test/shell.test.tsx
+[[33mwarn[39m] web/scripts/test/sql-engine.test.ts
+[[33mwarn[39m] web/scripts/test/stage-page.test.tsx
+[[33mwarn[39m] web/scripts/test/state-progress.test.ts
+[[33mwarn[39m] web/scripts/test/state-store.test.ts
+[[33mwarn[39m] web/scripts/test/tasks-design.test.tsx
+[[33mwarn[39m] web/scripts/test/tasks-mcq.test.tsx
+[[33mwarn[39m] web/scripts/test/tasks-sql.test.tsx
+[[33mwarn[39m] Code style issues found in 95 files. Run Prettier with --write to fix.
+exit=1
+
+$ npx prettier --check README.md
+Checking formatting...
+All matched files use Prettier code style!
+exit=0
