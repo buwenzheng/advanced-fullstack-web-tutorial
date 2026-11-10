@@ -1,0 +1,30 @@
+# T-E5.0 baseline verify (dual entry, before any E5 change)
+# date: 2026-11-10
+# node: v22.15.0 (.nvmrc); python: 3.11.9
+# command: npm run verify
+# exit code: 0
+# preconditions: git status --short empty; tag e4-qa present
+
+[unit tests]
+Test Files  27 passed (27)
+Tests       287 passed (287)
+
+[content]
+content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+audit mode=ready lessons=45 draft=0 errors=0 warnings=0
+js code exercises=38 failing=0 starterFailing=38
+sql exercises=2 failing=0
+
+[build]
+vite build: built in 1.45s
+
+[budget]
+PASS entry (index.next.html)              147.8KB / 180.0KB
+PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+PASS search index                         194.7KB / 300.0KB
+
+[playwright, chromium, grep-invert @visual|@python]
+269 passed (55.1s)
+
+# note: e2e interactions spec regenerates docs/reviews/frontend-engineering/e3/screenshots/*.png
+# during verify; they were restored to HEAD after this run and are not part of T-E5.0.

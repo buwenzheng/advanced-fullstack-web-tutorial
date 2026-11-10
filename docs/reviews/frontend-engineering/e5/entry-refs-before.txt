@@ -1,0 +1,24 @@
+e2e/a11y.spec.ts:18:const ENTRY = '/index.next.html';
+e2e/content.spec.ts:22:    await page.goto(`/index.next.html#${item.route}`);
+e2e/content.spec.ts:33:  await page.goto('/index.next.html#/lesson/s0-l1');
+e2e/content.spec.ts:54:  await page.goto('/index.next.html#/project/p-graduation');
+e2e/content.spec.ts:73:  await page.goto('/index.next.html#/lab');
+e2e/content.spec.ts:125:  await page.goto('/index.next.html#/');
+e2e/content.spec.ts:158:  await page.goto('/index.next.html#/');
+e2e/content.spec.ts:180:  await page.goto('/index.next.html#/report');
+e2e/interactions.spec.ts:51:  await page.goto(`/index.next.html${route}`);
+e2e/keyboard.spec.ts:3:const ENTRY = '/index.next.html';
+e2e/lib/manifest.ts:15:    (item) => manifest[item]?.isEntry && item.endsWith('index.next.html'),
+e2e/lib/manifest.ts:17:  if (!key) throw new Error('manifest 中找不到 index.next.html 入口');
+e2e/parity.spec.ts:33:      await react.page.goto(`/index.next.html${route}`);
+e2e/responsive.spec.ts:18:const ENTRY = '/index.next.html';
+e2e/routes.spec.ts:5:const ENTRY = '/index.next.html';
+e2e/shell.spec.ts:5:    await page.goto('/index.next.html#/lesson/s0-l1');
+e2e/shell.spec.ts:29:    await page.goto('/index.next.html#/');
+package.json:12:    "dev:next": "npm run content:build && vite --open /index.next.html",
+package.json:15:    "preview:next": "vite preview --open /index.next.html",
+tools/bundle-budget.ts:36:  (key) => manifest[key]?.isEntry && key.endsWith('index.next.html'),
+tools/bundle-budget.ts:39:  console.error('FAIL manifest 中找不到 index.next.html 入口');
+tools/bundle-budget.ts:89:  ['entry (index.next.html)', entryGzip, LIMITS.entry],
+tools/bundle-budget.ts:110:        label: 'entry (index.next.html)',
+vite.config.ts:20:        next: htmlEntry('./web/index.next.html'),
