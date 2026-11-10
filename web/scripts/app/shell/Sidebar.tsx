@@ -1,18 +1,38 @@
-import { useState } from 'react';
-import { Link, matchPath, useLocation } from 'react-router';
-import { curriculum, graduationProject, lessonById } from '../../content/index';
-import { useProgress } from '../hooks/useProgress';
+import { useMemo, useState } from 'react';
+import { matchPath, useLocation } from 'react-router';
+import { useGraduation, useLessonSummaries, useStageSummaries } from '../data/content';
+import { useMastery } from '../data/mastery';
+import type { LessonSummary } from '../data/types';
 import ResetProgress from './ResetProgress';
 
 export default function Sidebar({ open }: { open: boolean }) {
   const { pathname } = useLocation();
-  const progress = useProgress();
+  const stages = useStageSummaries();
+  const lessons = useLessonSummaries();
+  const mastery = useMastery();
+  const graduation = useGraduation();
   const stageMatch = matchPath('/stage/:stageId', pathname);
   const lessonMatch = matchPath('/lesson/:lessonId', pathname);
-  const activeStageId = stageMatch?.params.stageId
-    ?? lessonById(lessonMatch?.params.lessonId ?? '')?.stageId;
   const [openStages, setOpenStages] = useState<Set<string>>(() => new Set());
   const [collapsedStages, setCollapsedStages] = useState<Set<string>>(() => new Set());
+
+  const lessonIndex = useMemo(
+    () => new Map(lessons.map((lesson) => [lesson.id, lesson])),
+    [lessons],
+  );
+  const lessonsByStage = useMemo(() => {
+    const map = new Map<string, LessonSummary[]>();
+    for (const lesson of lessons) {
+      const list = map.get(lesson.stageId) ?? [];
+      list.push(lesson);
+      map.set(lesson.stageId, list);
+    }
+    return map;
+  }, [lessons]);
+
+  const activeLessonId = lessonMatch?.params.lessonId ?? '';
+  const activeStageId = stageMatch?.params.stageId
+    ?? lessonIndex.get(activeLessonId)?.stageId;
 
   const toggleStage = (stageId: string) => {
     const isExpanded = openStages.has(stageId)
@@ -41,13 +61,13 @@ export default function Sidebar({ open }: { open: boolean }) {
       <nav className="sidebar__scroll" id="sidebar-nav">
         <div className="rail-head">
           <h2>学习路径</h2>
-          <span id="rail-count">{progress.course.done}/{progress.course.total}</span>
+          <span id="rail-count">{mastery.course.done}/{mastery.course.total}</span>
         </div>
 
-        {curriculum.map((stage) => {
-          const mastery = progress.stage(stage);
+        {stages.map((stage) => {
+          const stageMastery = mastery.stage(stage.id);
           const isActive = stage.id === activeStageId;
-          const isDone = mastery.total > 0 && mastery.done === mastery.total;
+          const isDone = stageMastery.total > 0 && stageMastery.done === stageMastery.total;
           const expanded = openStages.has(stage.id)
             || (isActive && !collapsedStages.has(stage.id));
 
@@ -65,21 +85,21 @@ export default function Sidebar({ open }: { open: boolean }) {
               >
                 <span className="stage-node__pip">{stage.appendix ? 'A' : String(stage.index)}</span>
                 <span className="stage-node__title">{stage.title}</span>
-                <span className="badge badge--muted tiny">{mastery.done}/{mastery.total}</span>
+                <span className="badge badge--muted tiny">{stageMastery.done}/{stageMastery.total}</span>
                 <svg className="stage-node__chevron" viewBox="0 0 20 20" aria-hidden="true">
                   <path d="M8 5l6 5-6 5" />
                 </svg>
               </button>
-              <div className="stage-node__bar"><i style={{ width: `${mastery.percent}%` }} /></div>
+              <div className="stage-node__bar"><i style={{ width: `${stageMastery.percent}%` }} /></div>
               <ul className="stage-node__lessons">
-                {stage.lessons.map((lesson) => {
-                  const done = progress.lessonDone(lesson);
-                  const current = lessonMatch?.params.lessonId === lesson.id;
+                {(lessonsByStage.get(stage.id) ?? []).map((lesson) => {
+                  const done = mastery.lesson(lesson.id);
+                  const current = activeLessonId === lesson.id;
                   return (
                     <li key={lesson.id}>
-                      <Link
+                      <a
                         className={`lesson-link${done ? ' is-done' : ''}${current ? ' is-current' : ''}`}
-                        to={`/lesson/${lesson.id}`}
+                        href={`#/lesson/${lesson.id}`}
                         data-lesson={lesson.id}
                         aria-current={current ? 'page' : undefined}
                       >
@@ -88,7 +108,7 @@ export default function Sidebar({ open }: { open: boolean }) {
                         </span>
                         <span>{lesson.title}</span>
                         {lesson.status !== 'ready' ? <span className="badge badge--muted tiny">草稿</span> : null}
-                      </Link>
+                      </a>
                     </li>
                   );
                 })}
@@ -98,22 +118,22 @@ export default function Sidebar({ open }: { open: boolean }) {
         })}
 
         <div className="rail-section">
-          <Link className={`rail-link${routeName === 'lab' ? ' is-current' : ''}`} to="/lab" data-rail="lab">
+          <a className={`rail-link${routeName === 'lab' ? ' is-current' : ''}`} href="#/lab" data-rail="lab">
             <svg viewBox="0 0 20 20" aria-hidden="true">
               <path d="M4 15l3.5-4.5L10 13l5.5-7" /><circle cx="4" cy="15" r="1" /><circle cx="15.5" cy="6" r="1" />
             </svg>
             <span>HTTP 实验室</span>
-          </Link>
-          <Link className={`rail-link${routeName === 'report' ? ' is-current' : ''}`} to="/report" data-rail="report">
+          </a>
+          <a className={`rail-link${routeName === 'report' ? ' is-current' : ''}`} href="#/report" data-rail="report">
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16V9M8 16V5M12 16v-4M16 16V7" /></svg>
             <span>学习报告</span>
-          </Link>
-          <Link className="rail-link" to={`/project/${graduationProject.id}`} data-rail="graduation">
+          </a>
+          <a className="rail-link" href={`#/project/${graduation.id}`} data-rail="graduation">
             <svg viewBox="0 0 20 20" aria-hidden="true">
               <path d="M10 3l7 4v6l-7 4-7-4V7z" /><path d="M10 17v-6" />
             </svg>
             <span>毕业项目</span>
-          </Link>
+          </a>
         </div>
       </nav>
       <ResetProgress />
