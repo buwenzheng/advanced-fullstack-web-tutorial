@@ -146,7 +146,7 @@ test.describe('React 入口交互清单', () => {
     expect(errors).toEqual([]);
   });
 
-  test('语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node', async ({ page }) => {
+  test('@python 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node', async ({ page }) => {
     const errors = collectErrors(page);
     await gotoReact(page, '#/lesson/s1-l3');
     await expect(page.getByRole('tab', { name: 'Node.js' })).toHaveAttribute('aria-selected', 'true');

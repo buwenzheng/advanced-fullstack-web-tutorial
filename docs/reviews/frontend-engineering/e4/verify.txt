@@ -1,0 +1,95 @@
+# T-E4.7 verify 与 CI 整合 · 证据
+
+evidence-meta:
+- date: 2026-11-10
+- node: v22.15.0 (.nvmrc 一致)
+- verify command: npm run verify
+- verify exit: 0
+- log: tmp/verify.log（被 gitignore，不提交；关键输出摘录见下）
+- ci: 未运行（未推送远程，见第 5 节）
+
+## 1. 合并后的 scripts（package.json 摘录）
+
+```json
+"e2e": "npm run build && playwright test --project=chromium",
+"e2e:visual": "playwright test e2e/visual.spec.ts --project=chromium",
+"e2e:python": "playwright test --project=chromium --grep @python",
+"e2e:update": "npm run build && playwright test --project=chromium --grep @visual --update-snapshots",
+"verify": "npm run lint && npm run typecheck && npm run test:coverage && npm run content:validate && npm run audit:content && npm run audit:exercises && npm run build && npm run budget && playwright test --project=chromium --grep-invert \"@visual|@python\""
+```
+
+## 2. npm run verify 关键输出（exit 0）
+
+lint（eslint）无 error 输出，退出码 0；typecheck `tsc -p tsconfig.json --noEmit && tsc -p tsconfig.node.json --noEmit` 退出码 0。
+
+覆盖率（vitest run --coverage）：
+
+```text
+Test Files  27 passed (27)
+All files          |   91.27 |    79.56 |   93.52 |   93.92 |
+ app               |      40 |        0 |       0 |      40 |
+ app/data          |   97.35 |    64.81 |     100 |     100 |
+ app/exercises     |    98.1 |    84.53 |   98.48 |    98.9 |
+ content           |   89.62 |    78.34 |     100 |    95.5 |
+ engine/python     |     100 |     87.5 |     100 |     100 |
+ engine/runner     |   94.69 |    83.14 |     100 |     100 |
+ engine/sql        |    89.8 |    80.81 |   94.89 |   91.61 |
+ state             |    99.3 |     92.7 |     100 |     100 |
+```
+
+content 门禁：
+
+```text
+content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+audit mode=ready lessons=45 draft=0 errors=0 warnings=0
+js code exercises=38 failing=0 starterFailing=38
+sql exercises=2 failing=0
+```
+
+构建：`vite build` 产出 `dist/index.html`、`dist/index.next.html`、`dist/.vite/manifest.json` 与 14 个 JS 产物、`✓ built in 1.38s`。
+
+包体：
+
+```text
+PASS entry (index.next.html)              147.8KB / 180.0KB
+PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+PASS search index                         194.7KB / 300.0KB
+INFO entry closure (2 files)
+```
+
+Playwright（chromium，`--grep-invert "@visual|@python"`）：`269 passed (54.5s)`，含 content.spec 的 lazy 闭包与 search 索引两条强断言（`ok 21` / `ok 22`）。
+
+## 3. 标签集合验证
+
+```
+$ npx playwright test --project=chromium --list --grep-invert "@visual|@python"
+Total: 269 tests in 9 files
+
+$ npx playwright test --project=chromium --list --grep "@visual"
+Total: 21 tests in 1 file
+
+$ npx playwright test --project=chromium --list --grep "@python"
+Total: 1 test in 1 file
+  [chromium] › interactions.spec.ts:149:3 › React 入口交互清单 › @python 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node
+```
+
+三集合互斥且并集覆盖全部 291 条 chromium 用例（269 + 21 + 1）。
+
+## 4. workflow 变更
+
+`.github/workflows/verify.yml` 重写为单一权威命令 `npm run verify`（Node 22.15.0 + npm ci + playwright install chromium），失败时上传 `playwright-report/` 与 `coverage/`；不使用 `continue-on-error`，无密钥。@visual 在 CI 排除（基线截图跨平台字体差异），@python 在 CI 排除（Pyodide CDN 网络依赖），发布前本地手跑。
+
+## 5. CI 运行状态
+
+未推送、未运行 Actions。原因：执行规则 4 规定「不推送远程，除非用户明确要求」，本次未获推送授权。本地 `npm run verify` 已两次 exit 0（第一次 269 passed 56.1s；第二次即本证据 269 passed 54.5s）。CI 绿色记为残余风险，待推送后按 task 卡复核。
+
+## 6. 问题与修复
+
+- verify 日志首版写入 test-results/ 被 Playwright 启动清空；改为重定向到 tmp/verify.log（gitignore）后完整保留。
+- e2e scripts 原默认跑 chromium+mobile 双项目，与 verify/CI 口径不一致；按 §7.1 限定 chromium，移动端视觉由 mobile project 的专项命令覆盖。
+
+## 7. 残余风险
+
+- CI 未实际运行：workflow 语法与缓存键未经 Actions 验证。
+- @python 用例本地排除于 verify，需在 E6 发布前手跑（任务卡已列入发布前检查）。
+- coverage 文本表 `app` 行 40% 只统计 `web/scripts/app/` 直属文件（RouteErrorPage.tsx 0% + router.tsx 100%）；阈值针对的 `web/scripts/app/**` 聚合值以 coverage-summary.json 求和为 92.46% 行（见 T-E4.5 coverage.md），门禁口径一致，无需调整。
