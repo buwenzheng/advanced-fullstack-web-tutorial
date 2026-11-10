@@ -1,0 +1,10 @@
+
+> advanced-fullstack-web-tutorial@0.0.0 e2e:python
+> playwright test --project=chromium --grep @python
+
+
+Running 1 test using 1 worker
+
+  ok 1 [chromium] › e2e\interactions.spec.ts:150:3 › React 入口交互清单 › @python 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node (7.6s)
+
+  1 passed (9.0s)

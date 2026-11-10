@@ -1,0 +1,121 @@
+# T-E6.0 发布冻结与产物审计 preflight
+# 记录时间：2026-11-10 21:40–21:56（本地，UTC+8）
+# 仓库：C:/Users/jm014254/Desktop/temporary/site/算法学习
+
+## 1. 环境与标签
+
+node -v
+  v22.15.0
+
+git rev-parse e5-switch
+  abd8f084a347579b522d470f9eb2d66f5a1f2ae6
+
+git rev-parse v2.0.1
+  aff10d13c7e083f70c77fba4c6ab0d0ba208b136
+
+git rev-parse HEAD
+  6be27e7a5c283f4701f671268e28835dc454b97c
+HEAD: 6be27e7 T-E5.6: G-E5 门禁与阶段报告
+
+git status --short（冻结时）
+  ?? docs/reviews/frontend-engineering/e6/
+  说明：仅本任务新增的证据目录未跟踪，无业务文件改动。
+  说明：执行 npm run verify 时 @visual 重生成的 11 张 e3 截图出现字节差异，
+        已用 `git restore --source=HEAD -- docs/reviews/frontend-engineering/e3/screenshots`
+        还原（测试产物，非业务改动），随后 status 仅剩 e6 目录。
+
+## 2. npm ci
+
+npm ci 退出码 0（全新安装）。
+说明：首次执行遇到 EPERM unlink（esbuild.exe / rollup native 被系统内残留的
+      elevated 进程占用）。处理：将旧 node_modules 整体移动到仓库外临时目录后
+      重新 `npm ci`，成功；不改锁文件、不改依赖。
+残余警告（EBADENGINE，Node 22.15.0 下）：
+  jsdom@31.0.0, undici@8.12.4, w3c-xmlserializer@6.0.0
+  仅警告，不阻塞；verify 全绿。记入阶段报告残余风险。
+
+## 3. 全量门禁（全部通过）
+
+npm run verify          exit 0   （完整日志见 verify.txt）
+  Test Files  27 passed (27)
+  Tests       287 passed (287)
+  All files | 91.27 stmts | 79.66 branch | 93.52 funcs | 93.92 lines
+  Playwright  137 passed (27.9s)
+  PASS entry (index.html)                    147.4KB / 180.0KB
+  PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+  PASS search index                          194.7KB / 300.0KB
+
+npm run e2e:visual      exit 0   21 passed (6.6s)      （见 visual.txt）
+npm run e2e:python      exit 0   1 passed (9.0s)       （见 python.txt）
+npx tsx tools/run-python-exercises.ts  exit 0
+  python exercises=38 failing=0 starterFailing=38      （见 python-answers.txt）
+npm run build           exit 0   ✓ built in 1.39s      （见 build.txt）
+
+## 4. 产物审计（dist/）
+
+find dist -maxdepth 1 -name 'index*.html' | wc -l
+  1（仅 dist/index.html）
+find dist -type f | wc -l
+  16（清单见 dist-files.txt）
+du -sh dist
+  2.3M
+禁止文件检查：
+  find dist -type f \( -name "*.map" -o -name "*.ts" -o -name "*.tsx" -o -name "*.md" \)
+    空
+  find dist -type d \( -name docs -o -name backups -o -name tmp \)
+    空
+绝对路径检查：
+  grep -nE '(src|href)="/' dist/index.html
+    空（base: './' 生效）
+密钥检查：
+  grep -R "backend-lab-demo-secret-not-for-production" dist
+    空，输出 secret check ok
+dist/index.html sha256
+  684d6036178e083a9e75fe935f4da895a576052fb544d6603c352ecc00dd2216
+
+## 5. functions/ 冻结
+
+git diff --stat v2.0.1 -- functions > functions-diff.txt
+  空（0 字节）
+git status --short functions > functions-status.txt
+  空（0 字节）
+
+## 6. 离线静态服务
+
+python -m http.server 8125 --bind 127.0.0.1 --directory dist
+（先停止 E5 遗留的 8125 监听进程）
+GET / + 16 个产物文件 = 17/17 全部 200（见 offline-dist.txt）
+
+## 7. 站点身份与基线
+
+描述文件 .后端进阶实验室.qoder.site（只读，不由本任务修改）：
+  projectId  01a18744-0ff9-78c1-81e2-9a37aa9ec9c2
+  siteId     01a18744-0ffa-79fa-92d9-0ac6a3f812aa
+  releaseId  01a1c34e-87a3-773c-86c3-f58087e01acd（v2.0.1）
+  actionId   aa4fa5cb-6055-49ad-beff-738512ddf628（v2，禁止复用）
+git tag --list v2.0.1
+  v2.0.1
+ls docs/release-notes-v2.md
+  存在
+
+## 8. 发布前站点 API 状态（阻塞项）
+
+get_context
+  unavailableSites: [{ path: '.后端进阶实验室.qoder.site', error: 'sites_request_failed' }]
+  sites: [], developmentSites: []
+get_site / get_site_access
+  sites_request_failed
+list_sites
+  0 projects
+
+结论：本会话无法读取站点信息，无法确认访问范围 private，也无法执行
+T-E6.2 prepare_site / T-E6.3 publish_site。按 E6 §1.2、§4.2 与总纲 §12.2：
+不绕过、不新建站点、不改访问策略；在发布确认点暂停并汇报阻塞。
+本地 T-E6.0 冻结与审计不受影响，全部通过。
+
+## 9. 残余风险
+
+- EBADENGINE 警告（jsdom/undici/w3c-xmlserializer）：仅安装警告，verify 全绿；
+- 旧 node_modules 已移至仓库外临时目录（$TEMP/nm-orphan-1794318603），
+  受残留 elevated 进程影响可能暂时无法完全删除；不在仓库内，不影响发布产物；
+- Sites API 不可用：线上验收与发布动作待 API 恢复后进行。
