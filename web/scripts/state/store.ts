@@ -1,7 +1,7 @@
 import { migrateLegacyIds, migrateDraftMap } from './migrate.js';
 
 const STORAGE_KEY = 'bff-lab-progress-v1';
-const DRAFT_KEY = 'bff-lab-drafts-v1';
+export const DRAFT_KEY = 'bff-lab-drafts-v1';
 
 export interface AnswerRecord {
   picked: number[] | null;
@@ -64,6 +64,7 @@ function migrateDrafts(): void {
 
 migrateDrafts();
 let state = read();
+let version = 0;
 const listeners = new Set<(state: ProgressState) => void>();
 
 function persist(): void {
@@ -75,6 +76,7 @@ function persist(): void {
 }
 
 function emit(): void {
+  version += 1;
   persist();
   listeners.forEach((fn) => fn(state));
 }
@@ -83,6 +85,10 @@ export const store = {
   subscribe(fn: (state: ProgressState) => void): () => void {
     listeners.add(fn);
     return () => listeners.delete(fn);
+  },
+
+  getVersion(): number {
+    return version;
   },
 
   get(): ProgressState {
