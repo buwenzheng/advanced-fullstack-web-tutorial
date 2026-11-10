@@ -13,7 +13,8 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       reportsDirectory: './coverage',
-      thresholds: { lines: 70, functions: 70, branches: 60, statements: 70 },
+      include: ['web/scripts/engine/runner/**/*.ts', 'web/scripts/state/**/*.ts'],
+      thresholds: { lines: 85, functions: 85, branches: 70, statements: 85 },
     },
   },
 });
