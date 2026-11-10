@@ -223,12 +223,10 @@ tools/
   check-duplication.mjs
   check-facts.mjs
   content-stats.mjs
-fixtures/
-  ai/                          # mock provider、评估集、注入用例
-backups/
-  web-v1-<date>/               # 重建前完整备份
-  content-<module>-<date>/     # 每个模块通过后的快照
+fixtures/                      # AI mock provider、评估集、注入用例（实际位于 web/scripts/content/fixtures/）
 ```
+
+> 版本控制：源码托管于私有仓库 `advanced-fullstack-web-tutorial`（GitHub）；发布版本用标签标记，不再使用本地 `backups/` 目录。
 
 ### 5.3 环境与命令
 
@@ -263,15 +261,15 @@ backups/
 
 验收：构造一份含旧 `s6-l*` 记录的 localStorage 夹具，迁移后报告页能正确识别 a1-a6 的完成状态。
 
-## 7. 备份与回滚
+## 7. 版本控制与回滚
 
-没有 git 仓库，备份是唯一回滚手段。
+源码已纳入 git（私有仓库 `advanced-fullstack-web-tutorial`），git 是唯一回滚手段；本地 `backups/` 已移除，`.gitignore` 保留该目录名防止再次堆积。
 
-1. M0 开始前：把整个 `web/` 与 `docs/curriculum-plan.md` 复制到 `backups/web-v1-<date>/`。
-2. 每个模块 G 门通过后：把 `web/scripts/content/` 复制到 `backups/content-<module>-<date>/`。
-3. 单个批次失败：只回滚当前课时文件与对应 `python.js` 条目，不回滚整个模块。
-4. 模块级失败：恢复最近一次模块快照，保留评审报告作为问题记录。
-5. 发布失败：保留已发布的上一版本；不删除站点、不改访问范围。
+1. 每个门禁或发布通过后在 `main` 打标签（如 `v2.0.1`）并推送，发布版本可由标签重建。
+2. 单个批次失败：`git restore` 当前课时文件与对应 `python.js` 条目，不回滚整个模块。
+3. 模块级失败：回退到最近一次通过门禁的提交，保留评审报告作为问题记录。
+4. 发布失败：保留已发布的上一版本；不删除站点、不改访问范围。
+5. 每次提交前跑门禁脚本，提交信息写明对应模块或门禁。
 
 ## 8. 风险与应对
 

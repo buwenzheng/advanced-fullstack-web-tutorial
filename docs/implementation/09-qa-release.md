@@ -183,7 +183,7 @@ python dev_server.py 8124 web
 - [ ] G0-G7 全部通过，评审报告齐全；
 - [ ] R1-R11 全量回归通过；
 - [ ] `docs/content-manifest.json` 与代码一致；
-- [ ] 备份完成：`backups/web-v2-<date>/`（含 `web/`、`functions/`、描述文件、manifest）；
+- [ ] 版本快照完成：在 `main` 打发布标签（如 `v2.0.2`）并推送，发布源可由标签重建；
 - [ ] 访问策略确认为私有；
 - [ ] 发布产物无密钥、无 docs/backups。
 
@@ -259,9 +259,9 @@ python dev_server.py 8124 web
 
 ## 7. 回滚预案
 
-1. **发布前备份**：`backups/web-v2-<date>/` 保留上一版 `web/`、`functions/`、描述文件与 manifest。
+1. **版本快照**：发布前在 `main` 打发布标签并推送，保留上一版可重建源。
 2. **平台回滚优先**：若 Sites 提供上一 release 回滚，使用平台操作；记录 releaseId 与时间。
-3. **备份重发**：平台无回滚时，用备份目录作为源，生成新 action，`prepare_site` + `publish_site`；projectId/siteId 不变。
+3. **按标签重建**：平台无回滚时，检出发布标签作为源，生成新 action，`prepare_site` + `publish_site`；projectId/siteId 不变。
 4. **验证回滚**：用 6.1 冒烟矩阵重跑；确认访问范围仍私有。
 5. **记录**：回滚原因、影响、时间线、后续修复；写入 `docs/reviews/g8-release.md`。
 6. **禁止**：删除站点、重建 project、改公开、用旧 action 冒充新版本。
@@ -282,7 +282,7 @@ G8 通过需同时满足：
 
 - `docs/reviews/g8-release.md`：回归矩阵结果、发布记录、冒烟结果、残余风险；
 - `docs/release-notes-v2.md`：课程结构、45 讲、双轨练习、项目链、AI 质量门槛；
-- `backups/web-v2-<date>/`：可回滚快照；
+- git 发布标签（如 `v2.0.1`）：可回滚快照；
 - 线上 URL 与 releaseId。
 
 **残余风险模板**

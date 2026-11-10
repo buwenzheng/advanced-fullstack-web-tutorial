@@ -65,6 +65,6 @@
 ## 7. 回滚
 
 - 回滚基线：releaseId `01a1c321-a3b6-7976-b71c-4f5feb1adc0a`（actionId `ee38f83f-58f6-4c6f-9ff8-1bdddf0190da`，M9 全量版）；更早基线 releaseId `01a1bef4-36c8-74c7-9f44-f5c8ce0d49ea`（actionId `a42feff6-e275-448e-84cd-fac73f185549`）；
-- 备份：发布源 `backups/web-v2-20261109/`；当前终态快照 `backups/web-v2.0.1-20261110/`（web/docs/functions 全量）；
+- 源码：git 标签 `v2.0.1`（私有仓库 `advanced-fullstack-web-tutorial`）；发布源可由标签重建，本地 `backups/` 已移除；
 - 平台支持按 release 回滚时优先使用平台操作；否则以备份为新源，新 action 重新 `prepare_site` + `publish_site`，`projectId/siteId` 不变；
 - 详细步骤与验证矩阵见 `docs/reviews/g8-release.md` 第 8 节。
