@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, content, walkStrings } from './lib/content.mjs';
+import { ROOT, content, walkStrings } from './lib/content.js';
 
 const REGISTRY = path.join(ROOT, 'docs/facts/registry.md');
 const DATE_RE = /\d{4}-\d{2}-\d{2}/;
@@ -23,7 +23,7 @@ const PATTERNS = [
   /Next\.js \d+(?:\.\d+)*/g,
 ];
 
-const findings = new Map();
+const findings = new Map<string, Set<string>>();
 
 walkStrings(content.curriculum, (value, keyPath) => {
   for (const pattern of PATTERNS) {
@@ -31,7 +31,7 @@ walkStrings(content.curriculum, (value, keyPath) => {
     for (const match of matches) {
       const key = match.trim();
       if (!findings.has(key)) findings.set(key, new Set());
-      findings.get(key).add(keyPath);
+      findings.get(key)!.add(keyPath);
     }
   }
 });
@@ -56,7 +56,7 @@ const registered = new Set(
     .map((line) => line.toLowerCase()),
 );
 
-const missing = [];
+const missing: string[] = [];
 for (const [fact, where] of findings) {
   const hit = [...registered].some((line) => line.includes(fact.toLowerCase()));
   if (!hit) missing.push(`${fact} @ ${[...where].slice(0, 3).join(', ')}`);

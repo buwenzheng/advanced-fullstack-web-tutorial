@@ -1,4 +1,4 @@
-import { content, walkStrings } from './lib/content.mjs';
+import { content, walkStrings } from './lib/content.js';
 
 const lessonIds = new Set(content.allLessons.map((lesson) => lesson.id));
 const stageIds = new Set(content.curriculum.map((stage) => stage.id));
@@ -8,13 +8,14 @@ const projectIds = new Set([
 ]);
 const knownRoutes = new Set(['#/', '#/lab', '#/report']);
 
-const broken = [];
+const broken: string[] = [];
 
-function checkRoute(route, where) {
+function checkRoute(route: string, where: string) {
   if (knownRoutes.has(route)) return;
   const match = route.match(/^#\/(lesson|stage|project)\/([A-Za-z0-9_-]+)$/);
   if (!match) return;
-  const [, kind, id] = match;
+  const kind = match[1];
+  const id = match[2] ?? '';
   const pool = kind === 'lesson' ? lessonIds : kind === 'stage' ? stageIds : projectIds;
   if (!pool.has(id)) broken.push(`${where}: ${route} 目标不存在`);
 }

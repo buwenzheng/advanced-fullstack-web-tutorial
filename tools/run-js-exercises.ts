@@ -1,14 +1,15 @@
-import { eachExercise } from './lib/content.mjs';
-import { runSourceSuite } from './lib/js-runner.mjs';
+import { eachExercise } from './lib/content.js';
+import { runSourceSuite } from './lib/js-runner.js';
+import type { CodeExercise, Lesson } from '../web/scripts/content/types.js';
 
-const tasks = [];
+const tasks: Array<{ task: CodeExercise; lesson: Lesson }> = [];
 eachExercise((task, lesson) => {
   if (task.kind === 'code') tasks.push({ task, lesson });
 });
 
 let failing = 0;
 let starterFailing = 0;
-const errors = [];
+const errors: string[] = [];
 
 for (const { task, lesson } of tasks) {
   const tests = Array.isArray(task.tests) ? task.tests : [];

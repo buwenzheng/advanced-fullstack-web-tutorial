@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { ROOT, content, manifest, EXPECTED, LESSON_ID_RE, walkStrings, stripHtml } from './lib/content.mjs';
-import { runSourceSuite } from './lib/js-runner.mjs';
+import { ROOT, content, manifest, EXPECTED, LESSON_ID_RE, walkStrings, stripHtml } from './lib/content.js';
+import { runSourceSuite } from './lib/js-runner.js';
 import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql.js';
+import type { Lesson } from '../web/scripts/content/types.js';
 
 const allowDrafts = process.argv.includes('--drafts');
-const errors = [];
-const warnings = [];
+const errors: string[] = [];
+const warnings: string[] = [];
 
 const ALLOWED_BLOCKS = new Set([
   'text', 'analogy', 'code', 'table', 'pitfall', 'tip', 'note', 'compare', 'list', 'flow', 'steps', 'case',
@@ -17,12 +18,12 @@ const BAD_CONTENT = [/<script\b/i, /<img[^>]+src=["']https?:/i, /!\[[^\]]*\]\((?
 // 浏览器 worker（web/scripts/engine/runner.js）只实现这些断言方法，CLI 不得放宽。
 const BROWSER_ASSERT_METHODS = new Set(['equal', 'deepEqual', 'deepStrictEqual', 'strictEqual', 'throws', 'rejects', 'ok']);
 
-function error(message) { errors.push(message); }
-function warn(message) { warnings.push(message); }
-function isReady(lesson) { return lesson.status === 'ready'; }
-function nonEmpty(value) { return typeof value === 'string' && value.trim().length > 0; }
+function error(message: string) { errors.push(message); }
+function warn(message: string) { warnings.push(message); }
+function isReady(lesson: Lesson) { return (lesson.status as string) === 'ready'; }
+function nonEmpty(value: unknown) { return typeof value === 'string' && value.trim().length > 0; }
 
-function sumMinutes(lessons) {
+function sumMinutes(lessons: Lesson[]) {
   return lessons.reduce((total, lesson) => total + (lesson.duration || 0), 0);
 }
 
@@ -62,7 +63,7 @@ for (const stage of content.curriculum) {
     const lessonFile = path.join(ROOT, `web/scripts/content/stages/${stage.id}/${lesson.id}.js`);
     if (!fs.existsSync(lessonFile)) error(`${where}: 缺少文件 ${path.relative(ROOT, lessonFile)}`);
 
-    if (lesson.status !== 'draft' && lesson.status !== 'ready') error(`${where}: 非法 status=${lesson.status}`);
+    if ((lesson.status as string) !== 'draft' && (lesson.status as string) !== 'ready') error(`${where}: 非法 status=${lesson.status}`);
     if (!allowDrafts && !isReady(lesson)) error(`${where}: 仍为 draft（正式审计不允许）`);
 
     if (!Array.isArray(lesson.objectives) || lesson.objectives.length < (isReady(lesson) ? 3 : 1)) {
@@ -83,13 +84,13 @@ for (const stage of content.curriculum) {
       if (!ALLOWED_BLOCKS.has(block.type)) { error(`${blockWhere}: 未知块类型 ${block.type}`); return; }
       blockTypes.add(block.type);
 
-      const required = {
+      const required: string[] = {
         text: ['html'], analogy: ['html'], pitfall: ['html'], tip: ['html'], note: ['html'],
         list: ['items'], steps: ['steps'], code: ['code'], table: ['head', 'rows'],
         compare: ['cols'], flow: ['steps'], case: CASE_FIELDS,
       }[block.type] || [];
       for (const field of required) {
-        const value = block[field];
+        const value = (block as Record<string, unknown>)[field];
         const ok = Array.isArray(value) ? value.length > 0 : nonEmpty(value);
         if (!ok) error(`${blockWhere}: ${block.type} 缺少 ${field}`);
       }
@@ -139,7 +140,7 @@ for (const stage of content.curriculum) {
 
     /* 6-8. 练习 */
     for (let index = 0; index < lesson.exercises.length; index += 1) {
-      const task = lesson.exercises[index];
+      const task = lesson.exercises[index]!;
       const taskWhere = `${where}.exercises[${index}]`;
       if (taskIds.has(task.id)) error(`题目 ID 重复：${task.id}`);
       taskIds.add(task.id);
@@ -154,7 +155,7 @@ for (const stage of content.curriculum) {
           if (!nonEmpty(test.name)) error(`${taskWhere}.tests[${testIndex}]: name 为空`);
           if (!nonEmpty(test.code)) error(`${taskWhere}.tests[${testIndex}]: code 为空`);
           for (const match of String(test.code || '').matchAll(/\bassert\.([A-Za-z_$][\w$]*)/g)) {
-            if (!BROWSER_ASSERT_METHODS.has(match[1])) {
+            if (!BROWSER_ASSERT_METHODS.has(match[1] ?? '')) {
               error(`${taskWhere}.tests[${testIndex}]: assert.${match[1]} 不在浏览器断言子集内`);
             }
           }
@@ -186,7 +187,7 @@ for (const stage of content.curriculum) {
             if (outcome.kind !== 'select') error(`${taskWhere}: solution 不是 SELECT`);
             else if (!rowsEqual(outcome.rows, task.expected, outcome.columns)) error(`${taskWhere}: solution 结果与 expected 不一致`);
           } catch (caught) {
-            error(`${taskWhere}: SQL 执行失败 ${(caught && caught.message) || caught}`);
+            error(`${taskWhere}: SQL 执行失败 ${(caught && (caught as Error).message) || caught}`);
           }
         }
       } else if (task.kind === 'design') {
@@ -195,7 +196,7 @@ for (const stage of content.curriculum) {
         if (!Array.isArray(task.checklist) || task.checklist.length < 6) error(`${taskWhere}: checklist 至少 6 条`);
         if (!nonEmpty(task.reference)) error(`${taskWhere}: reference 为空`);
       } else {
-        error(`${taskWhere}: 未知练习类型 ${task.kind}`);
+        error(`${taskWhere}: 未知练习类型 ${(task as { kind: string }).kind}`);
       }
     }
   }
@@ -229,7 +230,7 @@ for (const stage of content.curriculum) {
   if (!Array.isArray(graduation.milestones) || graduation.milestones.length !== 11) {
     error(`${where}: 应有 11 个里程碑`);
   }
-  const expectedReuse = {
+  const expectedReuse: Record<string, string[]> = {
     m1: ['p2'],
     m2: ['p1', 'p2'],
     m3: ['p3', 'p5'],
@@ -268,7 +269,7 @@ for (const stage of content.curriculum) {
   if (!Array.isArray(graduation.deliverables) || graduation.deliverables.length < 5) error(`${where}: deliverables 至少 5 条`);
   if (!Array.isArray(graduation.checklist) || graduation.checklist.length < 5) error(`${where}: checklist 至少 5 条`);
 
-  const requiredTemplates = {
+  const requiredTemplates: Record<string, string[]> = {
     adr: ['备选', '后果', '反悔'],
     capacity: ['三场景', '冗余', '成本', '压测'],
     incident: ['时间线', '影响', '根因', '行动项'],
@@ -358,13 +359,13 @@ if (appendixMinutes !== manifest.totals.appendixMinutes) error(`清单 appendixM
 if (content.allLessons.length !== manifest.totals.lessons) error(`清单 lessons=${manifest.totals.lessons}，实际 ${content.allLessons.length}`);
 if (content.allLessons.length !== EXPECTED.lessons) error(`应有 ${EXPECTED.lessons} 讲，实际 ${content.allLessons.length}`);
 if (coreLessons.length !== EXPECTED.core) error(`核心应有 ${EXPECTED.core} 讲，实际 ${coreLessons.length}`);
-if (appendix.lessons.length !== EXPECTED.appendix) error(`附录应有 ${EXPECTED.appendix} 讲`);
+if ((appendix?.lessons.length ?? 0) !== EXPECTED.appendix) error(`附录应有 ${EXPECTED.appendix} 讲`);
 if (coreMinutes !== EXPECTED.coreMinutes) error(`核心时长应为 ${EXPECTED.coreMinutes}，实际 ${coreMinutes}`);
 if (appendixMinutes !== EXPECTED.appendixMinutes) error(`附录时长应为 ${EXPECTED.appendixMinutes}，实际 ${appendixMinutes}`);
 
 /* 12-13. 重复与事实 */
-for (const tool of ['check-duplication.mjs', 'check-facts.mjs']) {
-  const result = spawnSync(process.execPath, [path.join(ROOT, 'tools', tool)], { encoding: 'utf8', cwd: ROOT });
+for (const tool of ['check-duplication.ts', 'check-facts.ts']) {
+  const result = spawnSync(process.execPath, ['--import', 'tsx', path.join(ROOT, 'tools', tool)], { encoding: 'utf8', cwd: ROOT });
   const output = `${result.stdout || ''}${result.stderr || ''}`.trim();
   if (result.status !== 0) {
     error(`${tool} 未通过\n${output}`);

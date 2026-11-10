@@ -1,15 +1,61 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
+import {
+  curriculum,
+  graduationProject,
+  allLessons,
+  PYTHON_BLOCKS,
+  PYTHON_TRACKS,
+} from '../../web/scripts/content/index.js';
+import type {
+  Check,
+  Exercise,
+  Lesson,
+  Project,
+  PythonBlockMap,
+  PythonTrackMap,
+  Stage,
+} from '../../web/scripts/content/types.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const ROOT = path.resolve(HERE, '../..');
 
-export const content = await import(pathToFileURL(path.join(ROOT, 'web/scripts/content/index.js')).href);
+export const content = {
+  curriculum: curriculum as unknown as Stage[],
+  graduationProject: graduationProject as unknown as Project,
+  allLessons: allLessons as unknown as Lesson[],
+  PYTHON_BLOCKS: PYTHON_BLOCKS as unknown as PythonBlockMap,
+  PYTHON_TRACKS: PYTHON_TRACKS as unknown as PythonTrackMap,
+};
+
+export interface ManifestLesson {
+  id: string;
+  duration: number;
+}
+export interface ManifestStage {
+  id: string;
+  index: number;
+  title: string;
+  duration: number;
+  lessons: ManifestLesson[];
+}
+export interface Manifest {
+  version: number;
+  stages: ManifestStage[];
+  appendix: { id: string; duration: number; lessons: string[] };
+  graduation: { id: string; milestones: number };
+  totals: {
+    lessons: number;
+    coreMinutes: number;
+    appendixMinutes: number;
+    minutes: number;
+  };
+}
 
 export const manifest = JSON.parse(
   fs.readFileSync(path.join(ROOT, 'docs/content-manifest.json'), 'utf8'),
-);
+) as Manifest;
 
 export const EXPECTED = {
   lessons: 45,
@@ -22,7 +68,9 @@ export const EXPECTED = {
 
 export const LESSON_ID_RE = /^s[0-7]-(l\d+|cli|schema|perf|resilience|data-scale)$|^a\d+$/;
 
-export function walkStrings(value, visit, keyPath = '') {
+export type WalkVisitor = (value: string, keyPath: string) => void;
+
+export function walkStrings(value: unknown, visit: WalkVisitor, keyPath = ''): void {
   if (typeof value === 'string') {
     visit(value, keyPath);
     return;
@@ -38,7 +86,7 @@ export function walkStrings(value, visit, keyPath = '') {
   }
 }
 
-export function stripHtml(html) {
+export function stripHtml(html: unknown): string {
   return String(html || '')
     .replace(/<pre[\s\S]*?<\/pre>/gi, ' ')
     .replace(/<code[\s\S]*?<\/code>/gi, ' ')
@@ -51,8 +99,8 @@ export function stripHtml(html) {
     .trim();
 }
 
-export function blockText(block) {
-  const parts = [];
+export function blockText(block: unknown): string {
+  const parts: string[] = [];
   walkStrings(block, (value, keyPath) => {
     if (keyPath.endsWith('.type')) return;
     parts.push(keyPath.includes('html') || keyPath.includes('text') ? stripHtml(value) : value);
@@ -60,7 +108,14 @@ export function blockText(block) {
   return parts.join(' ').replace(/\s+/g, ' ').trim();
 }
 
-export function eachExercise(callback) {
+export type ExerciseVisitor = (
+  task: Exercise,
+  lesson: Lesson,
+  stage: Stage,
+  index: number,
+) => void;
+
+export function eachExercise(callback: ExerciseVisitor): void {
   for (const stage of content.curriculum) {
     for (const lesson of stage.lessons) {
       lesson.exercises.forEach((task, index) => callback(task, lesson, stage, index));
@@ -68,7 +123,9 @@ export function eachExercise(callback) {
   }
 }
 
-export function eachCheck(callback) {
+export type CheckVisitor = (check: Check, lesson: Lesson, stage: Stage, index: number) => void;
+
+export function eachCheck(callback: CheckVisitor): void {
   for (const stage of content.curriculum) {
     for (const lesson of stage.lessons) {
       lesson.checks.forEach((check, index) => callback(check, lesson, stage, index));
@@ -76,6 +133,6 @@ export function eachCheck(callback) {
   }
 }
 
-export function loadPythonMaps() {
+export function loadPythonMaps(): { blocks: PythonBlockMap; tracks: PythonTrackMap } {
   return { blocks: content.PYTHON_BLOCKS, tracks: content.PYTHON_TRACKS };
 }

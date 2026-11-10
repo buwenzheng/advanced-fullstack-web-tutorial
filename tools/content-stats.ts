@@ -1,7 +1,10 @@
-import { content, manifest, EXPECTED } from './lib/content.mjs';
+import { content, manifest, EXPECTED } from './lib/content.js';
+import type { Stage } from '../web/scripts/content/types.js';
 
-function statsOf(stage) {
-  const stat = { lessons: stage.lessons.length, minutes: 0, checks: 0, code: 0, sql: 0, design: 0 };
+type Stats = Record<'lessons' | 'minutes' | 'checks' | 'code' | 'sql' | 'design', number>;
+
+function statsOf(stage: Stage): Stats {
+  const stat: Stats = { lessons: stage.lessons.length, minutes: 0, checks: 0, code: 0, sql: 0, design: 0 };
   for (const lesson of stage.lessons) {
     stat.minutes += lesson.duration || 0;
     stat.checks += lesson.checks.length;
@@ -14,14 +17,14 @@ function statsOf(stage) {
   return stat;
 }
 
-const totals = { lessons: 0, minutes: 0, checks: 0, code: 0, sql: 0, design: 0 };
+const totals: Stats = { lessons: 0, minutes: 0, checks: 0, code: 0, sql: 0, design: 0 };
 const core = { lessons: 0, minutes: 0 };
 const appendix = { lessons: 0, minutes: 0 };
-const errors = [];
+const errors: string[] = [];
 
 for (const stage of content.curriculum) {
   const stat = statsOf(stage);
-  for (const key of Object.keys(totals)) totals[key] += stat[key];
+  for (const key of Object.keys(totals) as Array<keyof Stats>) totals[key] += stat[key];
   if (stage.appendix) {
     appendix.lessons += stat.lessons;
     appendix.minutes += stat.minutes;

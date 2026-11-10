@@ -1,15 +1,17 @@
-import { eachExercise } from './lib/content.mjs';
+import { eachExercise } from './lib/content.js';
 import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql.js';
 
 let exercises = 0;
 let failing = 0;
-const errors = [];
+const errors: string[] = [];
 
 eachExercise((task, lesson) => {
   if (task.kind !== 'sql') return;
   exercises += 1;
 
-  const missing = ['tables', 'expected', 'solution'].filter((key) => task[key] === undefined);
+  const missing = (['tables', 'expected', 'solution'] as const).filter(
+    (key) => task[key] === undefined,
+  );
   if (missing.length) {
     failing += 1;
     errors.push(`${lesson.id}/${task.id}: 缺少字段 ${missing.join(', ')}`);
@@ -30,7 +32,7 @@ eachExercise((task, lesson) => {
     }
   } catch (error) {
     failing += 1;
-    errors.push(`${lesson.id}/${task.id}: ${String((error && error.message) || error)}`);
+    errors.push(`${lesson.id}/${task.id}: ${String((error && (error as Error).message) || error)}`);
   }
 });
 

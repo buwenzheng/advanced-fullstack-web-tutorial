@@ -2,19 +2,33 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { eachExercise } from './lib/content.mjs';
+import { eachExercise } from './lib/content.js';
+import type { CodeExercise, Lesson } from '../web/scripts/content/types.js';
 
 const MARKER = '<<<BFF_RESULTS>>>';
 const TIMEOUT_MS = 5000;
 
-function indent(code, spaces = 4) {
+interface PythonTest {
+  name?: string;
+  code: string;
+}
+
+interface PythonTrack {
+  starter: string;
+  solution: string;
+  tests: PythonTest[];
+}
+
+type PythonTask = CodeExercise & { python: PythonTrack };
+
+function indent(code: unknown, spaces = 4) {
   const pad = ' '.repeat(spaces);
   const lines = String(code || '').split('\n');
   const body = lines.map((line) => (line ? pad + line : '')).join('\n');
   return body.trim() ? body : `${pad}pass`;
 }
 
-function buildFile(source, tests) {
+function buildFile(source: string, tests: PythonTest[]) {
   const blocks = tests.map((test, index) => `
 async def __t${index}():
 ${indent(test.code)}
@@ -49,7 +63,7 @@ print(json.dumps(RESULTS, ensure_ascii=True))
 `;
 }
 
-function runSuite(source, tests) {
+function runSuite(source: string, tests: PythonTest[]) {
   const file = path.join(os.tmpdir(), `bff-py-${process.pid}-${Math.random().toString(36).slice(2)}.py`);
   fs.writeFileSync(file, buildFile(source, tests), 'utf8');
   try {
@@ -64,8 +78,8 @@ function runSuite(source, tests) {
       const detail = (result.error && result.error.message) || result.stderr || stdout || 'python 执行失败';
       return tests.map((test) => ({ name: test.name, ok: false, error: String(detail).trim().slice(0, 800) }));
     }
-    const payload = stdout.slice(markerIndex + MARKER.length).trim().split('\n')[0];
-    const raw = JSON.parse(payload);
+    const payload = stdout.slice(markerIndex + MARKER.length).trim().split('\n')[0] ?? '';
+    const raw = JSON.parse(payload) as Array<[string, boolean, string]>;
     return tests.map((test, index) => ({
       name: test.name,
       ok: Boolean(raw[index]?.[1]),
@@ -76,14 +90,14 @@ function runSuite(source, tests) {
   }
 }
 
-const tasks = [];
+const tasks: Array<{ task: PythonTask; lesson: Lesson }> = [];
 eachExercise((task, lesson) => {
-  if (task.kind === 'code' && task.python) tasks.push({ task, lesson });
+  if (task.kind === 'code' && task.python) tasks.push({ task: task as PythonTask, lesson });
 });
 
 let failing = 0;
 let starterFailing = 0;
-const errors = [];
+const errors: string[] = [];
 
 for (const { task, lesson } of tasks) {
   const tests = Array.isArray(task.python.tests) ? task.python.tests : [];
@@ -93,8 +107,7 @@ for (const { task, lesson } of tasks) {
     continue;
   }
 
-  const solutionResults = runSuite(task.python.solution, tests);
-  if (solutionResults.some((result) => !result.ok)) {
+  const solutionResults = runSuite(task.python.solution, tests);  if (solutionResults.some((result) => !result.ok)) {
     failing += 1;
     const detail = solutionResults
       .map((result) => (result.ok ? null : `  - ${result.name}: ${result.error}`))

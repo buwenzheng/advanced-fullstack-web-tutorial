@@ -1,12 +1,13 @@
-import { content, walkStrings, stripHtml } from './lib/content.mjs';
+import { content, walkStrings, stripHtml } from './lib/content.js';
+import type { Lesson } from '../web/scripts/content/types.js';
 
 const MIN_PARAGRAPH = 40;
 const SHINGLE = 5;
 const WARN = 0.3;
 const FAIL = 0.4;
 
-function paragraphsOf(lesson) {
-  const paragraphs = [];
+function paragraphsOf(lesson: Lesson) {
+  const paragraphs: string[] = [];
   for (const block of lesson.blocks || []) {
     if (block.type === 'code') continue;
     walkStrings(block, (value, keyPath) => {
@@ -21,8 +22,8 @@ function paragraphsOf(lesson) {
   return paragraphs;
 }
 
-function shinglesOf(paragraphs) {
-  const shingles = new Set();
+function shinglesOf(paragraphs: string[]) {
+  const shingles = new Set<string>();
   for (const paragraph of paragraphs) {
     for (let index = 0; index + SHINGLE <= paragraph.length; index += 1) {
       shingles.add(paragraph.slice(index, index + SHINGLE));
@@ -31,7 +32,7 @@ function shinglesOf(paragraphs) {
   return shingles;
 }
 
-function jaccard(a, b) {
+function jaccard(a: Set<string>, b: Set<string>) {
   if (!a.size || !b.size) return 0;
   let intersection = 0;
   const [small, large] = a.size <= b.size ? [a, b] : [b, a];
@@ -43,12 +44,12 @@ const entries = content.allLessons
   .map((lesson) => ({ lesson, shingles: shinglesOf(paragraphsOf(lesson)) }))
   .filter((entry) => entry.shingles.size > 0);
 
-const pairs = [];
+const pairs: Array<{ a: string; b: string; score: number }> = [];
 for (let i = 0; i < entries.length; i += 1) {
   for (let j = i + 1; j < entries.length; j += 1) {
-    const score = jaccard(entries[i].shingles, entries[j].shingles);
+    const score = jaccard(entries[i]!.shingles, entries[j]!.shingles);
     if (score >= WARN) {
-      pairs.push({ a: entries[i].lesson.id, b: entries[j].lesson.id, score });
+      pairs.push({ a: entries[i]!.lesson.id, b: entries[j]!.lesson.id, score });
     }
   }
 }

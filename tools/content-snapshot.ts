@@ -1,10 +1,10 @@
 import { createHash } from 'node:crypto';
 import { curriculum, graduationProject } from '../web/scripts/content/index.js';
 
-function canonical(value) {
+function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical);
   if (value && typeof value === 'object') {
-    const source = value;
+    const source = value as Record<string, unknown>;
     return Object.fromEntries(
       Object.keys(source)
         .sort()
