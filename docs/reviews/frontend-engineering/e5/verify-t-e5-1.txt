@@ -1,0 +1,17 @@
+date: 2026-11-10
+node: v22.15.0
+command: npm run verify
+exit: 0
+
+lint: pass
+typecheck: pass
+coverage: Test Files 27 passed (27); Tests 287 passed (287)
+content:validate: content ok stages=9 lessons=45 projects=9 checks=135 exercises=79 pythonLessons=34 pythonBlocks=60 pythonTracks=38 duration=3400
+audit:content: audit mode=ready lessons=45 draft=0 errors=0 warnings=0
+audit:exercises: js code exercises=38 failing=0 starterFailing=38; sql exercises=2 failing=0
+build: ✓ built in 1.36s
+budget:
+  PASS entry (index.next.html)              147.4KB / 180.0KB
+  PASS lazy max (assets/appendix-DxFFXbYb.js) 85.1KB / 150.0KB
+  PASS search index                         194.7KB / 300.0KB
+e2e: 137 passed (27.6s)

@@ -1,0 +1,7 @@
+$ find dist -maxdepth 1 -name "index*.html" -print
+dist/index.html
+dist/index.next.html
+$ grep -c "id=\\"root\\"" dist/index.html
+1
+$ grep -c "app.js" dist/index.html
+0

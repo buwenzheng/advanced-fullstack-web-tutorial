@@ -13,68 +13,10 @@
 <link rel="stylesheet" href="./styles/lesson.css" />
 </head>
 <body>
-<a class="skip-link" href="#main">跳到主要内容</a>
-
 <noscript>
   <div class="noscript">这个学习站的讲解可以阅读，但练习需要在浏览器里执行 JavaScript。请启用 JavaScript 后再开始。</div>
 </noscript>
-
-<div class="app" id="app">
-  <header class="topbar">
-    <button class="icon-btn topbar__menu" id="menu-toggle" aria-label="打开课程目录" aria-expanded="false" aria-controls="sidebar">
-      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" /></svg>
-    </button>
-
-    <a class="brand" href="#/" aria-label="返回学习总览">
-      <span class="brand__mark" aria-hidden="true">
-        <svg viewBox="0 0 32 32"><path d="M8 11l5 5-5 5" /><path d="M16 21h8" /></svg>
-      </span>
-      <span class="brand__text">
-        <strong>后端进阶实验室</strong>
-        <em>Backend for Frontend Engineers</em>
-      </span>
-    </a>
-
-    <div class="topbar__search">
-      <svg class="topbar__search-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="5.5" /><path d="M13 13l4 4" /></svg>
-      <input id="search-input" type="search" placeholder="搜索知识点、阶段、项目或 AI 主题…" autocomplete="off" aria-label="搜索课程内容" aria-expanded="false" aria-controls="search-results" role="combobox" aria-autocomplete="list" />
-      <div class="search-results" id="search-results" role="listbox" hidden></div>
-    </div>
-
-    <div class="topbar__actions">
-      <div class="lang-switch" id="lang-switch" role="group" aria-label="代码语言轨道"></div>
-      <a class="topbar__link" href="#/lab" title="HTTP 实验台">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h9" /></svg>
-        <span>实验室</span>
-      </a>
-      <a class="topbar__link" href="#/report" title="学习报告">
-        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 16V9M8 16V5M12 16v-4M16 16V7" /></svg>
-        <span>学习报告</span>
-      </a>
-      <div class="progress-chip" id="progress-chip" title="总体完成度">
-        <svg class="progress-chip__ring" viewBox="0 0 36 36" aria-hidden="true">
-          <circle class="progress-chip__track" cx="18" cy="18" r="15.5" />
-          <circle class="progress-chip__value" cx="18" cy="18" r="15.5" id="progress-ring" />
-        </svg>
-        <span id="progress-label">0%</span>
-      </div>
-    </div>
-  </header>
-
-  <aside class="sidebar" id="sidebar" aria-label="课程目录">
-    <nav class="sidebar__scroll" id="sidebar-nav"></nav>
-    <div class="sidebar__foot">
-      <p>进度保存在本机浏览器，换设备不会同步。</p>
-      <button class="text-btn" id="reset-progress" type="button">清空学习记录</button>
-    </div>
-  </aside>
-
-  <main class="main" id="main" tabindex="-1"></main>
-</div>
-
-<div class="scrim" id="scrim" hidden></div>
-<div class="toast-host" id="toast-host" role="status" aria-live="polite"></div>
-
-<script type="module" src="./scripts/app.js"></script>
+<div id="root"></div>
+<script type="module" src="./scripts/main.tsx"></script>
 </body>
 </html>

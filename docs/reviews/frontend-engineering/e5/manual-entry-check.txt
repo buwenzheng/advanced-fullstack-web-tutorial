@@ -1,0 +1,5 @@
+PASS #/ h1=1 #main=1 errors=0 title=把前端的手感，接后端的世界
+PASS #/stage/s0 h1=1 #main=1 errors=0 title=地基：请求、运行时与排障
+PASS #/lesson/s0-l1 h1=1 #main=1 errors=0 title=从 URL 到响应：请求的四段旅程
+PASS #/lab h1=1 #main=1 errors=0 title=HTTP 实验室
+PASS #/report h1=1 #main=1 errors=0 title=学习报告
