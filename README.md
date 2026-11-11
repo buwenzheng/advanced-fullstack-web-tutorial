@@ -67,7 +67,7 @@ web/
   generated/                 # catalog 与搜索索引（gitignored）
 e2e/                         # Playwright、路由清单、视觉基线
 tools/                       # 内容生成、审计、包体预算
-functions/                   # Qoder Sites 边缘函数
+functions/                   # 边缘函数（可选）
 docs/                        # 课程、实施、评审与发布文档
 ```
 
@@ -89,8 +89,8 @@ docs/                        # 课程、实施、评审与发布文档
 ## 部署
 
 - `dist/` 是纯静态站点，可部署到任意静态服务器；
-- 正式发布使用 Qoder Sites 私有站点，`functions/` 为边缘函数目录，不涉及数据库；
-- 不提交 `dist/`、`web/generated/`、任何密钥；站点始终保持私有。
+- `functions/` 为可选边缘函数目录（健康检查与 API），不涉及数据库；
+- 不提交 `dist/`、`web/generated/`、任何密钥。
 
 ## 文档
 
