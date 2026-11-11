@@ -88,9 +88,11 @@ docs/                        # 课程、实施、评审与发布文档
 
 ## 部署
 
-- `dist/` 是纯静态站点，可部署到任意静态服务器；
-- `functions/` 为可选边缘函数目录（健康检查与 API），不涉及数据库；
-- 仓库不维护 Qoder Site 站点绑定；2026-11-11 起 v3 以静态产物交付；
+- 推送到 `main` 后先由 `verify` 工作流跑完整门禁；通过后 `deploy` 工作流构建 `dist/` 并发布到 GitHub Pages；
+- 首次使用需在仓库 Settings → Pages 把 Source 设为「GitHub Actions」；也可在 Actions 中手动运行 `deploy`；
+- 站点地址以 Pages 显示为准（通常为 `https://<owner>.github.io/<repo>/`）；Vite 使用相对 `base`，项目子路径可直接工作；
+- `dist/` 仍是纯静态产物，可改部署到任意静态服务器；GitHub Pages 不托管 `functions/`，实验台 live 模式需另行部署边缘函数，mock 模式不受影响；
+- GitHub Pages 站点默认公开；私有仓库启用 Pages 需要账户计划支持，但若必须保留私有访问，Pages 不适用；
 - 不提交 `dist/`、`web/generated/`、任何密钥。
 
 ## 文档

@@ -1,10 +1,10 @@
 # 前端工程化改造方案（v3）：React 19 + Vite + TypeScript
 
-> 状态：E0–E5 已执行并完成阶段标签；E6 的 Qoder Sites 私有发布于 2026-11-11 取消，v3 以纯静态产物交付。
+> 状态：E0–E5 已执行并完成阶段标签；E6 的 Qoder Sites 私有发布于 2026-11-11 取消，v3 以纯静态产物交付并通过 GitHub Actions 发布到 GitHub Pages。
 > 前置基线：v2.0.1（tag `v2.0.1`，原私有发布 release `01a1c34e-87a3-773c-86c3-f58087e01acd`）。
 > 本方案取代 `00-master-plan.md` §1.3「不引入构建工具」的约束。
 >
-> **2026-11-11 变更说明**：站点归属旧 Qoder 账号，当前账号无权管理（`sites_request_failed`）。按用户决定取消 Qoder Site 发布，删除站点描述文件与线上发布专用产物。本文件 §3.3 发布行、§6 E6、§7 发布不变量、§8 站点风险、§9 发布 DoD、§11 E6 索引及 §12 中与站点发布相关的内容均以此说明为准；其余架构、质量门禁与兼容约束继续有效。E6.0/E6.1 的本地冻结与验证证据保留。
+> **2026-11-11 变更说明**：站点归属旧 Qoder 账号，当前账号无权管理（`sites_request_failed`）。按用户决定取消 Qoder Site 发布，删除站点描述文件与线上发布专用产物；部署改为 GitHub Actions → GitHub Pages（`verify` 通过后自动发布，见 `.github/workflows/deploy.yml`），`functions/` 不随 Pages 发布。本文件 §3.3 发布行、§6 E6、§7 发布不变量、§8 站点风险、§9 发布 DoD、§11 E6 索引及 §12 中与站点发布相关的内容均以此说明为准；其余架构、质量门禁与兼容约束继续有效。E6.0/E6.1 的本地冻结与验证证据保留。
 
 ## 1. 结论
 
@@ -39,7 +39,7 @@
 - 不改课程内容语义、课时 ID、标题、时长、题目 ID、答案与测试；
 - 不改 hash URL、`localStorage` 键、进度迁移规则；
 - 不改 `functions/`（Deno 边缘函数）、不新增后端、不引入数据库；
-- 不做 SSR/SSG、不做公开访问、不做多语言 UI；
+- 不做 SSR/SSG、不做多语言 UI；部署到 GitHub Pages 时为公开静态站点，若需私有访问需改用其他托管；
 - 不在迁移过程中发布半成品；v3 原计划在 E6 一次性私有发布（站点发布已于 2026-11-11 取消）；
 - 不替换 Pyodide、SQL 引擎、代码高亮等判题语义（允许内部重构，行为必须一致）。
 
@@ -153,7 +153,7 @@ dist/                           # Vite 构建产物（gitignore），可部署�
 构建：npm run build          → content:validate → content:build → tsc --noEmit → vite build → dist/
 预览：npm run preview        → vite preview (dist/)
 验收：npm run verify         → lint + typecheck + unit + content audit + build + e2e
-交付：dist/ 为纯静态产物，可部署到任意静态服务器（原 Qoder Sites 发布已取消）
+交付：dist/ 为纯静态产物，由 GitHub Actions 发布到 GitHub Pages，也可部署到任意静态服务器（原 Qoder Sites 发布已取消）
 ```
 
 ### 3.4 内容加载策略
