@@ -1,8 +1,10 @@
 # 前端工程化改造方案（v3）：React 19 + Vite + TypeScript
 
-> 状态：待批准，未执行。批准后本文件是 v3 改造的唯一执行依据；E0 开始前不改动任何课程内容与线上站点。
-> 前置基线：v2.0.1（tag `v2.0.1`，私有发布 release `01a1c34e-87a3-773c-86c3-f58087e01acd`）。
-> 本方案会取代 `00-master-plan.md` §1.3「不引入构建工具」的约束；批准后在 E0 同步修订总纲。
+> 状态：E0–E5 已执行并完成阶段标签；E6 的 Qoder Sites 私有发布于 2026-11-11 取消，v3 以纯静态产物交付。
+> 前置基线：v2.0.1（tag `v2.0.1`，原私有发布 release `01a1c34e-87a3-773c-86c3-f58087e01acd`）。
+> 本方案取代 `00-master-plan.md` §1.3「不引入构建工具」的约束。
+>
+> **2026-11-11 变更说明**：站点归属旧 Qoder 账号，当前账号无权管理（`sites_request_failed`）。按用户决定取消 Qoder Site 发布，删除站点描述文件与线上发布专用产物。本文件 §3.3 发布行、§6 E6、§7 发布不变量、§8 站点风险、§9 发布 DoD、§11 E6 索引及 §12 中与站点发布相关的内容均以此说明为准；其余架构、质量门禁与兼容约束继续有效。E6.0/E6.1 的本地冻结与验证证据保留。
 
 ## 1. 结论
 
@@ -38,7 +40,7 @@
 - 不改 hash URL、`localStorage` 键、进度迁移规则；
 - 不改 `functions/`（Deno 边缘函数）、不新增后端、不引入数据库；
 - 不做 SSR/SSG、不做公开访问、不做多语言 UI；
-- 不在迁移过程中发布半成品；v3 只在 E6 一次性私有发布；
+- 不在迁移过程中发布半成品；v3 原计划在 E6 一次性私有发布（站点发布已于 2026-11-11 取消）；
 - 不替换 Pyodide、SQL 引擎、代码高亮等判题语义（允许内部重构，行为必须一致）。
 
 ## 2. 现状架构盘点
@@ -140,7 +142,7 @@ web/                            # Vite root，仍是前端源码目录
     generated/                  # 构建生成：catalog.json、search-index.json（gitignore）
 tools/                          # 内容快照、审计、练习执行、打包检查
 functions/                      # 不变
-dist/                           # Vite 构建产物（gitignore），Qoder Sites 上传目录
+dist/                           # Vite 构建产物（gitignore），可部署到任意静态服务器
 ```
 
 ### 3.3 运行与构建链路
@@ -151,7 +153,7 @@ dist/                           # Vite 构建产物（gitignore），Qoder Sites
 构建：npm run build          → content:validate → content:build → tsc --noEmit → vite build → dist/
 预览：npm run preview        → vite preview (dist/)
 验收：npm run verify         → lint + typecheck + unit + content audit + build + e2e
-发布：Qoder Sites prepare_site(webDirectory: "dist", functionDirectory: "functions", private)
+交付：dist/ 为纯静态产物，可部署到任意静态服务器（原 Qoder Sites 发布已取消）
 ```
 
 ### 3.4 内容加载策略
@@ -299,12 +301,14 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 
 ### E6 私有发布 v3.0.0（0.5 人日）
 
+> 2026-11-11 状态变更：E6.1–E6.3（prepare、publish、线上冒烟）不再执行；E6.4 的发布说明与 `v3.0.0` 标签未执行。站点发布与线上验收取消，E6.0/E6.1 的本地冻结与验证证据仍有效。
+
 - E6.1 `prepare_site`：同一 projectId/siteId，`webDirectory: "dist"`、`functionDirectory: "functions"`、`databaseAccess: "none"`、`spa: true`、新 actionId；
 - E6.2 `publish_site` 并确认 `published: true`、访问范围仍为 `private`、函数 `app` 正常；
 - E6.3 线上冒烟：66 路由（登录态）、四类任务（mcq/code/sql/design）、进度迁移；
 - E6.4 `docs/release-notes-v3.md`、评审报告、标签 `v3.0.0`。
 
-**门禁 G-E6**：发布成功且私有；线上冒烟通过；回滚路径确认（v2 release 保留）。
+**门禁 G-E6（已取消，2026-11-11）**：原要求为发布成功且私有、线上冒烟通过、回滚路径确认；站点发布取消后不再适用。
 
 总工期：约 7–12 人日（单人对现有代码熟悉，不含课程内容修订）。
 
@@ -318,10 +322,10 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 | 内容 | 课时/题目 ID、标题、时长、顺序、答案、测试不变；快照哈希证明 |
 | 判题语义 | JS 断言/超时、Python Pyodide 行为、SQL 语义与 v2 一致 |
 | 后端 | `functions/` 不改；`DEMO_SECRET` 不变；不新增数据库 |
-| 发布 | 始终私有；复用 projectId/siteId；新 actionId；打包必须含 `dist` + `functions` |
+| 发布（已取消） | 原计划：始终私有；复用 projectId/siteId；新 actionId；打包必须含 `dist` + `functions`；2026-11-11 起不再执行 |
 | 回滚 | v2.0.1 标签与现有 release 保留；任一阶段失败只回退该阶段标签 |
 
-发布输入的唯一变化：`webDirectory` 从 `"web"` 改为 `"dist"`。E6 前先用 `vite preview` 验证 `dist/` 可直接静态服务；若平台不接受 `dist`，回退方案是构建到 `web/dist` 并以 `"web/dist"` 作为 `webDirectory`。
+原发布输入的唯一变化：`webDirectory` 从 `"web"` 改为 `"dist"`。该发布路径已于 2026-11-11 取消；`dist/` 现作为纯静态产物交付，可直接部署到任意静态服务器。
 
 ## 8. 风险与对策
 
@@ -334,7 +338,7 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 | 首屏仍过大 | 内容/索引进入入口包 | catalog 与正文分离；懒加载；包体预算 CI 门禁 |
 | Pyodide 网络/打包问题 | Worker 加载失败 | 版本锁定；Worker 用 Vite 原生方式打包；E2E 标注网络依赖 |
 | localStorage 破坏 | 用户进度丢失 | 键名不变；迁移夹具；发布前手工注入旧数据验证 |
-| Qoder Sites 输入变化 | 打包失败/404 | E6 前本地 preview；失败保留 v2 release；准备 `web/dist` 回退 |
+| 静态托管差异 | 打包失败/404 | `base: './'` 相对路径；本地 preview 验证；任意静态服务器可部署 |
 | 迁移战线过长 | 半成品长期并行 | 每阶段可独立回退；允许在 E1 后暂停（已获得类型与构建收益） |
 | CI 环境差异 | 本地过、CI 挂 | Node 22 锁定；Playwright 固定版本；无密钥、无外部服务 |
 
@@ -349,10 +353,10 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 - [ ] 入口 JS ≤ 180KB gzip；最大懒加载 chunk ≤ 150KB gzip；搜索索引 ≤ 300KB gzip；
 - [ ] 视觉基线与 v2.0.1 一致（仅允许加载态差异）；
 - [ ] 旧进度夹具迁移正确；四类任务在浏览器内可运行；
-- [ ] README/总纲/QA 文档更新；发布说明与评审报告齐全；
-- [ ] v3.0.0 私有发布成功，访问范围 private，`functions/` 未被改动。
+- [ ] README/总纲/QA 文档更新；交付说明与评审报告齐全；
+- ~~v3.0.0 私有发布成功，访问范围 private~~：2026-11-11 取消站点发布，改为 `dist/` 纯静态交付；`functions/` 未被改动。
 
-## 10. 批准后的第一步
+## 10. 执行顺序（历史记录）
 
 1. 打保护标签 `v2.0.1`（已存在），确认工作区干净；
 2. 执行 E0.1–E0.5，产出基线文件与 `dist/` shadow build；
@@ -371,9 +375,9 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 | E3 | `14-e3-views-and-interaction.md` | 6 个页面、12 类内容块、检查题、四类任务、项目页、实验台、报告、懒加载 | G-E3 |
 | E4 | `15-e4-quality-gates.md` | 66 路由 E2E、控制台门禁、axe、响应式、视觉回归、包体预算、CI 全量 | G-E4 |
 | E5 | `16-e5-switch-and-cleanup.md` | 默认入口切换、删除旧代码、文档更新、全量复验 | G-E5 |
-| E6 | `17-e6-release-v3.md` | `dist/` 打包、私有发布、线上冒烟、v3.0.0 标签与发布说明 | G-E6 |
+| E6 | `17-e6-release-v3.md` | 已取消（2026-11-11）：原计划 `dist/` 打包、私有发布、线上冒烟、v3.0.0 标签与发布说明；本地验证证据保留 | — |
 
-执行顺序固定为 E0 → E1 → E2 → E3 → E4 → E5 → E6；不允许并行跳阶段。每个阶段结束时必须提交该阶段文档中列出的证据，并打阶段标签。
+执行顺序固定为 E0 → E1 → E2 → E3 → E4 → E5；E6 站点发布已取消（2026-11-11）。每个阶段结束时必须提交该阶段文档中列出的证据，并打阶段标签。
 
 ## 12. 变更控制与偏离判定
 
@@ -392,7 +396,7 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 - 想新增课程、页面、功能（暗色主题、i18n、SSR、PWA、后端接口等）；
 - 想引入框架（Vue/Next/Astro）、状态库（Redux/Zustand）、UI 库、CSS 框架或任何未列出的运行时依赖；
 - 想降低任何验收标准、跳过门禁、跳过视觉/可访问性检查；
-- 想在 E6 之前发布，或把站点改为公开；
+- ~~想在 E6 之前发布，或把站点改为公开~~（站点发布已于 2026-11-11 取消，此条不再适用）；
 - 想修改 `functions/`、数据库或访问策略。
 
 ### 12.3 发现旧缺陷时
@@ -400,7 +404,7 @@ Python 轨道 E2E 依赖 jsDelivr 网络，设为「允许失败并记录」，�
 迁移期发现 v2 已有缺陷时：
 
 1. 先判断是否阻塞当前阶段门禁；
-2. 不阻塞：记入 `docs/reviews/frontend-engineering/known-issues.md`，保持行为不变，E6 后单独修；
+2. 不阻塞：记入 `docs/reviews/frontend-engineering/known-issues.md`，保持行为不变，后续单独修；
 3. 阻塞：只做最小修复，补回归测试，写入本阶段报告，并同步更新内容快照差异说明。
 
 禁止借迁移之名顺手重构、改文案、调样式或“优化”课程内容。

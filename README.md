@@ -90,10 +90,11 @@ docs/                        # 课程、实施、评审与发布文档
 
 - `dist/` 是纯静态站点，可部署到任意静态服务器；
 - `functions/` 为可选边缘函数目录（健康检查与 API），不涉及数据库；
+- 仓库不维护 Qoder Site 站点绑定；2026-11-11 起 v3 以静态产物交付；
 - 不提交 `dist/`、`web/generated/`、任何密钥。
 
 ## 文档
 
 - 课程与发布文档：`docs/`
 - 前端工程化迁移总纲：`docs/implementation/10-frontend-engineering.md`
-- 执行文档：E0–E6（`docs/implementation/11-*` 至 `17-*`）
+- 执行文档：E0–E5 为现行交付依据（`docs/implementation/11-*` 至 `16-*`）；E6（`17-e6-release-v3.md`）的站点发布已于 2026-11-11 取消，保留为历史计划

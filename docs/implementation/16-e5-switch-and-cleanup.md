@@ -3,6 +3,8 @@
 > 上级：`10-frontend-engineering.md` §5、§6 E5、§7；前置：`15-e4-quality-gates.md`。
 > 目标：把 React 应用从并行入口提升为唯一默认入口，删除 v2 运行时代码与 `dev_server.py`，把 E2E、包体预算、工具与文档全部收敛到单入口；不改变课程内容、hash URL、`localStorage` 键、视觉基线与 `functions/`。
 > 工期：0.5–1 人日。完成定义：G-E5 通过，标签 `e5-switch`。
+>
+> **2026-11-11 后续变更**：E6 的 Qoder Sites 发布已取消，站点描述文件已删除；本文档中的站点相关约束与检查项仅适用于 E5 历史执行阶段。
 
 ## 1. 阶段边界
 

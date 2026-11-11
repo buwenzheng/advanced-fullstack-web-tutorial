@@ -402,8 +402,8 @@ export default defineConfig({
 
 - **说明**：
   - `root: 'web'` 保持源码目录不变，避免 97 个文件搬迁；
-  - `outDir: '../dist'` 让构建产物与源码分离，E6 以 `dist` 作为发布目录；
-  - `base: './'` 让产物使用相对路径，兼容 Qoder Sites 与子路径预览；
+  - `outDir: '../dist'` 让构建产物与源码分离，`dist/` 作为静态交付目录；
+  - `base: './'` 让产物使用相对路径，兼容任意静态托管与子路径预览；
   - E0 不修改 `web/index.html`，Vite 直接处理现有 `<script type="module" src="./scripts/app.js">`。
 - **命令**：
 
