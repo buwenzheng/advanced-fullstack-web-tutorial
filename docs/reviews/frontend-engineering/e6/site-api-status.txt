@@ -42,6 +42,38 @@ curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/
 curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/functions/v1/app/health
   401（匿名不可读，函数存在但与前端同样受私有访问保护）
 
+## 第四次重试（2026-11-11 09:14，本地，UTC+8）
+
+get_context
+  local.sites: []
+  local.developmentSites: []
+  local.unavailableSites:
+    [{ path: 'C:\\Users\\jm014254\\Desktop\\temporary\\site\\算法学习\\.后端进阶实验室.qoder.site',
+       error: 'sites_request_failed' }]
+  runtime.region: cn；sitesOpenApiOrigin: https://openapi.qoder.com.cn
+  runtime.host.mode: desktop；filePreview: true
+
+get_site { siteId: '01a18744-0ffa-79fa-92d9-0ac6a3f812aa' }
+  sites_request_failed
+
+list_sites { scope: 'owned' }
+  total_size: 0，projects: []
+
+list_sites { scope: 'shared' }
+  total_size: 0，sites: []
+
+get_publish_status { actionId: 'dad605a8-70cc-4cc5-b023-f2a1fd0ca19b'（未使用的新 action） }
+  sites_action_unavailable
+  （说明 OpenAPI 能返回结构化响应，失败集中在项目/站点解析路径）
+
+curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/
+  root=401
+
+curl https://backend-for-frontend-0nmydpfsdfg.qoder.website/functions/v1/app/health
+  health=401
+
+第四次重试结论：与 2026-11-10 三次记录一致，无恢复迹象；未执行任何写操作。
+
 ## 结论
 
 - 站点与函数端点在线，匿名访问被拒绝；但 Sites OpenAPI 无法读取站点，
