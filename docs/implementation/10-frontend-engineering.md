@@ -4,7 +4,7 @@
 > 前置基线：v2.0.1（tag `v2.0.1`，原私有发布 release `01a1c34e-87a3-773c-86c3-f58087e01acd`）。
 > 本方案取代 `00-master-plan.md` §1.3「不引入构建工具」的约束。
 >
-> **2026-11-11 变更说明**：站点归属旧 Qoder 账号，当前账号无权管理（`sites_request_failed`）。按用户决定取消 Qoder Site 发布，删除站点描述文件与线上发布专用产物；部署改为 GitHub Actions → GitHub Pages（`verify` 通过后自动发布，见 `.github/workflows/deploy.yml`），`functions/` 不随 Pages 发布。本文件 §3.3 发布行、§6 E6、§7 发布不变量、§8 站点风险、§9 发布 DoD、§11 E6 索引及 §12 中与站点发布相关的内容均以此说明为准；其余架构、质量门禁与兼容约束继续有效。E6.0/E6.1 的本地冻结与验证证据保留。
+> **2026-11-11 变更说明**：站点归属旧 Qoder 账号，当前账号无权管理（`sites_request_failed`）。按用户决定取消 Qoder Site 发布，删除站点描述文件与线上发布专用产物；部署改为 GitHub Actions → GitHub Pages（push `main` 后 `deploy.yml` 先跑完整 `npm run verify`，通过后构建并发布，见 `.github/workflows/deploy.yml`），`functions/` 不随 Pages 发布。本文件 §3.3 发布行、§6 E6、§7 发布不变量、§8 站点风险、§9 发布 DoD、§11 E6 索引及 §12 中与站点发布相关的内容均以此说明为准；其余架构、质量门禁与兼容约束继续有效。E6.0/E6.1 的本地冻结与验证证据保留。
 
 ## 1. 结论
 
@@ -221,7 +221,7 @@ Python 映射在内容装配时合并：保留现有 `PYTHON_BLOCKS`/`PYTHON_TRA
 
 ### 5.3 CI
 
-GitHub Actions `verify.yml`（push / PR）：
+GitHub Actions `verify.yml`（PR / 手动触发）与 `deploy.yml`（push main / 手动触发，先跑同一份 `npm run verify` 再发布 Pages）：
 
 ```text
 node 22 → npm ci → lint → typecheck → test
