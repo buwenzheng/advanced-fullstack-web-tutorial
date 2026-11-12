@@ -6,28 +6,12 @@ import { lessonTasks, taskSolved } from '../../state/mastery-core';
 import { useLesson } from '../data/content';
 import { useMastery } from '../data/mastery';
 import type { LessonContext } from '../data/types';
-import type { Project, Stage } from '../../content/types';
 import { useLang } from '../hooks/useLang';
+import { projectForLesson } from '../lesson/project-for-lesson';
 import { renderBlock } from '../lesson/blocks';
 import { TaskRenderer } from '../exercises/TaskRenderer';
 import { resolveLessonRedirect } from '../redirects';
 import EmptyState from './EmptyState';
-
-/** 多项目块：按章节顺序对齐 projectIds；单项目回退 stage.project */
-export function projectForLesson(stage: Stage, lessonId: string): Project | null {
-  const projects = stage.projects?.length
-    ? stage.projects
-    : (stage.project ? [stage.project] : []);
-  if (!projects.length) return null;
-  if (projects.length === 1) return projects[0]!;
-
-  const chapters = stage.chapters ?? [];
-  const chapterIndex = chapters.findIndex((chapter) => chapter.lessonIds.includes(lessonId));
-  if (chapterIndex < 0) return projects[0]!;
-
-  const preferredId = stage.projectIds?.[chapterIndex] ?? projects[chapterIndex]?.id;
-  return projects.find((project) => project.id === preferredId) ?? projects[Math.min(chapterIndex, projects.length - 1)]!;
-}
 
 function CheckIcon() {
   return (
