@@ -32,9 +32,11 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify
         run: npm run verify
-      # 首次需在 Settings → Pages 将 Source 设为 GitHub Actions，否则此处 Not Found
+      # 公开仓可自动开通 Pages（Source=GitHub Actions）；私有仓仍需手动在 Settings → Pages 启用
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
