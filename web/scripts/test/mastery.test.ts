@@ -37,13 +37,13 @@ describe('catalog 掌握度与 mastery-core 等价', () => {
   });
 
   it('仅手动标记课时：lessonDone 短路生效', async () => {
-    store.setLessonDone('s2-l1', true);
+    store.setLessonDone('m2-resource', true);
     store.setLessonDone('appendix-l1', true);
     await assertEquivalent();
 
     const catalog = await loadCatalog();
     const view = masteryFromCatalog(catalog, store.get());
-    expect(view.lesson('s2-l1')).toBe(true);
+    expect(view.lesson('m2-resource')).toBe(true);
     expect(view.lesson('appendix-l1')).toBe(true);
   });
 
@@ -88,17 +88,34 @@ describe('catalog 掌握度与 mastery-core 等价', () => {
   });
 
   it('混合进度：阶段与课程汇总、下一讲定位一致', async () => {
-    store.setLessonDone('s0-l1', true);
-    const s2 = curriculum.find((stage) => stage.id === 's2')!;
-    const s2Lesson = s2.lessons[0]!;
-    s2Lesson.checks.forEach((check) => store.recordAnswer(check.id, [], true));
-    s2Lesson.exercises.slice(0, 1).forEach((exercise) => store.recordAnswer(exercise.id, [], true));
+    store.setLessonDone('m1-http', true);
+    const m2 = curriculum.find((stage) => stage.id === 'm2')!;
+    const m2Lesson = m2.lessons[0]!;
+    m2Lesson.checks.forEach((check) => store.recordAnswer(check.id, [], true));
+    m2Lesson.exercises.slice(0, 1).forEach((exercise) => store.recordAnswer(exercise.id, [], true));
 
     await assertEquivalent();
 
     const catalog = await loadCatalog();
     const view = masteryFromCatalog(catalog, store.get());
-    expect(view.nextLessonId).toBe('s0-l2');
-    expect(view.stage(s2.id).done).toBe(0);
+    expect(view.nextLessonId).toBe('m1-runtime');
+    expect(view.stage(m2.id).done).toBe(0);
+  });
+
+  it('下一讲尊重 activePath，缺省使用路径 C，并可回退当前块', async () => {
+    const catalog = await loadCatalog();
+    curriculum.find((stage) => stage.id === 'm1')!.lessons.forEach(
+      (lesson) => store.setLessonDone(lesson.id, true),
+    );
+
+    expect(masteryFromCatalog(catalog, store.get()).nextLessonId).toBe('m4-coding-system');
+    store.setActivePath('b');
+    expect(masteryFromCatalog(catalog, store.get()).nextLessonId).toBe('m2-sql');
+
+    const pathBBlocks = new Set(['m1', 'm2', 'm3']);
+    catalog.lessons.filter((lesson) => pathBBlocks.has(lesson.stageId)).forEach(
+      (lesson) => store.setLessonDone(lesson.id, true),
+    );
+    expect(masteryFromCatalog(catalog, store.get(), 'b').nextLessonId).toBe('b-bigO');
   });
 });

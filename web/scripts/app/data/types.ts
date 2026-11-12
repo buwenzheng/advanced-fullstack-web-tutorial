@@ -1,4 +1,4 @@
-import type { Lesson, Project, Stage } from '../../content/types';
+import type { BlockKind, Chapter, Lesson, Project, Stage } from '../../content/types';
 
 export type Accent = 'teal' | 'amber' | 'violet' | 'rose' | 'blue' | 'green';
 
@@ -13,6 +13,12 @@ export interface StageSummary {
   lessonCount: number;
   projectId: string | null;
   draftCount: number;
+}
+
+export interface BlockSummary extends StageSummary {
+  kind: BlockKind;
+  chapters: Chapter[];
+  projectIds: string[];
 }
 
 export interface LessonSummary {

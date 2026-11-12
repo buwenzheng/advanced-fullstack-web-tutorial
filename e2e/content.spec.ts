@@ -3,9 +3,9 @@ import { entryUrl } from './lib/entry';
 import { entryClosure } from './lib/manifest';
 
 const lessons = [
-  { route: '/lesson/s0-l1', title: '从 URL 到响应：请求的四段旅程' },
-  { route: '/lesson/s7-l5', title: 'Agent 工作流、工具链与团队落地' },
-  { route: '/lesson/a1', title: '复杂度与测量：先能算，再能测' },
+  { route: '/lesson/m1-http', title: '从 URL 到响应：请求的四段旅程' },
+  { route: '/lesson/m4-coding-team', title: 'Agent 工作流、工具链与团队落地' },
+  { route: '/lesson/b-bigO', title: '复杂度与测量：先能算，再能测' },
 ];
 
 function collectErrors(page: import('@playwright/test').Page) {
@@ -31,7 +31,7 @@ for (const item of lessons) {
 
 test('lesson 双轨切换与 MCQ 作答反馈', async ({ page }) => {
   const errors = collectErrors(page);
-  await page.goto(entryUrl('#/lesson/s0-l1'));
+  await page.goto(entryUrl('#/lesson/m1-http'));
 
   const panes = page.locator('.code-tracks .codeblock');
   await expect(panes).toHaveCount(2);
@@ -52,7 +52,7 @@ test('lesson 双轨切换与 MCQ 作答反馈', async ({ page }) => {
 
 test('project 页渲染毕业项目里程碑与模板，勾选后进度更新', async ({ page }) => {
   const errors = collectErrors(page);
-  await page.goto(entryUrl('#/project/p-graduation'));
+  await page.goto(entryUrl('#/project/x-linkhub'));
 
   await expect(page.locator('main h1')).toHaveText('LinkHub 短链服务');
   await expect(page.locator('.project-hero .eyebrow')).toHaveText('毕业项目');
@@ -139,8 +139,8 @@ test('lazy 入口闭包与阶段 chunk 强断言', async ({ page }) => {
   await settle(page);
   expect(outsideClosure(jsResponses, closure), '同阶段切换不应新增 chunk').toEqual(firstOutside);
 
-  await page.locator('.stage-node[data-stage="s1"] .stage-node__head').click();
-  await page.locator('.lesson-link[data-lesson="s1-l1"]').click();
+  await page.locator('.stage-node[data-stage="m2"] .stage-node__head').click();
+  await page.locator('.lesson-link[data-lesson="m2-sql"]').click();
   await expect(page.locator('main h1')).toHaveText('关系模型与 SQL：从对象到表');
   await settle(page);
   expect(outsideClosure(jsResponses, closure).size, '跨阶段应新增 1 个 chunk').toBe(
@@ -184,7 +184,7 @@ test('report 报告页展示统计与错题列表', async ({ page }) => {
   await expect(page.locator('.stat')).toHaveCount(5);
   await expect(page.locator('.stat').nth(1)).toContainText('1');
   await expect(page.locator('.stat').nth(4)).toContainText('1');
-  await expect(page.locator('.bar-row')).toHaveCount(11);
+  await expect(page.locator('.bar-row')).toHaveCount(8);
   const wrongRow = page.locator('.list-stack .lesson-row');
   await expect(wrongRow).toHaveCount(1);
   await expect(wrongRow.first()).toContainText('破坏性变更');

@@ -1,4 +1,9 @@
 import { assembleContent } from './assemble.js';
+import {
+  assertPathsAgainstBlocks,
+  flattenManifestLessons,
+  tryParseContentManifest,
+} from './manifest.js';
 import type {
   Block,
   Lesson,
@@ -29,9 +34,9 @@ export interface ValidationIssue {
 }
 
 const EXPECTED = {
-  stages: 9,
+  stages: 6,
   lessons: 45,
-  projects: 9,
+  projects: 8,
   checks: 135,
   exercises: 79,
   tasks: 214,
@@ -44,7 +49,7 @@ const EXPECTED = {
   codeBlocks: 74,
 };
 
-const STAGE_IDS = ['s0', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 'appendix'];
+const STAGE_IDS = ['m1', 'm2', 'm3', 'm4', 'e1', 'b'];
 const BLOCK_TYPES = new Set([
   'text',
   'analogy',
@@ -61,22 +66,6 @@ const BLOCK_TYPES = new Set([
 ]);
 const CODE_LANGS = new Set(['javascript', 'bash', 'sql', 'dockerfile']);
 const DETAIL_FIELDS = ['delivery', 'acceptance', 'evidence', 'reuse', 'related'] as const;
-
-interface ManifestLesson {
-  id: string;
-  duration: number;
-}
-interface ManifestStage {
-  id: string;
-  index: number;
-  duration: number;
-  lessons: ManifestLesson[];
-}
-interface ManifestShape {
-  stages: ManifestStage[];
-  appendix: { id: string; duration: number; lessons: string[] };
-  totals: { lessons: number; coreMinutes: number; appendixMinutes: number; minutes: number };
-}
 
 function deepEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;
@@ -133,7 +122,7 @@ export function validateContent(
   }
   const rawProjects: Project[] = [];
   for (const input of inputs) {
-    if (input.data.project) rawProjects.push(input.data.project);
+    rawProjects.push(...(input.data.projects ?? (input.data.project ? [input.data.project] : [])));
   }
 
   const pyBlockEntries = inputs.flatMap((input) => Object.values(input.pythonBlocks));
@@ -193,12 +182,13 @@ export function validateContent(
       add(`stage.${stage.id}`, `index 应为 ${position}，实际 ${stage.index}`);
     }
     const isLast = position === inputs.length - 1;
-    if (stage.appendix && !isLast) add(`stage.${stage.id}`, '附录阶段必须位于最后');
-    if (stage.id === 'appendix' && !stage.appendix) add(`stage.${stage.id}`, '附录阶段必须标记 appendix');
-    if (stage.appendix) {
-      if (stage.project !== null) add(`stage.${stage.id}`, '附录阶段项目应为 null');
+    const isToolbox = stage.kind === 'toolbox' || stage.appendix;
+    if (isToolbox && !isLast) add(`stage.${stage.id}`, '工具箱必须位于最后');
+    if (stage.id === 'b' && !isToolbox) add(`stage.${stage.id}`, 'b 必须标记 kind=toolbox 或 appendix');
+    if (isToolbox) {
+      if (stage.project !== null || stage.projects?.length) add(`stage.${stage.id}`, '工具箱项目应为空');
     } else if (stage.project === null) {
-      add(`stage.${stage.id}`, '核心阶段必须有项目');
+      add(`stage.${stage.id}`, '非工具箱块必须有项目');
     }
   });
 
@@ -338,12 +328,12 @@ export function validateContent(
     });
   }
   if (graduation.milestones.length !== 11) {
-    add('project.p-graduation', `毕业项目应有 11 个里程碑，实际 ${graduation.milestones.length}`);
+    add('project.x-linkhub', `毕业项目应有 11 个里程碑，实际 ${graduation.milestones.length}`);
   }
   graduation.milestones.forEach((milestone, index) => {
     for (const field of DETAIL_FIELDS) {
       if (milestone[field] === undefined) {
-        add(`project.p-graduation.milestones[${index}]`, `缺少详细字段 ${field}`);
+        add(`project.x-linkhub.milestones[${index}]`, `缺少详细字段 ${field}`);
       }
     }
   });
@@ -358,70 +348,119 @@ export function validateContent(
     if (project.templates !== undefined) add(`project.${project.id}`, '只有毕业项目可以包含 templates');
   }
   if (!Array.isArray(graduation.templates) || graduation.templates.length !== EXPECTED.templates) {
-    add('project.p-graduation', `模板应为 ${EXPECTED.templates} 份`);
+    add('project.x-linkhub', `模板应为 ${EXPECTED.templates} 份`);
   }
 
-  /* 9. 清单 */
-  const doc = manifest as ManifestShape | null;
-  if (!doc || typeof doc !== 'object' || !Array.isArray(doc.stages) || !doc.totals) {
+  /* 9. 清单（v3：blocks + 旧课时 id / newId 对照） */
+  const doc = tryParseContentManifest(manifest);
+  if (!doc) {
     add('manifest', '清单结构无效');
   } else {
-    const coreStages = inputs.filter((input) => !input.data.appendix);
-    if (doc.stages.length !== coreStages.length) {
-      add('manifest.stages', `核心阶段数 ${doc.stages.length} 与内容 ${coreStages.length} 不一致`);
+    const contentById = new Map(rawLessons.map(({ lesson }) => [lesson.id, lesson]));
+    const flat = flattenManifestLessons(doc);
+    if (flat.length !== rawLessons.length) {
+      add('manifest.blocks', `课时数 ${flat.length} 与内容 ${rawLessons.length} 不一致`);
     }
-    doc.stages.forEach((manifestStage, position) => {
-      const stage = coreStages[position]?.data;
-      if (!stage) return;
-      if (manifestStage.id !== stage.id) add(`manifest.stages[${position}]`, `阶段 ID 应为 ${stage.id}`);
-      if (manifestStage.duration !== stage.duration) {
-        add(`manifest.stages[${position}]`, `时长 ${manifestStage.duration} 与内容 ${stage.duration} 不一致`);
+
+    const seenIds = new Set<string>();
+    const seenLegacy = new Set<string>();
+    for (const entry of flat) {
+      if (seenIds.has(entry.id)) add(`manifest.lesson.${entry.id}`, '课时 ID 在清单中重复');
+      seenIds.add(entry.id);
+      const legacy = entry.legacyId ?? entry.newId;
+      if (legacy) {
+        if (seenLegacy.has(legacy)) add(`manifest.lesson.${legacy}`, 'legacyId 在清单中重复');
+        seenLegacy.add(legacy);
       }
-      const actualLessons = stage.lessons.map((lesson) => lesson.id);
-      const manifestLessons = manifestStage.lessons.map((lesson) => lesson.id);
-      if (actualLessons.join(',') !== manifestLessons.join(',')) {
-        add(`manifest.${stage.id}`, '课时 ID/顺序与内容不一致');
+      const lesson = contentById.get(entry.id);
+      if (!lesson) {
+        add(`manifest.lesson.${entry.id}`, '清单课时在内容中不存在');
+        continue;
       }
-      for (const entry of manifestStage.lessons) {
-        const lesson = stage.lessons.find((item) => item.id === entry.id);
-        if (lesson && lesson.duration !== entry.duration) {
-          add(`manifest.${entry.id}`, `时长 ${entry.duration} 与内容 ${lesson.duration} 不一致`);
+      if (lesson.duration !== entry.duration) {
+        add(`manifest.lesson.${entry.id}`, `时长 ${entry.duration} 与内容 ${lesson.duration} 不一致`);
+      }
+    }
+    for (const { lesson } of rawLessons) {
+      if (!seenIds.has(lesson.id)) add(`manifest.lesson.${lesson.id}`, '内容课时未出现在清单 blocks');
+    }
+
+    for (const block of doc.blocks) {
+      const sum = block.lessons.reduce((total, lesson) => total + lesson.duration, 0);
+      if (sum !== block.duration) {
+        add(`manifest.block.${block.id}`, `duration ${block.duration} 与课时合计 ${sum} 不一致`);
+      }
+      const lessonIdSet = new Set(block.lessons.map((lesson) => lesson.id));
+      for (const chapter of block.chapters) {
+        for (const lessonId of chapter.lessonIds) {
+          if (!lessonIdSet.has(lessonId)) {
+            add(`manifest.block.${block.id}.chapter.${chapter.id}`, `lessonIds 含未知课时 ${lessonId}`);
+          }
         }
       }
-    });
-    const appendix = inputs.find((input) => input.data.appendix);
-    if (!appendix) {
-      add('manifest.appendix', '缺少附录阶段');
-    } else {
-      const actualIds = appendix.data.lessons.map((lesson) => lesson.id);
-      if (doc.appendix.lessons.join(',') !== actualIds.join(',')) {
-        add('manifest.appendix', '附录课时 ID/顺序与内容不一致');
-      }
-      const appendixMinutes = appendix.data.lessons.reduce(
-        (sum, lesson) => sum + (lesson.duration || 0),
-        0,
-      );
-      if (doc.appendix.duration !== appendixMinutes) {
-        add('manifest.appendix', `时长 ${doc.appendix.duration} 与内容 ${appendixMinutes} 不一致`);
-      }
     }
-    const coreMinutes = coreStages.reduce(
-      (sum, input) =>
-        sum + input.data.lessons.reduce((stageSum, lesson) => stageSum + (lesson.duration || 0), 0),
-      0,
-    );
-    const appendixMinutes = inputs
-      .filter((input) => input.data.appendix)
+
+    const coreMinutes = inputs
+      .filter((input) => input.data.kind !== 'toolbox' && !input.data.appendix)
       .reduce(
         (sum, input) =>
           sum + input.data.lessons.reduce((stageSum, lesson) => stageSum + (lesson.duration || 0), 0),
         0,
       );
+    const appendixMinutes = inputs
+      .filter((input) => input.data.kind === 'toolbox' || input.data.appendix)
+      .reduce(
+        (sum, input) =>
+          sum + input.data.lessons.reduce((stageSum, lesson) => stageSum + (lesson.duration || 0), 0),
+        0,
+      );
+    const toolboxMinutes = doc.blocks
+      .filter((block) => block.kind === 'toolbox')
+      .reduce((sum, block) => sum + block.duration, 0);
+    const requiredMinutes = doc.blocks
+      .filter((block) => block.kind === 'required')
+      .reduce((sum, block) => sum + block.duration, 0);
+    const electiveMinutes = doc.blocks
+      .filter((block) => block.kind === 'elective')
+      .reduce((sum, block) => sum + block.duration, 0);
+
     if (doc.totals.lessons !== rawLessons.length) add('manifest.totals', 'lessons 不一致');
     if (doc.totals.minutes !== stats.duration) add('manifest.totals', 'minutes 不一致');
     if (doc.totals.coreMinutes !== coreMinutes) add('manifest.totals', 'coreMinutes 不一致');
     if (doc.totals.appendixMinutes !== appendixMinutes) {
       add('manifest.totals', 'appendixMinutes 不一致');
+    }
+    if (doc.totals.appendixMinutes !== toolboxMinutes) {
+      add('manifest.totals', 'appendixMinutes 应等于 toolbox 块时长合计');
+    }
+    if (doc.totals.requiredMinutes !== undefined && doc.totals.requiredMinutes !== requiredMinutes) {
+      add('manifest.totals', 'requiredMinutes 不一致');
+    }
+    if (doc.totals.electiveMinutes !== undefined && doc.totals.electiveMinutes !== electiveMinutes) {
+      add('manifest.totals', 'electiveMinutes 不一致');
+    }
+    if (requiredMinutes + electiveMinutes !== coreMinutes) {
+      add('manifest.totals', 'required+elective 应等于 coreMinutes（现行内容阶段合计）');
+    }
+
+    if (doc.toolbox.id !== 'b') add('manifest.toolbox', 'id 应为 b');
+    const toolboxBlock = doc.blocks.find((block) => block.id === 'b');
+    if (!toolboxBlock || toolboxBlock.kind !== 'toolbox') {
+      add('manifest.toolbox', '缺少 kind=toolbox 的 block b');
+    } else {
+      for (const group of doc.toolbox.groups) {
+        if (!toolboxBlock.chapters.some((chapter) => chapter.id === group)) {
+          add('manifest.toolbox', `groups 含未知章 ${group}`);
+        }
+      }
+    }
+
+    if (doc.capstone.id !== graduation.id) {
+      add('manifest.capstone', `id 应为 ${graduation.id}`);
+    }
+
+    for (const message of assertPathsAgainstBlocks(doc)) {
+      add('manifest.paths', message);
     }
   }
 

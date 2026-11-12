@@ -1,30 +1,33 @@
-# 内容 Schema v2
+# 内容 Schema v3（Block / Chapter / Path）
 
-> 本文件是 `web/scripts/content/` 的数据契约。`content/index.js` 的归一化函数、`tools/audit-content.mjs` 的校验规则、`docs/content-manifest.json` 的统计口径都必须与本文一致。字段口径冲突时，以 `docs/curriculum-plan.md` 的目录级字段为准；执行细节以 `docs/implementation/*` 为准。
+> 本文件是 `web/scripts/content/` 的数据契约。`content/index.ts` 的归一化函数、`tools/audit-content.ts` 的校验规则、`docs/content-manifest.json` 的统计口径都必须与本文一致。字段口径冲突时，以 `docs/curriculum-plan.md` 的目录级字段为准；执行细节以 `docs/implementation/*` 为准。
+>
+> **2026-11-12**：现行目录已切换为 **version 3**：M1–M4 主修、E1 选修、B 工具箱、A–D 路径与可选 X。代码中的 `Stage` / `stageId` 命名是兼容层；其业务语义分别为 Block / blockId。
 
 ## 1. 结构
 
 ```text
 web/scripts/content/
-  index.js                 # 合并、归一化、导出查询函数
-  graduation.js            # 毕业项目
-  stages/<stage>/index.js  # 阶段元数据 + 组装
-  stages/<stage>/<lesson>.js
-  stages/<stage>/project.js
-  stages/<stage>/python.js # PYTHON_BLOCKS / PYTHON_TRACKS
+  index.ts                   # 合并、归一化、导出查询函数
+  paths.ts                   # A–D 学习路径
+  graduation.ts              # 可选毕业项目 x-linkhub
+  stages/<block>/index.ts    # 大块元数据 + 组装
+  stages/<block>/<lesson>.ts
+  stages/<block>/project*.ts
+  stages/<block>/python*.ts  # PYTHON_BLOCKS / PYTHON_TRACKS
 ```
 
 - 每讲一个文件，只导出课时对象，不写副作用。
-- 阶段 `index.js` 只做导入、阶段元数据与数组组装。
-- 项目独立 `project.js`；附录阶段 `project` 为 `null`。
-- 课时文件导出名用驼峰（如 `s0L1`、`s0Cli`、`a10`），对象 `id` 与文件名一致。
+- 大块 `index.ts` 只做导入、大块元数据与数组组装。
+- 项目独立 `project*.ts`；工具箱 B 不挂块内项目。
+- 课时文件导出名用驼峰（如 `m1Http`、`m4CodingSystem`、`bBigO`），对象 `id` 与文件名一致。
 
-## 2. 阶段（stage）
+## 2. 大块（Block）与章（Chapter）
 
 ```js
 {
-  id: 's0',                // s0..s7 | appendix
-  index: 0,                // 0..8 连续
+  id: 'm3',                // m1 | m2 | m3 | m4 | e1 | b
+  index: 2,                // 展示顺序
   title: '…',
   subtitle: '…',
   accent: 'teal',          // 设计系统色名
@@ -33,16 +36,38 @@ web/scripts/content/
   outcome: ['…'],          // 3-5 条
   keywords: ['…'],
   lessons: [],             // 顺序即展示顺序
-  project: null,           // 项目对象或 null
-  appendix: true           // 仅 appendix 阶段
+  project: null,           // 兼容字段；单项目对象或 null
+  appendix: false,         // 兼容字段；仅 B 为 true，业务判断优先使用 kind
+  kind: 'required',        // required | elective | toolbox
+  chapters: [              // 大块内章节
+    { id: 'ship', title: '生产', lessonIds: ['m3-cache', /*…*/] }
+  ],
+  projectIds: ['p-m3-ship', 'p-m3-web']
 }
 ```
+
+`appendix` 是遗留兼容字段，不得用于新增目录建模；旧 `stage` / `stageId` 名称可以留在类型和路由实现中，但新文档与产品文案统一称“大块”。
+
+### 2.1 学习路径（Path）
+
+定义在 `web/scripts/content/paths.ts`，并写入清单 `paths`：
+
+```js
+{
+  id: 'a' | 'b' | 'c' | 'd',
+  title: '…',
+  blurb: '…',
+  steps: [{ blockId: 'm1' }, { blockId: 'm3', chapterId: 'ship' }]
+}
+```
+
+`blockId` 通常使用大块 ID（`m1`…`b`）；路径 D 的 `x` step 表示转入可选毕业项目，不对应课时大块，实际项目 ID 为 `x-linkhub`。路径只表达推荐学习组合，不是访问门锁。
 
 ## 3. 课时（lesson）
 
 ```js
 {
-  id: 's0-l1',
+  id: 'm1-http',
   title: '…',
   subtitle: '…',
   duration: 55,
@@ -57,9 +82,10 @@ web/scripts/content/
 
 ID 规则：
 
-- 核心课时：`^s[0-7]-(l\d+|cli|schema|perf|resilience|data-scale)$`
-- 附录课时：`^a\d+$`
-- ID 一经写入 `docs/content-manifest.json` 不可改动；确需改动时先改大纲与清单，再做进度迁移。
+- 课时：`^(m[1-4]|e1|b)-[a-z][a-z0-9-]*$`
+- 大块：`m1 | m2 | m3 | m4 | e1 | b`
+- 旧 `s0`–`s7`、`appendix`、`a1`–`a13` 只用于重定向与进度迁移，不得写入新内容。
+- ID 确需改动时，先改大纲与清单，再同步重定向、进度迁移及夹具；路由形态保持不变。
 
 ## 4. 内容块（block）
 
@@ -103,7 +129,7 @@ ID 规则：
 
 ```js
 {
-  id: 's0-l1-check-1',
+  id: 'm1-http-check-1',
   kind: 'mcq',
   type: 'single' | 'multi',   // 缺省 single
   prompt: '…',
@@ -124,7 +150,7 @@ ID 规则：
 
 ```js
 {
-  id: 's0-l1-ex-1',
+  id: 'm1-http-ex-1',
   kind: 'code',
   title: '…',
   brief: '…',                 // 题面，支持 HTML
@@ -174,8 +200,8 @@ ID 规则：
 
 ```js
 {
-  id: 'p0',
-  stageLabel: '阶段 0 项目',
+  id: 'p-m1-probe',
+  stageLabel: 'M1 项目',
   title: '…',
   brief: '…',
   goal: '…',
@@ -188,7 +214,7 @@ ID 规则：
 }
 ```
 
-毕业项目 ID 为 `p-graduation`，里程碑 ID 固定 `m1`…`m11`。
+块内项目 ID 使用 `p-{block}-{slug}`。可选毕业项目 ID 为 `x-linkhub`，里程碑 ID 固定 `m1`…`m11`；旧 `p0`–`p7` 与 `p-graduation` 仅用于兼容迁移。
 
 ## 8. Python 映射
 
@@ -196,11 +222,11 @@ ID 规则：
 
 ```js
 export const PYTHON_BLOCKS = {
-  's0-l1': [{ code: '…', note: '…' }]   // 按该讲 code 块顺序对齐
+  'm1-http': [{ code: '…', note: '…' }]   // 按该讲 code 块顺序对齐
 };
 
 export const PYTHON_TRACKS = {
-  's0-l1-ex-1': { starter: '…', tests: [], solution: '…', hint: '…' }
+  'm1-http-ex-1': { starter: '…', tests: [], solution: '…', hint: '…' }
 };
 ```
 
@@ -210,7 +236,8 @@ export const PYTHON_TRACKS = {
 
 ## 9. 归一化与统计
 
-- `content/index.js` 负责：补 `stageId`、补默认 `title/duration/status`、注入 Python、把 `checks/exercises` 统一为数组、补项目空字段。
-- `docs/content-manifest.json` 记录版本、阶段顺序、课时 ID/时长、毕业里程碑数与总计。
-- 统计口径：45 讲；核心 32 讲 2510 分钟；附录 13 讲 890 分钟；总计 3400 分钟。
-- `tools/content-stats.mjs` 与 `tools/audit-content.mjs` 都以此文件和清单为准。
+- `content/index.ts` 负责：补 `stageId`、补默认 `title/duration/status`、注入 Python、把 `checks/exercises` 统一为数组、补项目空字段。
+- `docs/content-manifest.json` **version 3**：`paths`、`blocks[]`（含旧 `id` + `newId` + duration）、`toolbox`、`capstone`、`totals`。
+- 统计口径：45 讲；M1–M4 主修 28 讲 2170 分钟；E1 选修 4 讲 340 分钟；B 工具箱 13 讲 890 分钟；总计 3400 分钟。`totals.coreMinutes` / `appendixMinutes` 是遗留清单字段，仅为兼容读取保留。
+- `tools/content-stats.ts` 与 `tools/audit-content.ts` 以内容课时与清单 `blocks` 扁平对照为准。
+- 解析辅助：`web/scripts/content/manifest.ts`。

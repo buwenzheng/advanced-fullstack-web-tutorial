@@ -1,4 +1,4 @@
-import { content, manifest, EXPECTED } from './lib/content.js';
+import { content, manifest, manifestLessons, EXPECTED } from './lib/content.js';
 import type { Stage } from '../web/scripts/content/types.js';
 
 type Stats = Record<'lessons' | 'minutes' | 'checks' | 'code' | 'sql' | 'design', number>;
@@ -34,15 +34,20 @@ for (const stage of content.curriculum) {
   }
   console.log(`${stage.id}: lessons=${stat.lessons} minutes=${stat.minutes} checks=${stat.checks} code=${stat.code} sql=${stat.sql} design=${stat.design}`);
 
-  const manifestStage = manifest.stages.find((entry) => entry.id === stage.id);
-  if (!stage.appendix) {
-    if (!manifestStage) errors.push(`${stage.id}: 清单缺少该阶段`);
-    else if (manifestStage.duration !== stat.minutes) errors.push(`${stage.id}: 时长 ${stat.minutes} != 清单 ${manifestStage.duration}`);
+  for (const lesson of stage.lessons) {
+    const entry = manifestLessons.find((item) => item.id === lesson.id);
+    if (!entry) errors.push(`${stage.id}/${lesson.id}: 清单缺少该课时`);
+    else if (entry.duration !== lesson.duration) {
+      errors.push(`${lesson.id}: 时长 ${lesson.duration} != 清单 ${entry.duration}`);
+    }
   }
 }
 
-if (manifest.appendix.duration !== appendix.minutes) {
-  errors.push(`appendix: 时长 ${appendix.minutes} != 清单 ${manifest.appendix.duration}`);
+const toolboxMinutes = manifest.blocks
+  .filter((block) => block.kind === 'toolbox')
+  .reduce((sum, block) => sum + block.duration, 0);
+if (toolboxMinutes !== appendix.minutes) {
+  errors.push(`toolbox: 时长 ${toolboxMinutes} != 内容附录 ${appendix.minutes}`);
 }
 if (manifest.totals.lessons !== totals.lessons) errors.push(`清单 lessons=${manifest.totals.lessons} 实际 ${totals.lessons}`);
 if (manifest.totals.coreMinutes !== core.minutes) errors.push(`清单 coreMinutes=${manifest.totals.coreMinutes} 实际 ${core.minutes}`);

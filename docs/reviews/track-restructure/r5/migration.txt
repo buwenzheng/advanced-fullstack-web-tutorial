@@ -1,0 +1,5 @@
+
+> advanced-fullstack-web-tutorial@0.0.0 test:migration
+> tsx tools/test-progress-migration.ts
+
+progress migration ok: v3 fixtures (s6, a*, mixed, idempotent, p3/p4, drafts)

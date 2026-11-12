@@ -1,15 +1,33 @@
 import { Fragment } from 'react';
-import { useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 import { stageLabel } from '../data/labels';
 import { formatDuration, store } from '../../state/store';
 import { lessonTasks, taskSolved } from '../../state/mastery-core';
 import { useLesson } from '../data/content';
 import { useMastery } from '../data/mastery';
 import type { LessonContext } from '../data/types';
+import type { Project, Stage } from '../../content/types';
 import { useLang } from '../hooks/useLang';
 import { renderBlock } from '../lesson/blocks';
 import { TaskRenderer } from '../exercises/TaskRenderer';
+import { resolveLessonRedirect } from '../redirects';
 import EmptyState from './EmptyState';
+
+/** 多项目块：按章节顺序对齐 projectIds；单项目回退 stage.project */
+export function projectForLesson(stage: Stage, lessonId: string): Project | null {
+  const projects = stage.projects?.length
+    ? stage.projects
+    : (stage.project ? [stage.project] : []);
+  if (!projects.length) return null;
+  if (projects.length === 1) return projects[0]!;
+
+  const chapters = stage.chapters ?? [];
+  const chapterIndex = chapters.findIndex((chapter) => chapter.lessonIds.includes(lessonId));
+  if (chapterIndex < 0) return projects[0]!;
+
+  const preferredId = stage.projectIds?.[chapterIndex] ?? projects[chapterIndex]?.id;
+  return projects.find((project) => project.id === preferredId) ?? projects[Math.min(chapterIndex, projects.length - 1)]!;
+}
 
 function CheckIcon() {
   return (
@@ -24,7 +42,9 @@ function CheckIcon() {
 export default function LessonPage() {
   const { lessonId = '' } = useParams();
   const { current } = useLang();
-  const context = useLesson(lessonId);
+  const redirectTo = resolveLessonRedirect(lessonId);
+  const context = useLesson(redirectTo ?? lessonId);
+  if (redirectTo) return <Navigate to={`/lesson/${redirectTo}`} replace />;
   if (!context) return <EmptyState text="找不到这一讲，可能是链接有误。" back />;
   return <LessonView key={current} context={context} />;
 }
@@ -39,6 +59,7 @@ export function LessonView({ context }: { context: LessonContext }) {
   const autoMastered = mastery.lesson(lesson.id);
   const manual = store.lessonDone(lesson.id);
   const doneHidden = isDraft || (autoMastered && !manual);
+  const linkedProject = projectForLesson(stage, lesson.id);
 
   return (
     <article className="page">
@@ -119,9 +140,9 @@ export function LessonView({ context }: { context: LessonContext }) {
         >
           {manual ? '已掌握' : '标记为已掌握'}
         </button>
-        {stage.project ? (
-          <a className="btn btn--ghost btn--sm" href={`#/project/${stage.project.id}`}>
-            {`进入阶段项目：${stage.project.title}`}
+        {linkedProject ? (
+          <a className="btn btn--ghost btn--sm" href={`#/project/${linkedProject.id}`}>
+            {`进入阶段项目：${linkedProject.title}`}
           </a>
         ) : null}
       </div>
@@ -139,10 +160,10 @@ export function LessonView({ context }: { context: LessonContext }) {
             <strong>{next.title}</strong>
           </a>
         ) : null}
-        {!prev && !next && stage.project ? (
-          <a className="is-next" href={`#/project/${stage.project.id}`}>
+        {!prev && !next && linkedProject ? (
+          <a className="is-next" href={`#/project/${linkedProject.id}`}>
             <span>本阶段结束 →</span>
-            <strong>{stage.project.title}</strong>
+            <strong>{linkedProject.title}</strong>
           </a>
         ) : null}
       </nav>

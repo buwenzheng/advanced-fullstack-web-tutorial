@@ -1,9 +1,13 @@
 import type { z } from 'zod';
 import type {
   blockSchema,
+  blockKindSchema,
+  chapterSchema,
   checkSchema,
   exerciseSchema,
+  learningPathSchema,
   lessonSchema,
+  pathStepSchema,
   projectSchema,
   stageSchema,
   pythonBlockMapSchema,
@@ -21,6 +25,10 @@ export type StageData = z.infer<typeof stageSchema>;
 export type Stage = Omit<StageData, 'lessons'> & { lessons: Lesson[] };
 export type PythonBlockMap = z.infer<typeof pythonBlockMapSchema>;
 export type PythonTrackMap = z.infer<typeof pythonTrackMapSchema>;
+export type BlockKind = z.infer<typeof blockKindSchema>;
+export type Chapter = z.infer<typeof chapterSchema>;
+export type PathStep = z.infer<typeof pathStepSchema>;
+export type LearningPath = z.infer<typeof learningPathSchema>;
 
 export interface StageInput {
   data: StageData;

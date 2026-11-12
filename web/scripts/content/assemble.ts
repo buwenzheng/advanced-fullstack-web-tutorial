@@ -5,6 +5,9 @@ export function normalizeProject(project: Project | null): Project | null {
   return {
     ...project,
     goal: project.goal || '',
+    prerequisites: project.prerequisites || [],
+    nonGoals: project.nonGoals || [],
+    xRelation: project.xRelation || '',
     stack: project.stack || [],
     steps: project.steps || [],
     milestones: project.milestones || [],
@@ -62,6 +65,7 @@ export function assembleStage(input: StageInput, stageId: string): Stage {
     ...input.data,
     lessons: input.data.lessons.map((lesson) => normalizeLesson(lesson, stageId, input)),
     project: normalizeProject(input.data.project),
+    projects: input.data.projects?.map((project) => normalizeProject(project) as Project),
   };
 }
 

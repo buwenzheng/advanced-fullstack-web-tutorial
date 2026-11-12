@@ -33,8 +33,7 @@ function stageTaskCount(stageId: string): number {
 }
 
 const stageProjects = curriculum
-  .map((stage) => stage.project)
-  .filter((project): project is NonNullable<typeof project> => Boolean(project));
+  .flatMap((stage) => stage.projects ?? (stage.project ? [stage.project] : []));
 const totalMilestones = [...stageProjects, graduationProject]
   .reduce((sum, project) => sum + project.milestones.length, 0);
 const codeTaskCount = curriculum
@@ -50,7 +49,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('ReportPage', () => {
-  it('空进度展示零统计、空错题与 9 条阶段进度', async () => {
+  it('空进度展示零统计、空错题与 6 条内容块进度', async () => {
     await renderReport();
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('学习报告');
@@ -77,31 +76,31 @@ describe('ReportPage', () => {
 
     const stages = sectionByHeading('各阶段掌握度');
     const stageRows = stages.querySelectorAll('.bar-row');
-    expect(stageRows).toHaveLength(9);
+    expect(stageRows).toHaveLength(6);
     expect(stageRows[0]).toHaveTextContent('阶段 0 · 地基：请求、运行时与排障');
-    expect(stageRows[0]).toHaveTextContent(`0/${stageTaskCount('s0')}`);
-    expect((stageRows[0] as HTMLElement).querySelector('a')).toHaveAttribute('href', '#/stage/s0');
-    expect(stageRows[8]).toHaveTextContent('附录：数据结构、性能、架构、工程与 AI 基础设施');
-    expect((stageRows[8] as HTMLElement).querySelector('a')).toHaveAttribute('href', '#/stage/appendix');
+    expect(stageRows[0]).toHaveTextContent(`0/${stageTaskCount('m1')}`);
+    expect((stageRows[0] as HTMLElement).querySelector('a')).toHaveAttribute('href', '#/stage/m1');
+    expect(stageRows[5]).toHaveTextContent('工具箱');
+    expect((stageRows[5] as HTMLElement).querySelector('a')).toHaveAttribute('href', '#/stage/b');
 
     expect(screen.getByText('目前没有待攻克的题目——要么你还没开始，要么你已经全部答对了。')).toBeInTheDocument();
 
     const projects = sectionByHeading('项目进度');
     const projectCards = projects.querySelectorAll('a.panel');
-    expect(projectCards).toHaveLength(9);
+    expect(projectCards).toHaveLength(8);
     expect(within(projects).getByText(graduationProject.title)).toBeInTheDocument();
 
     const nextUp = sectionByHeading('接下来学什么');
     const nextLinks = nextUp.querySelectorAll('a.btn');
     expect(nextLinks).toHaveLength(3);
-    expect(nextLinks[0]).toHaveAttribute('href', '#/lesson/s0-l1');
+    expect(nextLinks[0]).toHaveAttribute('href', '#/lesson/m1-http');
     expect(nextLinks[0]).toHaveTextContent('从 URL 到响应：请求的四段旅程');
-    expect(nextLinks[1]).toHaveAttribute('href', '#/lesson/s0-l2');
+    expect(nextLinks[1]).toHaveAttribute('href', '#/lesson/m1-runtime');
   });
 
   it('答错题目进入待攻克列表，附录阶段显示 A 标签', async () => {
-    store.recordAnswer('s2-l1-check-3', [2], false);
-    store.recordAnswer('a1-check-1', [0], false);
+    store.recordAnswer('m2-resource-check-3', [2], false);
+    store.recordAnswer('b-bigO-check-1', [0], false);
     await renderReport();
 
     const stats = document.querySelectorAll('.stat');
@@ -112,23 +111,23 @@ describe('ReportPage', () => {
     const rows = document.querySelectorAll('.list-stack .lesson-row');
     expect(rows).toHaveLength(2);
     const first = rows[0] as HTMLElement;
-    expect(first.querySelector('.lesson-row__num')).toHaveTextContent('2');
+    expect(first.querySelector('.lesson-row__num')).toHaveTextContent('1');
     expect(first.querySelector('.lesson-row__title')).toHaveTextContent(
       'LinkHub 的 POST /v1/links 已在第三方使用。以下哪项最可能构成破坏性变更？',
     );
     expect(first.querySelector('.lesson-row__sub')).toHaveTextContent('资源建模与 HTTP 语义 · 已尝试 1 次');
     expect(first.querySelector('.badge')).toHaveTextContent('重做');
-    expect(first).toHaveAttribute('href', '#/lesson/s2-l1');
+    expect(first).toHaveAttribute('href', '#/lesson/m2-resource');
 
     const appendixRow = rows[1] as HTMLElement;
     expect(appendixRow.querySelector('.lesson-row__num')).toHaveTextContent('A');
     expect(appendixRow.querySelector('.lesson-row__sub')).toHaveTextContent(
       '复杂度与测量：先能算，再能测 · 已尝试 1 次',
     );
-    expect(appendixRow).toHaveAttribute('href', '#/lesson/a1');
+    expect(appendixRow).toHaveAttribute('href', '#/lesson/b-bigO');
 
     cleanup();
-    store.recordAnswer('s2-l1-check-3', [2], true);
+    store.recordAnswer('m2-resource-check-3', [2], true);
     await renderReport();
     const afterStats = document.querySelectorAll('.stat');
     expect(afterStats[1]).toHaveTextContent('2');
@@ -140,10 +139,10 @@ describe('ReportPage', () => {
   });
 
   it('设计题未完成计入错题，Python 轨道与里程碑分别汇总', async () => {
-    store.recordChecklist('s2-l1-ex-2', [0, 1], 8);
-    store.recordAnswer('s2-l1-ex-1@py', [], true);
-    store.setLessonDone('s0-l1', true);
-    store.toggleMilestone('p0', 'p0-m1');
+    store.recordChecklist('m2-resource-ex-2', [0, 1], 8);
+    store.recordAnswer('m2-resource-ex-1@py', [], true);
+    store.setLessonDone('m1-http', true);
+    store.toggleMilestone('p-m1-probe', 'p-m1-probe-m1');
     await renderReport();
 
     const stats = document.querySelectorAll('.stat');
@@ -169,21 +168,21 @@ describe('ReportPage', () => {
 
     const stages = sectionByHeading('各阶段掌握度');
     const s2Row = [...stages.querySelectorAll('.bar-row')].find((row) => (
-      row.textContent?.includes('阶段 2 · API 设计与契约：把实现藏起来')
+      row.textContent?.includes('阶段 1 · 后端交付：数据与 API 契约')
     )) as HTMLElement;
-    expect(s2Row).toHaveTextContent(`1/${stageTaskCount('s2')}`);
+    expect(s2Row).toHaveTextContent(`1/${stageTaskCount('m2')}`);
 
     const projects = sectionByHeading('项目进度');
-    const p0Card = [...projects.querySelectorAll('a.panel')].find((card) => (
-      card.getAttribute('href') === '#/project/p0'
+    const probeCard = [...projects.querySelectorAll('a.panel')].find((card) => (
+      card.getAttribute('href') === '#/project/p-m1-probe'
     )) as HTMLElement;
-    const p0 = curriculum.find((stage) => stage.id === 's0')!.project!;
-    expect(within(p0Card).getByText(`1/${p0.milestones.length}`)).toBeInTheDocument();
-    expect((p0Card.querySelector('.stage-card__bar i') as HTMLElement).style.width).toBe(
-      `${Math.round((1 / p0.milestones.length) * 100)}%`,
+    const probeProject = curriculum.find((stage) => stage.id === 'm1')!.project!;
+    expect(within(probeCard).getByText(`1/${probeProject.milestones.length}`)).toBeInTheDocument();
+    expect((probeCard.querySelector('.stage-card__bar i') as HTMLElement).style.width).toBe(
+      `${Math.round((1 / probeProject.milestones.length) * 100)}%`,
     );
 
     const nextUp = sectionByHeading('接下来学什么');
-    expect(nextUp.querySelector('a.btn')).toHaveAttribute('href', '#/lesson/s0-l2');
+    expect(nextUp.querySelector('a.btn')).toHaveAttribute('href', '#/lesson/m1-runtime');
   });
 });

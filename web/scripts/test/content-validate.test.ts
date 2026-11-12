@@ -22,9 +22,9 @@ describe('content validate', () => {
     const { stats, issues } = issuesOf(cloneInputs());
     expect(issues).toEqual([]);
     expect(stats).toMatchObject({
-      stages: 9,
+      stages: 6,
       lessons: 45,
-      projects: 9,
+      projects: 8,
       checks: 135,
       exercises: 79,
       tasks: 214,
@@ -55,12 +55,12 @@ describe('content validate', () => {
     const [first, second] = [swapped[0]!, swapped[1]!];
     swapped[0] = second;
     swapped[1] = first;
-    expect(issuesOf(swapped).issues.some((issue) => issue.message.includes('阶段顺序应为 s0'))).toBe(true);
+    expect(issuesOf(swapped).issues.some((issue) => issue.message.includes('阶段顺序应为 m1'))).toBe(true);
 
     const appendix = cloneInputs();
     const last = appendix[appendix.length - 1]!;
     last.data.project = structuredClone(appendix[0]!.data.project);
-    expect(issuesOf(appendix).issues.some((issue) => issue.message === '附录阶段项目应为 null')).toBe(true);
+    expect(issuesOf(appendix).issues.some((issue) => issue.message === '工具箱项目应为空')).toBe(true);
   });
 
   it('重复课时 ID 被校验', () => {

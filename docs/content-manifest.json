@@ -1,226 +1,516 @@
 {
-  "version": 2,
-  "stages": [
+  "version": 3,
+  "paths": [
     {
-      "id": "s0",
-      "index": 0,
-      "title": "地基：请求、运行时与排障",
-      "duration": 170,
-      "lessons": [
+      "id": "a",
+      "title": "后端补齐",
+      "blurb": "地基 → 后端交付 → 生产（M3 章1）",
+      "steps": [
         {
-          "id": "s0-l1",
-          "duration": 55
+          "blockId": "m1"
         },
         {
-          "id": "s0-l2",
-          "duration": 60
+          "blockId": "m2"
         },
         {
-          "id": "s0-cli",
-          "duration": 55
+          "blockId": "m3",
+          "chapterId": "ship"
         }
       ]
     },
     {
-      "id": "s1",
-      "index": 1,
-      "title": "数据与持久化：从对象到可信任的数据",
-      "duration": 320,
-      "lessons": [
+      "id": "b",
+      "title": "全栈交付",
+      "blurb": "路径 A + M3 产品章",
+      "steps": [
         {
-          "id": "s1-l1",
-          "duration": 80
+          "blockId": "m1"
         },
         {
-          "id": "s1-l2",
-          "duration": 85
+          "blockId": "m2"
         },
         {
-          "id": "s1-l3",
-          "duration": 80
+          "blockId": "m3",
+          "chapterId": "ship"
         },
         {
-          "id": "s1-schema",
-          "duration": 75
+          "blockId": "m3",
+          "chapterId": "product"
         }
       ]
     },
     {
-      "id": "s2",
-      "index": 2,
-      "title": "API 设计与契约：把实现藏起来",
-      "duration": 300,
-      "lessons": [
+      "id": "c",
+      "title": "AI 全栈",
+      "blurb": "M1 → M4-Coding → M2 → M3 → M4-Product",
+      "steps": [
         {
-          "id": "s2-l1",
-          "duration": 75
+          "blockId": "m1"
         },
         {
-          "id": "s2-l2",
-          "duration": 75
+          "blockId": "m4",
+          "chapterId": "coding"
         },
         {
-          "id": "s2-l3",
-          "duration": 75
+          "blockId": "m2"
         },
         {
-          "id": "s2-l4",
-          "duration": 75
+          "blockId": "m3"
+        },
+        {
+          "blockId": "m4",
+          "chapterId": "product"
         }
       ]
     },
     {
-      "id": "s3",
-      "index": 3,
-      "title": "缓存、异步与韧性：让系统在压力下不崩",
-      "duration": 340,
-      "lessons": [
+      "id": "d",
+      "title": "资深加深",
+      "blurb": "全栈后选修分布式 + 工具箱设计 + 集成毕业",
+      "steps": [
         {
-          "id": "s3-l1",
-          "duration": 85
+          "blockId": "m1"
         },
         {
-          "id": "s3-l2",
-          "duration": 85
+          "blockId": "m2"
         },
         {
-          "id": "s3-l3",
-          "duration": 85
+          "blockId": "m3"
         },
         {
-          "id": "s3-resilience",
-          "duration": 85
-        }
-      ]
-    },
-    {
-      "id": "s4",
-      "index": 4,
-      "title": "生产化：可观测、性能与交付",
-      "duration": 310,
-      "lessons": [
-        {
-          "id": "s4-l1",
-          "duration": 80
+          "blockId": "e1"
         },
         {
-          "id": "s4-perf",
-          "duration": 75
+          "blockId": "b",
+          "chapterId": "design"
         },
         {
-          "id": "s4-l3",
-          "duration": 80
-        },
-        {
-          "id": "s4-l4",
-          "duration": 75
-        }
-      ]
-    },
-    {
-      "id": "s5",
-      "index": 5,
-      "title": "架构与分布式：拆分的代价与数据的边界",
-      "duration": 340,
-      "lessons": [
-        {
-          "id": "s5-l1",
-          "duration": 85
-        },
-        {
-          "id": "s5-l2",
-          "duration": 85
-        },
-        {
-          "id": "s5-l3",
-          "duration": 85
-        },
-        {
-          "id": "s5-data-scale",
-          "duration": 85
-        }
-      ]
-    },
-    {
-      "id": "s6",
-      "index": 6,
-      "title": "全栈集成：把后端能力变成产品",
-      "duration": 330,
-      "lessons": [
-        {
-          "id": "s6-l1",
-          "duration": 85
-        },
-        {
-          "id": "s6-l2",
-          "duration": 85
-        },
-        {
-          "id": "s6-l3",
-          "duration": 80
-        },
-        {
-          "id": "s6-l4",
-          "duration": 80
-        }
-      ]
-    },
-    {
-      "id": "s7",
-      "index": 7,
-      "title": "AI 应用与 AI Coding：把模型接进产品与研发",
-      "duration": 400,
-      "lessons": [
-        {
-          "id": "s7-l1",
-          "duration": 80
-        },
-        {
-          "id": "s7-l2",
-          "duration": 85
-        },
-        {
-          "id": "s7-l3",
-          "duration": 80
-        },
-        {
-          "id": "s7-l4",
-          "duration": 80
-        },
-        {
-          "id": "s7-l5",
-          "duration": 75
+          "blockId": "x"
         }
       ]
     }
   ],
-  "appendix": {
-    "id": "appendix",
-    "duration": 890,
-    "lessons": [
-      "a1",
-      "a2",
-      "a3",
-      "a4",
-      "a5",
-      "a6",
-      "a7",
-      "a8",
-      "a9",
-      "a10",
-      "a11",
-      "a12",
-      "a13"
+  "blocks": [
+    {
+      "id": "m1",
+      "kind": "required",
+      "title": "地基",
+      "duration": 170,
+      "chapters": [],
+      "lessons": [
+        {
+          "id": "m1-http",
+          "duration": 55,
+          "legacyId": "s0-l1"
+        },
+        {
+          "id": "m1-runtime",
+          "duration": 60,
+          "legacyId": "s0-l2"
+        },
+        {
+          "id": "m1-cli",
+          "duration": 55,
+          "legacyId": "s0-cli"
+        }
+      ],
+      "projects": [
+        "p-m1-probe"
+      ]
+    },
+    {
+      "id": "m2",
+      "kind": "required",
+      "title": "后端交付",
+      "duration": 620,
+      "chapters": [
+        {
+          "id": "data",
+          "title": "数据",
+          "lessonIds": [
+            "m2-sql",
+            "m2-index",
+            "m2-tx",
+            "m2-schema"
+          ]
+        },
+        {
+          "id": "api",
+          "title": "API",
+          "lessonIds": [
+            "m2-resource",
+            "m2-errors",
+            "m2-auth",
+            "m2-contract"
+          ]
+        }
+      ],
+      "lessons": [
+        {
+          "id": "m2-sql",
+          "duration": 80,
+          "legacyId": "s1-l1"
+        },
+        {
+          "id": "m2-index",
+          "duration": 85,
+          "legacyId": "s1-l2"
+        },
+        {
+          "id": "m2-tx",
+          "duration": 80,
+          "legacyId": "s1-l3"
+        },
+        {
+          "id": "m2-schema",
+          "duration": 75,
+          "legacyId": "s1-schema"
+        },
+        {
+          "id": "m2-resource",
+          "duration": 75,
+          "legacyId": "s2-l1"
+        },
+        {
+          "id": "m2-errors",
+          "duration": 75,
+          "legacyId": "s2-l2"
+        },
+        {
+          "id": "m2-auth",
+          "duration": 75,
+          "legacyId": "s2-l3"
+        },
+        {
+          "id": "m2-contract",
+          "duration": 75,
+          "legacyId": "s2-l4"
+        }
+      ],
+      "projects": [
+        "p-m2-data",
+        "p-m2-api"
+      ]
+    },
+    {
+      "id": "m3",
+      "kind": "required",
+      "title": "生产与产品",
+      "duration": 980,
+      "chapters": [
+        {
+          "id": "ship",
+          "title": "生产",
+          "lessonIds": [
+            "m3-cache",
+            "m3-queue",
+            "m3-ratelimit",
+            "m3-resilience",
+            "m3-otel",
+            "m3-perf",
+            "m3-container",
+            "m3-cicd"
+          ]
+        },
+        {
+          "id": "product",
+          "title": "产品",
+          "lessonIds": [
+            "m3-bff",
+            "m3-render",
+            "m3-realtime",
+            "m3-edge"
+          ]
+        }
+      ],
+      "lessons": [
+        {
+          "id": "m3-cache",
+          "duration": 85,
+          "legacyId": "s3-l1"
+        },
+        {
+          "id": "m3-queue",
+          "duration": 85,
+          "legacyId": "s3-l2"
+        },
+        {
+          "id": "m3-ratelimit",
+          "duration": 85,
+          "legacyId": "s3-l3"
+        },
+        {
+          "id": "m3-resilience",
+          "duration": 85,
+          "legacyId": "s3-resilience"
+        },
+        {
+          "id": "m3-otel",
+          "duration": 80,
+          "legacyId": "s4-l1"
+        },
+        {
+          "id": "m3-perf",
+          "duration": 75,
+          "legacyId": "s4-perf"
+        },
+        {
+          "id": "m3-container",
+          "duration": 80,
+          "legacyId": "s4-l3"
+        },
+        {
+          "id": "m3-cicd",
+          "duration": 75,
+          "legacyId": "s4-l4"
+        },
+        {
+          "id": "m3-bff",
+          "duration": 85,
+          "legacyId": "s6-l1"
+        },
+        {
+          "id": "m3-render",
+          "duration": 85,
+          "legacyId": "s6-l2"
+        },
+        {
+          "id": "m3-realtime",
+          "duration": 80,
+          "legacyId": "s6-l3"
+        },
+        {
+          "id": "m3-edge",
+          "duration": 80,
+          "legacyId": "s6-l4"
+        }
+      ],
+      "projects": [
+        "p-m3-ship",
+        "p-m3-web"
+      ]
+    },
+    {
+      "id": "m4",
+      "kind": "required",
+      "title": "AI 工程",
+      "duration": 400,
+      "chapters": [
+        {
+          "id": "coding",
+          "title": "AI Coding",
+          "lessonIds": [
+            "m4-coding-system",
+            "m4-coding-team"
+          ]
+        },
+        {
+          "id": "product",
+          "title": "产品 AI",
+          "lessonIds": [
+            "m4-llm",
+            "m4-rag",
+            "m4-eval"
+          ]
+        }
+      ],
+      "lessons": [
+        {
+          "id": "m4-llm",
+          "duration": 80,
+          "legacyId": "s7-l1"
+        },
+        {
+          "id": "m4-rag",
+          "duration": 85,
+          "legacyId": "s7-l2"
+        },
+        {
+          "id": "m4-eval",
+          "duration": 80,
+          "legacyId": "s7-l3"
+        },
+        {
+          "id": "m4-coding-system",
+          "duration": 80,
+          "legacyId": "s7-l4"
+        },
+        {
+          "id": "m4-coding-team",
+          "duration": 75,
+          "legacyId": "s7-l5"
+        }
+      ],
+      "projects": [
+        "p-m4-ai"
+      ]
+    },
+    {
+      "id": "e1",
+      "kind": "elective",
+      "title": "分布式与数据边界",
+      "duration": 340,
+      "chapters": [],
+      "lessons": [
+        {
+          "id": "e1-modular",
+          "duration": 85,
+          "legacyId": "s5-l1"
+        },
+        {
+          "id": "e1-consistency",
+          "duration": 85,
+          "legacyId": "s5-l2"
+        },
+        {
+          "id": "e1-failures",
+          "duration": 85,
+          "legacyId": "s5-l3"
+        },
+        {
+          "id": "e1-datascale",
+          "duration": 85,
+          "legacyId": "s5-data-scale"
+        }
+      ],
+      "projects": [
+        "p-e1-stats"
+      ]
+    },
+    {
+      "id": "b",
+      "kind": "toolbox",
+      "title": "工具箱",
+      "duration": 890,
+      "chapters": [
+        {
+          "id": "dsa",
+          "title": "数据结构",
+          "lessonIds": [
+            "b-bigO",
+            "b-hash",
+            "b-btree",
+            "b-heap",
+            "b-lru",
+            "b-prob"
+          ]
+        },
+        {
+          "id": "perf",
+          "title": "性能与基础设施",
+          "lessonIds": [
+            "b-capacity",
+            "b-linux"
+          ]
+        },
+        {
+          "id": "design",
+          "title": "设计与工程",
+          "lessonIds": [
+            "b-sysdesign",
+            "b-adr",
+            "b-quality",
+            "b-incident"
+          ]
+        },
+        {
+          "id": "ai",
+          "title": "AI 基础设施",
+          "lessonIds": [
+            "b-ai-infra"
+          ]
+        }
+      ],
+      "lessons": [
+        {
+          "id": "b-bigO",
+          "duration": 60,
+          "legacyId": "a1"
+        },
+        {
+          "id": "b-hash",
+          "duration": 65,
+          "legacyId": "a2"
+        },
+        {
+          "id": "b-btree",
+          "duration": 70,
+          "legacyId": "a3"
+        },
+        {
+          "id": "b-heap",
+          "duration": 70,
+          "legacyId": "a4"
+        },
+        {
+          "id": "b-lru",
+          "duration": 65,
+          "legacyId": "a5"
+        },
+        {
+          "id": "b-prob",
+          "duration": 70,
+          "legacyId": "a6"
+        },
+        {
+          "id": "b-capacity",
+          "duration": 70,
+          "legacyId": "a7"
+        },
+        {
+          "id": "b-linux",
+          "duration": 70,
+          "legacyId": "a8"
+        },
+        {
+          "id": "b-sysdesign",
+          "duration": 70,
+          "legacyId": "a9"
+        },
+        {
+          "id": "b-adr",
+          "duration": 70,
+          "legacyId": "a10"
+        },
+        {
+          "id": "b-quality",
+          "duration": 70,
+          "legacyId": "a11"
+        },
+        {
+          "id": "b-incident",
+          "duration": 70,
+          "legacyId": "a12"
+        },
+        {
+          "id": "b-ai-infra",
+          "duration": 70,
+          "legacyId": "a13"
+        }
+      ],
+      "projects": []
+    }
+  ],
+  "toolbox": {
+    "id": "b",
+    "groups": [
+      "dsa",
+      "perf",
+      "design",
+      "ai"
     ]
   },
-  "graduation": {
-    "id": "p-graduation",
+  "capstone": {
+    "id": "x-linkhub",
+    "legacyId": "p-graduation",
     "milestones": 11
   },
   "totals": {
     "lessons": 45,
+    "minutes": 3400,
     "coreMinutes": 2510,
     "appendixMinutes": 890,
-    "minutes": 3400
+    "requiredMinutes": 2170,
+    "electiveMinutes": 340
   }
 }

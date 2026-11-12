@@ -1,0 +1,61 @@
+
+Running 21 tests using 8 workers
+
+(node:47352) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:76500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:25024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:76848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:71180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:59356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\stage-m1-1440x900.png, writing actual.
+  ok  1 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual stage-m1 @ 1440x900 (3.5s)
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lab-1440x900.png is re-generated, writing actual.
+  ok  4 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 1440x900 (4.8s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\stage-m1-768x1024.png, writing actual.
+  ok  9 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual stage-m1 @ 768x1024 (2.1s)
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\home-768x1024.png is re-generated, writing actual.
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lesson-m1-http-1440x900.png, writing actual.
+  ok  7 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 768x1024 (6.1s)
+  ok  3 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-m1-http @ 1440x900 (7.2s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lesson-m4-coding-team-1440x900.png, writing actual.
+  ok  5 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-m4-coding-team @ 1440x900 (7.6s)
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\home-1440x900.png is re-generated, writing actual.
+  ok  2 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 1440x900 (8.7s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\project-x-linkhub-1440x900.png, writing actual.
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\report-1440x900.png is re-generated, writing actual.
+  ok  6 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual project-x-linkhub @ 1440x900 (8.2s)
+  ok  8 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 1440x900 (8.1s)
+  ok 13 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 768x1024 (2.1s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lesson-m1-http-768x1024.png, writing actual.
+  ok 10 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-m1-http @ 768x1024 (5.1s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lesson-m4-coding-team-768x1024.png, writing actual.
+  ok 11 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-m4-coding-team @ 768x1024 (5.4s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\stage-m1-390x844.png, writing actual.
+  ok 16 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual stage-m1 @ 390x844 (2.2s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\project-x-linkhub-768x1024.png, writing actual.
+  ok 20 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lab @ 390x844 (1.9s)
+  ok 12 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual project-x-linkhub @ 768x1024 (5.6s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lesson-m1-http-390x844.png, writing actual.
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\home-390x844.png is re-generated, writing actual.
+  ok 15 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual home @ 390x844 (4.9s)
+  ok 17 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-m1-http @ 390x844 (4.3s)
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\report-768x1024.png is re-generated, writing actual.
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\lesson-m4-coding-team-390x844.png, writing actual.
+  ok 14 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 768x1024 (5.8s)
+  ok 18 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual lesson-m4-coding-team @ 390x844 (4.5s)
+A snapshot doesn't exist at C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\project-x-linkhub-390x844.png, writing actual.
+  ok 19 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual project-x-linkhub @ 390x844 (4.2s)
+C:\Users\jm014254\Desktop\temporary\site\算法学习\e2e\__screenshots__\report-390x844.png is re-generated, writing actual.
+  ok 21 [chromium] › e2e\visual.spec.ts:24:7 › v2 visual baseline › @visual report @ 390x844 (3.4s)
+
+  21 passed (17.4s)

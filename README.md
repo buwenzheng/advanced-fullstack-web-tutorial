@@ -4,14 +4,15 @@
 
 ## 内容规模
 
-- 8 个核心阶段 + 1 个附录，共 45 讲；
-- 9 个项目（p0–p7 + 毕业项目），54 个里程碑；
+- 4 个主修块（M1–M4）+ 1 个选修块（E1）+ 工具箱 B，共 45 讲；
+- 8 个块内项目 + 可选集成毕业项目 X（`x-linkhub`）；
+- 4 条推荐学习路径（A–D），允许按目标阶段结业，不要求线性学完全部内容；
 - 214 个任务：检查题、代码题、SQL 题与方案题；
 - 12 类内容块；JavaScript / Python 双代码轨道；内置 HTTP 实验台与学习报告。
 
 ## 技术栈
 
-- React 19 + React Router 7（hash 路由，旧链接不变）
+- React 19 + React Router 7（hash 路由形态不变，旧 ID 链接重定向到新 ID）
 - Vite 7 + TypeScript 5.9（strict）
 - Zod 4 内容校验
 - Vitest + Testing Library；Playwright（含 axe 与视觉回归）
@@ -61,7 +62,11 @@ web/
       lab/                   # HTTP 实验台
       report/                # 报告模型
     state/                   # 进度、草稿、语言、迁移
-    content/                 # 课程内容与 Zod 校验（单一事实源）
+    content/
+      stages/               # 按 m1/m2/m3/m4/e1/b 大块组织课程与项目
+      paths.ts              # A–D 学习路径
+      graduation.ts         # 可选集成毕业项目 x-linkhub
+      schema.ts             # Block/Chapter/Path 等 Zod 契约
     engine/                  # JS / Python / SQL 判题
     test/                    # Vitest
   generated/                 # catalog 与搜索索引（gitignored）
@@ -73,12 +78,13 @@ docs/                        # 课程、实施、评审与发布文档
 
 ## 内容维护
 
-1. 修改 `web/scripts/content/**` 下的 TypeScript 内容；
-2. 运行 `npm run content:validate`；
-3. 运行 `npm run content:build`（`dev` / `build` 会代跑）；
-4. 运行 `npm run verify`。
+1. 先在 `docs/curriculum-plan.md` 确认所属大块、章、路径与 ID；结构调整同时对照 [`docs/implementation/18-track-restructure.md`](docs/implementation/18-track-restructure.md)；
+2. 修改 `web/scripts/content/stages/<block>/**` 中的课时或块内项目；路径改动集中在 `web/scripts/content/paths.ts`，可选毕业项目改动集中在 `graduation.ts`；
+3. 同步对应 `docs/content-specs/`、清单与必要的旧 ID 映射，不改变 `#/lesson/:id`、`#/stage/:id`、`#/project/:id` 路由形态；
+4. 运行 `npm run content:validate` 与 `npm run content:build`（`dev` / `build` 会代跑）；
+5. 运行 `npm run verify`；涉及视觉或 Python CDN 用例时另跑 README「测试与平台」中的专项命令。
 
-课程 ID、练习答案、hash URL、`localStorage` 键与旧进度迁移规则都是兼容契约，不要为了“整洁”改动。
+ID 参数值可按已批准迁移调整；练习答案、hash 路由形态、`localStorage` 键与旧进度迁移规则仍是兼容契约，不要为了“整洁”随意改动。
 
 ## 测试与平台
 
@@ -98,6 +104,8 @@ docs/                        # 课程、实施、评审与发布文档
 
 ## 文档
 
+- 课程目录（现行）：`docs/curriculum-plan.md`（分块路径：主修 M1–M4 + 选修 E1 + 工具箱 + 可选毕业）
+- 分块重构实施（现行）：`docs/implementation/18-track-restructure.md`（R0–R5；明细 `19-r1` … `23-r5`）
 - 课程与发布文档：`docs/`
-- 前端工程化迁移总纲：`docs/implementation/10-frontend-engineering.md`
-- 执行文档：E0–E5 为现行交付依据（`docs/implementation/11-*` 至 `16-*`）；E6（`17-e6-release-v3.md`）的站点发布已于 2026-11-11 取消，保留为历史计划
+- 前端工程化迁移总纲（历史）：`docs/implementation/10-frontend-engineering.md`；E0–E5 见 `11-*` … `16-*`；E6（`17-e6-release-v3.md`）站点发布已取消
+- 内容重建总纲（历史）：`docs/implementation/00-master-plan.md`（M0–M9）

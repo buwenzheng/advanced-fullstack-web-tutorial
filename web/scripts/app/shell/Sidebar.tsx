@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react';
 import { matchPath, useLocation } from 'react-router';
-import { useGraduationId, useLessonSummaries, useStageSummaries } from '../data/content';
+import { useGraduationId, useLessonSummaries } from '../data/content';
 import { useMastery } from '../data/mastery';
+import { useBlocks } from '../data/paths';
 import type { LessonSummary } from '../data/types';
 import ResetProgress from './ResetProgress';
 
 export default function Sidebar({ open }: { open: boolean }) {
   const { pathname } = useLocation();
-  const stages = useStageSummaries();
+  const stages = useBlocks();
   const lessons = useLessonSummaries();
   const mastery = useMastery();
   const graduationId = useGraduationId();
@@ -85,13 +86,26 @@ export default function Sidebar({ open }: { open: boolean }) {
               >
                 <span className="stage-node__pip">{stage.appendix ? 'A' : String(stage.index)}</span>
                 <span className="stage-node__title">{stage.title}</span>
+                {stage.kind === 'elective' ? <span className="badge badge--teal tiny">选修</span> : null}
+                {stage.kind === 'toolbox' ? <span className="badge badge--amber tiny">工具箱</span> : null}
                 <span className="badge badge--muted tiny">{`${stageMastery.done}/${stageMastery.total}`}</span>
                 {/* v2 的箭头是 HTML 命名空间的空 svg，占位但不绘制；保留同尺寸空盒以维持布局与像素对等 */}
                 <span className="stage-node__chevron" aria-hidden="true" />
               </button>
               <div className="stage-node__bar"><i style={{ width: `${stageMastery.percent}%` }} /></div>
               <ul className="stage-node__lessons">
-                {(lessonsByStage.get(stage.id) ?? []).map((lesson) => {
+                {(stage.chapters.length
+                  ? stage.chapters.flatMap((chapter) => [
+                    { chapter: chapter.title, id: `${stage.id}-${chapter.id}-heading` },
+                    ...chapter.lessonIds.map((id) => lessonIndex.get(id)).filter(
+                      (lesson): lesson is LessonSummary => Boolean(lesson),
+                    ),
+                  ])
+                  : lessonsByStage.get(stage.id) ?? []).map((entry) => {
+                  if ('chapter' in entry) {
+                    return <li className="stage-node__chapter" key={entry.id}>{entry.chapter}</li>;
+                  }
+                  const lesson = entry;
                   const done = mastery.lesson(lesson.id);
                   const current = activeLessonId === lesson.id;
                   return (

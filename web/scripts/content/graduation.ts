@@ -4,11 +4,21 @@ const lesson = (id: string, label: string) => `<a href="#/lesson/${id}">${label}
 const project = (id: string, label: string) => `<a href="#/project/${id}">${label}</a>`;
 
 export const graduationProject = {
-  "id": "p-graduation",
+  "id": "x-linkhub",
   "stageLabel": "毕业项目",
   "title": "LinkHub 短链服务",
-  "brief": "把 p1-p7 的成果合成一个可部署、可运营、可答辩的产品：认证与权限、持久化、缓存、异步统计、限流与幂等、可观测性、容器化发布、Web/BFF、多租户后台与 AI 助手。本站只给项目说明、模板与验收标准，真实系统在你的仓库里增量完成。",
-  "goal": "沿用 p1-p7 的同一代码库，不新建第二套 API、缓存、队列或统计服务；把每个里程碑做成可观察的增量，并留下可复现证据。答辩时不演示 happy path，而是讲清三个取舍、两个失败模式，并提交一次真实回滚与一次故障恢复的记录。",
+  "brief": "把路径 B、C 或 D 已掌握的能力集成为可部署、可运营、可答辩的产品。默认示例域是 LinkHub，但可在新仓库或等价产品中实现；按全栈、AI 全栈、分布式三档选择里程碑。",
+  "goal": "从现有项目产出或等价契约起步，把所选档位的里程碑做成可观察增量，并留下可复现证据。答辩时讲清三个取舍、两个失败模式，并提交一次真实回滚与一次故障恢复记录。",
+  "prerequisites": [
+    "全栈档：路径 B（M2 + M3 全文）",
+    "AI 全栈档：路径 C（全栈档 + M4-Product 与 Coding 门槛）",
+    "分布式档：路径 B 或 C + E1；只在选择该档时要求 E1"
+  ],
+  "nonGoals": [
+    "不要求先完成所有项目，也不要求沿用同一 LinkHub 仓库",
+    "不要求三档同时完成；AI 与分布式能力只对相应档位必需"
+  ],
+  "xRelation": "X 是可选集成毕业项目：路径 A 不要求 X；路径 B/C/D 可按目标选择全栈、AI 全栈或分布式档。",
   "stack": [
     "PostgreSQL",
     "Redis",
@@ -19,20 +29,20 @@ export const graduationProject = {
     "LLM/RAG"
   ],
   "steps": [
-    "冻结 p1-p7 的代码库与契约，建立 M1-M11 看板；每个里程碑先写「验收 + 证据」再开工，避免用截图代替结论。",
-    "B8.1：在 p1-p4 上补齐契约与认证、核心链路、异步统计、缓存与保护；M3 的统计服务直接复用 p5，不复制一套。",
-    "B8.2：复用 p4 完成可观测性与交付回滚；复用 p6 完成类型客户端、BFF、SSR/流式、CWV、安全头、RUM 与可访问性。",
-    "B8.3：复用 p2/p6 完成管理后台与租户隔离；复用 p7 完成 AI 功能与五项质量门槛；最后按 M11 准备答辩材料。",
-    "按 a10 写 3 份 ADR，按 a7 做三场景容量模型；每个数字都保留命令、报告或看板出处，答辩时能当场打开。",
-    "按 a12 做两次故障演练，其中一次必须是发布回滚；复盘在 24 小时内完成，行动项要有 owner 与可验证结果。",
-    "按 a11 做一次质量审计：测试策略、flaky 翻转次数、覆盖率缺口；按 s7-l4 记录 AI 协作五层与至少 3 个失败案例。",
+    "选定结业档与代码基线（已有项目、等价服务或新仓库均可），建立 M1–M11 看板；每个里程碑先写「验收 + 证据」再开工。",
+    "先完成契约与认证、核心链路、缓存与保护；异步统计可用 M3 方案，分布式档才要求 E1 Outbox 方案。",
+    "完成可观测性与交付回滚，再完成类型客户端、BFF、SSR/流式、CWV、安全头、RUM 与可访问性。",
+    "完成管理后台与租户隔离；AI 全栈档再完成 AI 功能与五项质量门槛；最后按 M11 准备答辩材料。",
+    "按 b-adr 写 3 份 ADR，按 b-capacity 做三场景容量模型；每个数字都保留命令、报告或看板出处，答辩时能当场打开。",
+    "按 b-incident 做两次故障演练，其中一次必须是发布回滚；复盘在 24 小时内完成，行动项要有 owner 与可验证结果。",
+    "按 b-quality 做一次质量审计：测试策略、flaky 翻转次数、覆盖率缺口；按 m4-coding-system 记录 AI 协作五层与至少 3 个失败案例。",
     "用答辩评分表做一次模拟答辩，专门修三类问题：数字与报告不一致、只讲 happy path、被追问时无法承认未知。"
   ],
   "milestones": [
     {
       "id": "m1",
       "title": "M1 契约与认证",
-      "desc": "在 p2 的 API 上固化契约与认证，不新增服务：OpenAPI 覆盖公开接口，错误码统一，JWT/Refresh 与 RBAC 落地。",
+      "desc": "在 p-m2-api 的 API 上固化契约与认证，不新增服务：OpenAPI 覆盖公开接口，错误码统一，JWT/Refresh 与 RBAC 落地。",
       "delivery": "OpenAPI 文档、统一错误码表、JWT/Refresh 轮换与撤销、RBAC 矩阵、契约测试。",
       "acceptance": [
         "OpenAPI 覆盖所有公开接口，请求/响应 schema 完整；破坏性变更会让契约检查在 CI 中失败。",
@@ -46,14 +56,14 @@ export const graduationProject = {
         "RBAC 矩阵与越权用例结果",
         "Refresh 轮换/撤销测试记录"
       ],
-      "reuse": ["p2"],
-      "related": [stage("s2", "S2"), stage("s3", "S3"), project("p2", "p2")],
+      "reuse": ["p-m2-api"],
+      "related": [stage("m2", "M2"), stage("m3", "M3"), project("p-m2-api", "p-m2-api")],
       "criteria": "契约可回归、越权全拒、Refresh 可轮换可撤销。"
     },
     {
       "id": "m2",
       "title": "M2 核心链路",
-      "desc": "在 p1/p2 的数据模型与 API 上补齐创建、跳转、管理列表与失效处理，形成一条可压测的主链路。",
+      "desc": "在 p-m2-data/p-m2-api 的数据模型与 API 上补齐创建、跳转、管理列表与失效处理，形成一条可压测的主链路。",
       "delivery": "创建短链、跳转、列表、删除/失效；输入校验与错误码接入 M1 契约。",
       "acceptance": [
         "创建、跳转、列表、停用全链路可用；停用后的链接返回 410，未知 slug 返回 404。",
@@ -67,14 +77,14 @@ export const graduationProject = {
         "错误码样例",
         "停用/未知链接行为录屏或断言"
       ],
-      "reuse": ["p1", "p2"],
-      "related": [stage("s1", "S1"), stage("s2", "S2"), stage("s3", "S3"), project("p1", "p1"), project("p2", "p2")],
+      "reuse": ["p-m2-data", "p-m2-api"],
+      "related": [stage("m2", "M2"), stage("m2", "M2"), stage("m3", "M3"), project("p-m2-data", "p-m2-data"), project("p-m2-api", "p-m2-api")],
       "criteria": "全链路可用，P99 有口径，410/404/400/422 语义正确。"
     },
     {
       "id": "m3",
       "title": "M3 异步统计",
-      "desc": "直接复用 p5 的 Outbox、RabbitMQ 与读模型，把点击事件接入统计链路；跳转只写事件，不同步等待统计。",
+      "desc": "直接复用 p-e1-stats 的 Outbox、RabbitMQ 与读模型，把点击事件接入统计链路；跳转只写事件，不同步等待统计。",
       "delivery": "点击事件生产、幂等消费、读模型更新、死信重放；查询接口标注一致性级别。",
       "acceptance": [
         "同一 eventId 重复提交 10 次，点击计数只增加 1；移除应用层幂等后，唯一索引仍能兜底。",
@@ -88,14 +98,14 @@ export const graduationProject = {
         "消费者故障演练记录",
         "死信重放记录"
       ],
-      "reuse": ["p3", "p5"],
-      "related": [stage("s3", "S3"), stage("s5", "S5"), lesson("a12", "a12"), project("p3", "p3"), project("p5", "p5")],
+      "reuse": ["p-m3-ship", "p-e1-stats"],
+      "related": [stage("m3", "M3"), stage("e1", "E1"), lesson("b-incident", "b-incident"), project("p-m3-ship", "p-m3-ship"), project("p-e1-stats", "p-e1-stats")],
       "criteria": "重复只计一次，延迟有上界，统计故障不影响跳转。"
     },
     {
       "id": "m4",
       "title": "M4 缓存与保护",
-      "desc": "复用 p3/p4 的 Redis、限流与幂等实现，为跳转加缓存、为创建加幂等键、为热点与故障加保护。",
+      "desc": "复用 p-m3-ship/p-m3-ship 的 Redis、限流与幂等实现，为跳转加缓存、为创建加幂等键、为热点与故障加保护。",
       "delivery": "缓存读写与失效、分布式限流、Idempotency-Key、热点保护、Redis 故障降级。",
       "acceptance": [
         "热点链接压测时不击穿数据库：开启缓存前后对比数据库 QPS，命中率与保护阈值写进报告。",
@@ -109,14 +119,14 @@ export const graduationProject = {
         "幂等并发测试",
         "Redis 故障演练记录"
       ],
-      "reuse": ["p3", "p4"],
-      "related": [stage("s3", "S3"), lesson("a5", "a5"), project("p3", "p3"), project("p4", "p4")],
+      "reuse": ["p-m3-ship"],
+      "related": [stage("m3", "M3"), lesson("b-lru", "b-lru"), project("p-m3-ship", "p-m3-ship")],
       "criteria": "热点不击穿，429 有 Retry-After，幂等不重复创建，缓存故障可降级。"
     },
     {
       "id": "m5",
       "title": "M5 可观测性",
-      "desc": "复用 p4 的日志、指标与 trace 基础，把 API、数据库、队列与 BFF 串成一条可追溯链路。",
+      "desc": "复用 p-m3-ship 的日志、指标与 trace 基础，把 API、数据库、队列与 BFF 串成一条可追溯链路。",
       "delivery": "结构化日志、RED 指标、OpenTelemetry trace、看板、告警与 runbook。",
       "acceptance": [
         "任取一个 requestId，能在 trace 中还原网关、API、数据库与队列的经过；对应日志行可被检索到。",
@@ -130,14 +140,14 @@ export const graduationProject = {
         "指标看板",
         "告警 runbook 与触发记录"
       ],
-      "reuse": ["p4"],
-      "related": [stage("s4", "S4"), lesson("a12", "a12"), project("p4", "p4")],
+      "reuse": ["p-m3-ship"],
+      "related": [stage("m3", "M3"), lesson("b-incident", "b-incident"), project("p-m3-ship", "p-m3-ship")],
       "criteria": "requestId 可还原全链路，日志无 PII，告警有 runbook。"
     },
     {
       "id": "m6",
       "title": "M6 交付",
-      "desc": "复用 p4 的容器与流水线，在毕业项目上完成多阶段构建、灰度与一次真实回滚。",
+      "desc": "复用 p-m3-ship 的容器与流水线，在毕业项目上完成多阶段构建、灰度与一次真实回滚。",
       "delivery": "多阶段 Dockerfile、非 root 运行、健康检查、CI/CD 流水线、灰度与回滚流程。",
       "acceptance": [
         "镜像多阶段构建、以非 root 运行、带健康检查；缺少必需环境变量时启动失败并给出明确原因。",
@@ -151,14 +161,14 @@ export const graduationProject = {
         "回滚时间线与指标对比",
         "灰度记录"
       ],
-      "reuse": ["p4"],
-      "related": [stage("s4", "S4"), lesson("a8", "a8"), project("p4", "p4")],
+      "reuse": ["p-m3-ship"],
+      "related": [stage("m3", "M3"), lesson("b-linux", "b-linux"), project("p-m3-ship", "p-m3-ship")],
       "criteria": "非 root 构建，流水线不可绕过，完成一次真实回滚与灰度。"
     },
     {
       "id": "m7",
       "title": "M7 Web 与 BFF",
-      "desc": "复用 p6 的类型客户端、BFF 与 SSR 能力，把 API 组合成页面可用的聚合接口，并收紧会话安全。",
+      "desc": "复用 p-m3-web 的类型客户端、BFF 与 SSR 能力，把 API 组合成页面可用的聚合接口，并收紧会话安全。",
       "delivery": "OpenAPI 生成客户端、BFF 聚合、SSR/流式首屏、HttpOnly 会话、CSRF 防护、实时看板。",
       "acceptance": [
         "客户端由 OpenAPI 生成；CI 检查破坏性变更，手写类型与契约不漂移。",
@@ -172,14 +182,14 @@ export const graduationProject = {
         "SSR 页面与断线重连录屏",
         "Cookie/存储检查与 CSRF 用例结果"
       ],
-      "reuse": ["p6"],
-      "related": [stage("s6", "S6"), lesson("a8", "a8"), project("p6", "p6")],
+      "reuse": ["p-m3-web"],
+      "related": [stage("m3", "M3"), lesson("b-linux", "b-linux"), project("p-m3-web", "p-m3-web")],
       "criteria": "类型零漂移，BFF 有超时与降级，SSR 可用，会话安全通过。"
     },
     {
       "id": "m8",
       "title": "M8 全栈质量门槛",
-      "desc": "复用 p6 的页面与埋点，补齐 CWV 预算、安全头、RUM 与可访问性四条上线门槛。",
+      "desc": "复用 p-m3-web 的页面与埋点，补齐 CWV 预算、安全头、RUM 与可访问性四条上线门槛。",
       "delivery": "CWV 预算与报告、CSP/HSTS 等安全头、RUM 上报与 trace 串联、关键页面可访问性。",
       "acceptance": [
         "LCP、INP、CLS 的 p75 达到预算：LCP ≤ 2.5s、INP ≤ 200ms、CLS ≤ 0.1；报告给出设备与网络条件。",
@@ -193,14 +203,14 @@ export const graduationProject = {
         "RUM 看板与 trace 关联样例",
         "可访问性检查清单"
       ],
-      "reuse": ["p6"],
-      "related": [stage("s6", "S6"), lesson("a8", "a8"), lesson("a11", "a11"), project("p6", "p6")],
+      "reuse": ["p-m3-web"],
+      "related": [stage("m3", "M3"), lesson("b-linux", "b-linux"), lesson("b-quality", "b-quality"), project("p-m3-web", "p-m3-web")],
       "criteria": "CWV 达标，安全头齐全，RUM 可串联，键盘可完成核心操作。"
     },
     {
       "id": "m9",
       "title": "M9 管理后台与多租户",
-      "desc": "复用 p2 的权限模型与 p6 的页面能力，做管理后台与租户隔离；不新写一套认证。",
+      "desc": "复用 p-m2-api 的权限模型与 p-m3-web 的页面能力，做管理后台与租户隔离；不新写一套认证。",
       "delivery": "管理员登录、链接管理、统计查看、租户隔离、审计日志。",
       "acceptance": [
         "管理员可登录、创建/编辑/停用链接并查看统计；关键操作有成功与失败反馈。",
@@ -214,19 +224,19 @@ export const graduationProject = {
         "权限矩阵",
         "审计日志样例"
       ],
-      "reuse": ["p2", "p6"],
-      "related": [stage("s2", "S2"), stage("s3", "S3"), stage("s6", "S6"), project("p2", "p2"), project("p6", "p6")],
+      "reuse": ["p-m2-api", "p-m3-web"],
+      "related": [stage("m2", "M2"), stage("m3", "M3"), stage("m3", "M3"), project("p-m2-api", "p-m2-api"), project("p-m3-web", "p-m3-web")],
       "criteria": "后台核心操作可用，跨租户全拒，权限与 M1 一致，审计可查。"
     },
     {
       "id": "m10",
       "title": "M10 AI 功能与评估",
-      "desc": "复用 p7 的网关、RAG、受限工具与评估集，把 AI 功能接入 LinkHub，并逐项证明五项质量门槛。",
+      "desc": "复用 p-m4-ai 的网关、RAG、受限工具与评估集，把 AI 功能接入 LinkHub，并逐项证明五项质量门槛。",
       "delivery": "摘要/标签异步任务、语义搜索与块级引用、受限问数、成本上限、模型故障降级。",
       "acceptance": [
         "摘要/标签走异步链路，不阻塞创建；模型超时或失败时降级为规则提取，并记录原因。",
         "语义搜索租户过滤在排序前执行；引用精确到 docId 与 chunkIndex；跨租户文档不进入候选集。",
-        "问数只调用 p5 的受限工具，不直连生产库、不生成任意 SQL；越权与超限调用在查询前被拒绝并审计。",
+        "问数只调用 p-e1-stats 的受限工具，不直连生产库、不生成任意 SQL；越权与超限调用在查询前被拒绝并审计。",
         "离线评估集达到阈值并通过 CI 回归；直接与间接注入用例不越权、不泄漏。",
         "单请求与单租户成本有上限；provider 超时或 429 时 AI 功能降级，整站仍可用。"
       ],
@@ -237,8 +247,8 @@ export const graduationProject = {
         "成本看板",
         "模型故障演练记录"
       ],
-      "reuse": ["p7"],
-      "related": [stage("s7", "S7"), lesson("a13", "a13"), lesson("a6", "a6"), project("p7", "p7")],
+      "reuse": ["p-m4-ai"],
+      "related": [stage("m4", "M4"), lesson("b-ai-infra", "b-ai-infra"), lesson("b-prob", "b-prob"), project("p-m4-ai", "p-m4-ai")],
       "criteria": "五项门槛逐项有证据：评估、注入、引用、成本、降级。"
     },
     {
@@ -260,13 +270,13 @@ export const graduationProject = {
         "AI 评估报告与协作记录",
         "答辩提纲与评分表"
       ],
-      "reuse": ["p1", "p2", "p3", "p4", "p5", "p6", "p7"],
-      "related": [stage("s4", "S4"), stage("s5", "S5"), stage("s6", "S6"), stage("s7", "S7"), lesson("a10", "a10"), lesson("a12", "a12")],
+      "reuse": ["p-m2-data", "p-m2-api", "p-m3-ship", "p-e1-stats", "p-m3-web", "p-m4-ai"],
+      "related": [stage("m3", "M3"), stage("e1", "E1"), stage("m3", "M3"), stage("m4", "M4"), lesson("b-adr", "b-adr"), lesson("b-incident", "b-incident")],
       "criteria": "三个取舍、两个失败模式、一次回滚、一次恢复，数字与报告一致。"
     }
   ],
   "deliverables": [
-    "可运行系统（复用 p1-p7，不重写）",
+    "可运行系统（复用 p-m2-data-p-m4-ai，不重写）",
     "M1-M11 证据索引（命令、报告、截图、trace）",
     "3 份 ADR（含备选、后果与反悔条件）",
     "容量模型（三场景、冗余、成本、压测验证）",
@@ -276,7 +286,7 @@ export const graduationProject = {
     "答辩提纲与评分表"
   ],
   "checklist": [
-    "没有新建第二套 API、缓存、队列或统计服务，能力全部复用 p1-p7",
+    "没有新建第二套 API、缓存、队列或统计服务，能力全部复用 p-m2-data-p-m4-ai",
     "11 个里程碑都有可复现证据，不是「做完了」",
     "重复点击只计一次，统计故障不影响跳转",
     "热点链接压测不击穿数据库，429 带 Retry-After",
@@ -290,6 +300,26 @@ export const graduationProject = {
     "多区域部署与故障切换演练",
     "成本优化报告与单位经济性分析",
     "混沌演练自动化与回归看板"
+  ],
+  "completionTiers": [
+    {
+      "id": "fullstack",
+      "title": "全栈",
+      "milestoneIds": ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m11"],
+      "note": "完成 X1–X8 与 X10 对应里程碑；不要求 AI，也不要求 E1 的 Outbox 方案。"
+    },
+    {
+      "id": "ai-fullstack",
+      "title": "AI 全栈",
+      "milestoneIds": ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m10", "m11"],
+      "note": "全栈档基础上增加 X9 AI 功能与评估。"
+    },
+    {
+      "id": "distributed",
+      "title": "分布式",
+      "milestoneIds": ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m11"],
+      "note": "全栈档基础上，m3（X4）必须采用 E1 的 Outbox、独立消费者与可重建读模型方案。"
+    }
   ],
   "templates": [
     {

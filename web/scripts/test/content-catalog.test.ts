@@ -15,9 +15,9 @@ describe('content catalog', () => {
 
   it('覆盖全部阶段、课时、项目与题目且 ID 唯一', () => {
     expect(catalog.version).toBe(1);
-    expect(catalog.stages).toHaveLength(9);
+    expect(catalog.stages).toHaveLength(6);
     expect(catalog.lessons).toHaveLength(45);
-    expect(catalog.projects).toHaveLength(9);
+    expect(catalog.projects).toHaveLength(8);
     expect(catalog.tasks).toHaveLength(214);
     expect(new Set(catalog.stages.map((stage) => stage.id)).size).toBe(catalog.stages.length);
     expect(new Set(catalog.lessons.map((lesson) => lesson.id)).size).toBe(catalog.lessons.length);
@@ -34,8 +34,12 @@ describe('content catalog', () => {
         subtitle: stage.subtitle,
         duration: stage.duration,
         appendix: Boolean(stage.appendix),
+        kind: stage.kind,
+        chapterCount: stage.chapters?.length ?? 0,
+        chapters: stage.chapters ?? [],
         lessonCount: stage.lessons.length,
         projectId: stage.project ? stage.project.id : null,
+        projectIds: (stage.projects ?? (stage.project ? [stage.project] : [])).map((project) => project.id),
         accent: stage.accent,
       });
       for (const lesson of stage.lessons) {
@@ -53,10 +57,10 @@ describe('content catalog', () => {
       }
     }
 
-    const appendix = catalog.stages.find((stage) => stage.appendix)!;
-    expect(appendix.id).toBe('appendix');
-    expect(appendix.projectId).toBeNull();
-    expect(catalog.stages.filter((stage) => !stage.appendix)).toHaveLength(8);
+    const toolbox = catalog.stages.find((stage) => stage.kind === 'toolbox')!;
+    expect(toolbox.id).toBe('b');
+    expect(toolbox.projectId).toBeNull();
+    expect(catalog.stages.filter((stage) => stage.kind !== 'toolbox')).toHaveLength(5);
   });
 
   it('检查题与练习映射为目录任务并保留 Python 标记', () => {
@@ -95,7 +99,7 @@ describe('content catalog', () => {
     expect(catalog.tasks.filter((task) => task.kind !== 'mcq')).toHaveLength(79);
   });
 
-  it('项目目录包含八个阶段项目与毕业项目', () => {
+  it('项目目录包含七个块项目与毕业项目', () => {
     expect(catalog.projects.find((project) => project.id === graduationProject.id)).toEqual({
       id: graduationProject.id,
       stageLabel: graduationProject.stageLabel,
@@ -103,13 +107,14 @@ describe('content catalog', () => {
       milestones: graduationProject.milestones.length,
     });
     for (const stage of curriculum) {
-      if (!stage.project) continue;
-      expect(catalog.projects.find((project) => project.id === stage.project!.id)).toEqual({
-        id: stage.project.id,
-        stageLabel: stage.project.stageLabel,
-        title: stage.project.title,
-        milestones: stage.project.milestones.length,
-      });
+      for (const project of stage.projects ?? (stage.project ? [stage.project] : [])) {
+        expect(catalog.projects.find((item) => item.id === project.id)).toEqual({
+          id: project.id,
+          stageLabel: project.stageLabel,
+          title: project.title,
+          milestones: project.milestones.length,
+        });
+      }
     }
     expect(catalog.projects.filter((project) => project.stageLabel === '毕业项目')).toHaveLength(1);
   });
@@ -118,14 +123,14 @@ describe('content catalog', () => {
 describe('search index build', () => {
   const docs = buildSearchIndex();
 
-  it('生成 9 阶段、45 课时与 9 项目的 63 条文档', () => {
-    expect(docs).toHaveLength(63);
+  it('生成 6 块、45 课时与 8 项目的 59 条文档', () => {
+    expect(docs).toHaveLength(59);
     expect(
       docs.reduce<Record<string, number>>((counts, doc) => {
         counts[doc.kind] = (counts[doc.kind] ?? 0) + 1;
         return counts;
       }, {}),
-    ).toEqual({ stage: 9, lesson: 45, project: 9 });
+    ).toEqual({ stage: 6, lesson: 45, project: 8 });
     expect(new Set(docs.map((doc) => doc.id)).size).toBe(docs.length);
     for (const doc of docs) {
       expect(doc.href).toBe(`#/${doc.kind}/${doc.id}`);

@@ -1,4 +1,4 @@
-import type { Stage } from './types.js';
+import type { Chapter, Stage } from './types.js';
 
 export interface CatalogStage {
   id: string;
@@ -7,8 +7,13 @@ export interface CatalogStage {
   subtitle: string;
   duration: number;
   appendix: boolean;
+  /** R1+：有则输出；旧 stage 内容可缺省 */
+  kind?: Stage['kind'];
+  chapterCount?: number;
+  chapters?: Chapter[];
   lessonCount: number;
   projectId: string | null;
+  projectIds?: string[];
   accent: Stage['accent'];
 }
 

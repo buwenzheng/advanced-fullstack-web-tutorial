@@ -39,13 +39,15 @@ export function searchCurriculum(query: string): SearchHit[] {
       }
     });
 
-    if (stage.project && `${stage.project.title} ${stage.project.brief}`.toLowerCase().includes(q)) {
-      hits.push({
-        type: 'project',
-        title: stage.project.title,
-        sub: '阶段项目',
-        to: `/project/${stage.project.id}`,
-      });
+    for (const project of stage.projects ?? (stage.project ? [stage.project] : [])) {
+      if (`${project.title} ${project.brief}`.toLowerCase().includes(q)) {
+        hits.push({
+          type: 'project',
+          title: project.title,
+          sub: '阶段项目',
+          to: `/project/${project.id}`,
+        });
+      }
     }
   });
 

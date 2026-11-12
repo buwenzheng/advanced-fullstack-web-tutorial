@@ -6,16 +6,16 @@ describe('searchCurriculum', () => {
     expect(searchCurriculum('   ')).toEqual([]);
   });
 
-  it('阶段优先：地基命中 s0', () => {
-    expect(searchCurriculum('地基')[0]?.to).toBe('/stage/s0');
+  it('内容块优先：地基命中 m1', () => {
+    expect(searchCurriculum('地基')[0]?.to).toBe('/stage/m1');
   });
 
-  it('课时全文：事件循环命中 s0-l2', () => {
-    expect(searchCurriculum('事件循环').some((hit) => hit.to === '/lesson/s0-l2')).toBe(true);
+  it('课时全文：事件循环命中 m1-runtime', () => {
+    expect(searchCurriculum('事件循环').some((hit) => hit.to === '/lesson/m1-runtime')).toBe(true);
   });
 
-  it('毕业项目：LinkHub 短链服务命中 p-graduation', () => {
-    expect(searchCurriculum('LinkHub 短链服务').some((hit) => hit.to === '/project/p-graduation')).toBe(true);
+  it('毕业项目：LinkHub 短链服务命中 x-linkhub', () => {
+    expect(searchCurriculum('LinkHub 短链服务').some((hit) => hit.to === '/project/x-linkhub')).toBe(true);
   });
 
   it('结果最多 12 条', () => {

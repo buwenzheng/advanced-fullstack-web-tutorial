@@ -46,8 +46,12 @@ export function buildCatalog(): Catalog {
       subtitle: stage.subtitle,
       duration: stage.duration,
       appendix: Boolean(stage.appendix),
+      kind: stage.kind,
+      chapterCount: stage.chapters?.length ?? 0,
+      chapters: stage.chapters ?? [],
       lessonCount: stage.lessons.length,
       projectId: stage.project ? stage.project.id : null,
+      projectIds: (stage.projects ?? (stage.project ? [stage.project] : [])).map((project) => project.id),
       accent: stage.accent,
     });
     stage.lessons.forEach((lesson) => {
@@ -65,12 +69,12 @@ export function buildCatalog(): Catalog {
       lesson.checks.forEach((check) => tasks.push(taskOf(lesson.id, stage.id, check)));
       lesson.exercises.forEach((exercise) => tasks.push(taskOf(lesson.id, stage.id, exercise)));
     });
-    if (stage.project) {
+    for (const project of stage.projects ?? (stage.project ? [stage.project] : [])) {
       projects.push({
-        id: stage.project.id,
-        stageLabel: stage.project.stageLabel,
-        title: stage.project.title,
-        milestones: stage.project.milestones.length,
+        id: project.id,
+        stageLabel: project.stageLabel,
+        title: project.title,
+        milestones: project.milestones.length,
       });
     }
   });
@@ -106,14 +110,14 @@ export function buildSearchIndex(): SearchDocument[] {
         text: lessonHaystack(lesson),
       });
     });
-    if (stage.project) {
+    for (const project of stage.projects ?? (stage.project ? [stage.project] : [])) {
       docs.push({
         kind: 'project',
-        id: stage.project.id,
-        href: `#/project/${stage.project.id}`,
-        title: stage.project.title,
+        id: project.id,
+        href: `#/project/${project.id}`,
+        title: project.title,
         sub: '阶段项目',
-        text: `${stage.project.title} ${stage.project.brief}`,
+        text: `${project.title} ${project.brief}`,
       });
     }
   });

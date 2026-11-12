@@ -25,7 +25,9 @@ export const graduationProject: Project = normalizeProject(rawGraduationProject)
 export function findProject(id: string): Project | null {
   if (id === graduationProject.id) return graduationProject;
   for (const stage of curriculum) {
-    if (stage.project?.id === id) return stage.project;
+    const project = (stage.projects ?? (stage.project ? [stage.project] : []))
+      .find((candidate) => candidate.id === id);
+    if (project) return project;
   }
   return null;
 }

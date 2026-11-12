@@ -8,6 +8,12 @@ import {
   PYTHON_BLOCKS,
   PYTHON_TRACKS,
 } from '../../web/scripts/content/index.js';
+import {
+  flattenManifestLessons,
+  parseContentManifest,
+  type ContentManifestV3,
+  type ManifestLessonRef,
+} from '../../web/scripts/content/manifest.js';
 import type {
   Check,
   Exercise,
@@ -29,33 +35,14 @@ export const content = {
   PYTHON_TRACKS: PYTHON_TRACKS as unknown as PythonTrackMap,
 };
 
-export interface ManifestLesson {
-  id: string;
-  duration: number;
-}
-export interface ManifestStage {
-  id: string;
-  index: number;
-  title: string;
-  duration: number;
-  lessons: ManifestLesson[];
-}
-export interface Manifest {
-  version: number;
-  stages: ManifestStage[];
-  appendix: { id: string; duration: number; lessons: string[] };
-  graduation: { id: string; milestones: number };
-  totals: {
-    lessons: number;
-    coreMinutes: number;
-    appendixMinutes: number;
-    minutes: number;
-  };
-}
+export type Manifest = ContentManifestV3;
+export type ManifestLesson = ManifestLessonRef;
 
-export const manifest = JSON.parse(
-  fs.readFileSync(path.join(ROOT, 'docs/content-manifest.json'), 'utf8'),
-) as Manifest;
+export const manifest: Manifest = parseContentManifest(
+  JSON.parse(fs.readFileSync(path.join(ROOT, 'docs/content-manifest.json'), 'utf8')),
+);
+
+export const manifestLessons = flattenManifestLessons(manifest);
 
 export const EXPECTED = {
   lessons: 45,
@@ -66,7 +53,9 @@ export const EXPECTED = {
   minutes: 3400,
 };
 
-export const LESSON_ID_RE = /^s[0-7]-(l\d+|cli|schema|perf|resilience|data-scale)$|^a\d+$/;
+/** R1：内容仍用旧 ID；R2 后改为新 ID 正则 */
+/** R2 起：m1-m4 / e1 / b 语义 ID；仍兼容历史形态便于审计过渡日志 */
+export const LESSON_ID_RE = /^(?:m[1-4]|e1|b)-[a-zA-Z0-9-]+$|^s[0-7]-(l\d+|cli|schema|perf|resilience|data-scale)$|^a\d+$/;
 
 export type WalkVisitor = (value: string, keyPath: string) => void;
 
@@ -97,6 +86,10 @@ export function stripHtml(html: unknown): string {
     .replace(/&amp;/g, '&')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+export function sumMinutes(lessons: Array<{ duration?: number }>): number {
+  return lessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0);
 }
 
 export function blockText(block: unknown): string {
@@ -136,3 +129,5 @@ export function eachCheck(callback: CheckVisitor): void {
 export function loadPythonMaps(): { blocks: PythonBlockMap; tracks: PythonTrackMap } {
   return { blocks: content.PYTHON_BLOCKS, tracks: content.PYTHON_TRACKS };
 }
+
+export type { Check, Exercise, Lesson, Project, Stage };

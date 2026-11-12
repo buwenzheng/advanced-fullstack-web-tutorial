@@ -6,81 +6,57 @@ import type { SearchDocument } from '../shell/search-docs';
 import type { LessonContext } from './types';
 
 const STAGE_LOADERS: Record<string, () => Promise<StageInput>> = {
-  s0: async () => {
-    const module = await import('../../content/stages/s0/index.js');
+  m1: async () => {
+    const module = await import('../../content/stages/m1/index.js');
     return {
-      data: module.stage0,
+      data: module.stageM1,
       pythonBlocks: module.PYTHON_BLOCKS ?? {},
       pythonTracks: module.PYTHON_TRACKS ?? {},
     };
   },
-  s1: async () => {
-    const module = await import('../../content/stages/s1/index.js');
+  m2: async () => {
+    const module = await import('../../content/stages/m2/index.js');
     return {
-      data: module.stage1,
+      data: module.stageM2,
       pythonBlocks: module.PYTHON_BLOCKS ?? {},
       pythonTracks: module.PYTHON_TRACKS ?? {},
     };
   },
-  s2: async () => {
-    const module = await import('../../content/stages/s2/index.js');
+  m3: async () => {
+    const module = await import('../../content/stages/m3/index.js');
     return {
-      data: module.stage2,
+      data: module.stageM3,
       pythonBlocks: module.PYTHON_BLOCKS ?? {},
       pythonTracks: module.PYTHON_TRACKS ?? {},
     };
   },
-  s3: async () => {
-    const module = await import('../../content/stages/s3/index.js');
+  m4: async () => {
+    const module = await import('../../content/stages/m4/index.js');
     return {
-      data: module.stage3,
+      data: module.stageM4,
       pythonBlocks: module.PYTHON_BLOCKS ?? {},
       pythonTracks: module.PYTHON_TRACKS ?? {},
     };
   },
-  s4: async () => {
-    const module = await import('../../content/stages/s4/index.js');
+  e1: async () => {
+    const module = await import('../../content/stages/e1/index.js');
     return {
-      data: module.stage4,
+      data: module.stageE1,
       pythonBlocks: module.PYTHON_BLOCKS ?? {},
       pythonTracks: module.PYTHON_TRACKS ?? {},
     };
   },
-  s5: async () => {
-    const module = await import('../../content/stages/s5/index.js');
+  b: async () => {
+    const module = await import('../../content/stages/b/index.js');
     return {
-      data: module.stage5,
-      pythonBlocks: module.PYTHON_BLOCKS ?? {},
-      pythonTracks: module.PYTHON_TRACKS ?? {},
-    };
-  },
-  s6: async () => {
-    const module = await import('../../content/stages/s6/index.js');
-    return {
-      data: module.stage6,
-      pythonBlocks: module.PYTHON_BLOCKS ?? {},
-      pythonTracks: module.PYTHON_TRACKS ?? {},
-    };
-  },
-  s7: async () => {
-    const module = await import('../../content/stages/s7/index.js');
-    return {
-      data: module.stage7,
-      pythonBlocks: module.PYTHON_BLOCKS ?? {},
-      pythonTracks: module.PYTHON_TRACKS ?? {},
-    };
-  },
-  appendix: async () => {
-    const module = await import('../../content/stages/appendix/index.js');
-    return {
-      data: module.stageAppendix,
+      data: module.stageB,
       pythonBlocks: module.PYTHON_BLOCKS ?? {},
       pythonTracks: module.PYTHON_TRACKS ?? {},
     };
   },
 };
 
-const STAGE_IDS = ['s0', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 'appendix'];
+const STAGE_IDS = ['m1', 'm2', 'm3', 'm4', 'e1', 'b'];
 
 const stageCache = new Map<string, Promise<Stage | null>>();
 
@@ -161,10 +137,11 @@ export function loadProject(projectId: string): Promise<Project | null> {
   if (!task) {
     task = loadCatalog().then(async (catalog) => {
       if (!catalog.projects.some((project) => project.id === projectId)) return null;
-      const owner = catalog.stages.find((stage) => stage.projectId === projectId);
-      if (owner) {
-        const stage = await loadStage(owner.id);
-        return stage?.project ?? null;
+      const stages = await loadAllStages();
+      for (const stage of stages) {
+        const projects = stage.projects ?? (stage.project ? [stage.project] : []);
+        const project = projects.find((candidate) => candidate.id === projectId);
+        if (project) return project;
       }
       const graduation = await loadGraduation();
       return graduation.id === projectId ? graduation : null;

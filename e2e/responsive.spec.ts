@@ -3,10 +3,10 @@ import { entryUrl } from './lib/entry';
 
 const PAGES = [
   '#/',
-  '#/stage/s0',
-  '#/lesson/s0-l1',
-  '#/lesson/s7-l5',
-  '#/project/p-graduation',
+  '#/stage/m1',
+  '#/lesson/m1-http',
+  '#/lesson/m4-coding-team',
+  '#/project/x-linkhub',
   '#/lab',
   '#/report',
 ];
@@ -63,17 +63,17 @@ test.describe('移动端抽屉专项', () => {
   });
 
   test('从抽屉进入课时后自动关闭', async ({ page }) => {
-    await page.goto(entryUrl('#/lesson/s0-l1'));
+    await page.goto(entryUrl('#/lesson/m1-http'));
     await page.locator('#menu-toggle').click();
     await expect(page.locator('#sidebar')).toHaveClass(/is-open/);
-    await page.locator('.lesson-link[data-lesson="s0-l2"]').click();
-    await expect(page).toHaveURL(/#\/lesson\/s0-l2$/);
+    await page.locator('.lesson-link[data-lesson="m1-runtime"]').click();
+    await expect(page).toHaveURL(/#\/lesson\/m1-runtime$/);
     await expect(page.locator('#sidebar')).not.toHaveClass(/is-open/);
     await expect(page.locator('#scrim')).toBeHidden();
   });
 
   test('代码块与表格在自身容器内滚动，文档无横向溢出', async ({ page }) => {
-    await page.goto(entryUrl('#/lesson/s0-l1'));
+    await page.goto(entryUrl('#/lesson/m1-http'));
     await expect(page.locator('main h1')).toBeVisible();
 
     const overflow = await page.evaluate(

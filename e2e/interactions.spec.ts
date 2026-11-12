@@ -1,8 +1,8 @@
 import { mkdirSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
-import { s1L2 } from '../web/scripts/content/stages/s1/s1-l2';
-import { s1L3 } from '../web/scripts/content/stages/s1/s1-l3';
+import { m2Index } from '../web/scripts/content/stages/m2/m2-index';
+import { m2Tx } from '../web/scripts/content/stages/m2/m2-tx';
 import { entryUrl } from './lib/entry';
 
 interface ExerciseData {
@@ -19,10 +19,9 @@ function exerciseOf(source: { exercises: unknown[] }, id: string): ExerciseData 
   return found;
 }
 
-const codeTask = exerciseOf(s1L3, 's1-l3-ex-1');
-const designTask = exerciseOf(s1L3, 's1-l3-ex-2');
-const sqlTask = exerciseOf(s1L2, 's1-l2-ex-2');
-const codeTitle = codeTask.title;
+const codeTask = exerciseOf(m2Tx, 'm2-tx-ex-1');
+const designTask = exerciseOf(m2Tx, 'm2-tx-ex-2');
+const sqlTask = exerciseOf(m2Index, 'm2-index-ex-2');const codeTitle = codeTask.title;
 const codeStarter = codeTask.starter;
 const codeSolution = codeTask.solution;
 const designTitle = designTask.title;
@@ -61,7 +60,7 @@ async function shot(page: Page, name: string): Promise<void> {
 test.describe('React 入口交互清单', () => {
   test('MCQ：答错反馈、重试后可再次作答', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/lesson/s0-l1');
+    await gotoReact(page, '#/lesson/m1-http');
     const quiz = page.locator('.quiz').first();
     await quiz.getByRole('button', { name: /所有用户的 DNS 缓存同时过期/ }).click();
     await quiz.getByRole('button', { name: '提交答案' }).click();
@@ -81,7 +80,7 @@ test.describe('React 入口交互清单', () => {
 
   test('代码题：标准答案通过全部测试，重置恢复 starter', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/lesson/s1-l3');
+    await gotoReact(page, '#/lesson/m2-tx');
     const exercise = page.locator('.exercise').filter({ hasText: codeTitle });
     const editor = exercise.getByRole('textbox', { name: codeTitle });
     await editor.fill(codeSolution);
@@ -100,7 +99,7 @@ test.describe('React 入口交互清单', () => {
 
   test('SQL 题：标准答案返回正确结果', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/lesson/s1-l2');
+    await gotoReact(page, '#/lesson/m2-index');
     const exercise = page.locator('.exercise').filter({ hasText: sqlTitle });
     await exercise.getByRole('textbox', { name: 'SQL 编辑器' }).fill(sqlSolution);
     await exercise.getByRole('button', { name: '执行 SQL' }).click();
@@ -112,7 +111,7 @@ test.describe('React 入口交互清单', () => {
 
   test('方案题：勾满自检清单并刷新保持', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/lesson/s1-l3');
+    await gotoReact(page, '#/lesson/m2-tx');
     const exercise = page.locator('.exercise').filter({ hasText: designTitle });
     const boxes = exercise.locator('input[type="checkbox"]');
     await expect(boxes).toHaveCount(designCount);
@@ -133,7 +132,7 @@ test.describe('React 入口交互清单', () => {
 
   test('草稿：刷新保留输入，重置恢复 starter', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/lesson/s1-l3');
+    await gotoReact(page, '#/lesson/m2-tx');
     const editor = page.getByRole('textbox', { name: codeTitle });
     await editor.fill('// fixture draft 保留');
     await page.reload();
@@ -149,7 +148,7 @@ test.describe('React 入口交互清单', () => {
 
   test('@python 语言轨道：切换 Python 默认 Python 且刷新保持，可切回 Node', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/lesson/s1-l3');
+    await gotoReact(page, '#/lesson/m2-tx');
     await expect(page.getByRole('tab', { name: 'Node.js' })).toHaveAttribute('aria-selected', 'true');
 
     await page.locator('#lang-switch button[data-lang="python"]').click();
@@ -169,7 +168,7 @@ test.describe('React 入口交互清单', () => {
 
   test('项目：里程碑进度 +1 且刷新保持，毕业项目笔记刷新保持', async ({ page }) => {
     const errors = collectErrors(page);
-    await gotoReact(page, '#/project/p-graduation');
+    await gotoReact(page, '#/project/x-linkhub');
     const badge = page.locator('.project-hero .badge--amber');
     await expect(badge).toHaveText('里程碑进度 0/11');
     await page.locator('.milestone').first().locator('.milestone__box').click();
@@ -195,7 +194,7 @@ test.describe('React 入口交互清单', () => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
       origin: 'http://127.0.0.1:4173',
     });
-    await gotoReact(page, '#/project/p-graduation');
+    await gotoReact(page, '#/project/x-linkhub');
     const card = page.locator('.template-card').first();
     await card.getByRole('button', { name: '复制模板' }).click();
     await expect(card.getByRole('button', { name: '已复制' })).toBeVisible();
@@ -255,7 +254,7 @@ test.describe('React 入口交互清单', () => {
     await expect(page.locator('.stat')).toHaveCount(5);
     await expect(page.locator('.stat').nth(1)).toContainText('1');
     await expect(page.locator('.stat').nth(4)).toContainText('1');
-    await expect(page.locator('.bar-row')).toHaveCount(11);
+    await expect(page.locator('.bar-row')).toHaveCount(8);
     const wrongRow = page.locator('.list-stack .lesson-row');
     await expect(wrongRow).toHaveCount(1);
     await expect(wrongRow.first()).toContainText('破坏性变更');
@@ -277,7 +276,7 @@ test.describe('React 入口交互清单', () => {
 
     await input.press('Enter');
     await expect(page.locator('main h1')).toHaveText('LinkHub 短链服务');
-    await expect(page).toHaveURL(/#\/project\/p-graduation$/);
+    await expect(page).toHaveURL(/#\/project\/x-linkhub$/);
 
     await input.focus();
     await input.fill('LinkHub');
@@ -296,9 +295,9 @@ test.describe('React 入口交互清单', () => {
         p: {},
         meta: { version: 2, startedAt: 0 },
       }));
-      localStorage.setItem('bff-lab-drafts-v1', JSON.stringify({ 's1-l3-ex-1': '// draft to clear' }));
+      localStorage.setItem('bff-lab-drafts-v1', JSON.stringify({ 'm2-tx-ex-1': '// draft to clear' }));
     });
-    await gotoReact(page, '#/lesson/s1-l3');
+    await gotoReact(page, '#/lesson/m2-tx');
     await expect(page.getByRole('textbox', { name: codeTitle })).toHaveValue('// draft to clear');
 
     page.once('dialog', (dialog) => {
@@ -320,7 +319,7 @@ test.describe('React 入口交互清单', () => {
 });
 
 test.describe('旧进度夹具', () => {
-  test('s6 旧课时 ID 迁移后 a1 显示本讲已掌握', async ({ page }) => {
+  test('v1 附录 s6 迁移后 b-bigO 显示本讲已掌握', async ({ page }) => {
     const errors = collectErrors(page);
     await page.addInitScript(() => {
       localStorage.setItem('bff-lab-progress-v1', JSON.stringify({
@@ -337,29 +336,55 @@ test.describe('旧进度夹具', () => {
         meta: { version: 1, startedAt: 0 },
       }));
     });
-    await gotoReact(page, '#/lesson/a1');
+    await gotoReact(page, '#/lesson/b-bigO');
     await expect(page.locator('.lesson-head')).toContainText('本讲已掌握');
     const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('bff-lab-progress-v1') || '{}'));
-    expect(stored.meta.version).toBe(2);
-    expect(stored.l.a1).toEqual({ done: true });
+    expect(stored.meta.version).toBe(3);
+    expect(stored.l['b-bigO']).toEqual({ done: true });
     expect(stored.l['s6-l1']).toBeUndefined();
     await shot(page, 'legacy-mastered');
     expect(errors).toEqual([]);
   });
 
-  test('种子草稿显示在编辑器，旧 s6 草稿键迁移为 a1', async ({ page }) => {
+  test('v2 BFF 的 s6 迁移到 m3-bff 而非工具箱', async ({ page }) => {
     const errors = collectErrors(page);
     await page.addInitScript(() => {
+      localStorage.setItem('bff-lab-progress-v1', JSON.stringify({
+        q: {},
+        l: { 's6-l1': { done: true } },
+        p: {},
+        meta: { version: 2, startedAt: 0 },
+      }));
+    });
+    await gotoReact(page, '#/lesson/m3-bff');
+    await expect(page.locator('.lesson-head')).toContainText('本讲已掌握');
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('bff-lab-progress-v1') || '{}'));
+    expect(stored.meta.version).toBe(3);
+    expect(stored.l['m3-bff']).toEqual({ done: true });
+    expect(stored.l['b-bigO']).toBeUndefined();
+    expect(errors).toEqual([]);
+  });
+
+  test('种子草稿显示在编辑器；v2 进度下旧 s6 草稿迁到 m3-bff', async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.addInitScript(() => {
+      localStorage.setItem('bff-lab-progress-v1', JSON.stringify({
+        q: {},
+        l: {},
+        p: {},
+        meta: { version: 2, startedAt: 0 },
+      }));
       localStorage.setItem('bff-lab-drafts-v1', JSON.stringify({
-        's1-l3-ex-1': '// seeded draft',
+        'm2-tx-ex-1': '// seeded draft',
         's6-l1-ex-1': '// legacy draft',
       }));
     });
-    await gotoReact(page, '#/lesson/s1-l3');
+    await gotoReact(page, '#/lesson/m2-tx');
     await expect(page.getByRole('textbox', { name: codeTitle })).toHaveValue('// seeded draft');
     const drafts = await page.evaluate(() => JSON.parse(localStorage.getItem('bff-lab-drafts-v1') || '{}'));
-    expect(drafts['a1-ex-1']).toBe('// legacy draft');
+    expect(drafts['m3-bff-ex-1']).toBe('// legacy draft');
     expect(drafts['s6-l1-ex-1']).toBeUndefined();
+    expect(drafts['b-bigO-ex-1']).toBeUndefined();
     expect(errors).toEqual([]);
   });
 

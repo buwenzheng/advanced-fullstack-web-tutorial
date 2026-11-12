@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
+import { resolveProjectRedirect } from '../redirects';
 import type { Project } from '../../content/types';
 import { store } from '../../state/store';
 import { useGraduationId, useProject } from '../data/content';
@@ -67,6 +68,7 @@ export function ProjectView({ project }: { project: Project }) {
         <p>{project.brief}</p>
         <div style={{ marginTop: 16, display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
           <span className="badge badge--amber">里程碑进度 {doneCount}/{project.milestones.length}</span>
+          {project.id.startsWith('p-e1-') ? <span className="badge badge--teal">选修</span> : null}
           {project.stack.map((item) => (
             <span key={item} className="badge badge--muted">{item}</span>
           ))}
@@ -79,6 +81,29 @@ export function ProjectView({ project }: { project: Project }) {
             <div className="aside-card">
               <h3>你要交付什么</h3>
               <RichText as="p" html={project.goal} />
+            </div>
+          ) : null}
+
+          <div className="aside-card">
+            <h3>先修与边界</h3>
+            <p><strong>先修：</strong>{project.prerequisites.join('；')}</p>
+            <p><strong>与 X 的关系：</strong><RichText as="span" html={project.xRelation} /></p>
+            <h3 style={{ marginTop: 16 }}>非目标</h3>
+            <ul>
+              {project.nonGoals.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+
+          {project.completionTiers?.length ? (
+            <div className="aside-card">
+              <h3>三档结业</h3>
+              <ul>
+                {project.completionTiers.map((tier) => (
+                  <li key={tier.id}>
+                    <strong>{tier.title}</strong>：{tier.note}
+                  </li>
+                ))}
+              </ul>
             </div>
           ) : null}
 
@@ -139,7 +164,9 @@ export function ProjectView({ project }: { project: Project }) {
 
 export default function ProjectPage() {
   const { projectId = '' } = useParams();
-  const project = useProject(projectId);
+  const redirectTo = resolveProjectRedirect(projectId);
+  const project = useProject(redirectTo ?? projectId);
+  if (redirectTo) return <Navigate to={`/project/${redirectTo}`} replace />;
   if (!project) return <EmptyState text="找不到这个项目。" />;
   return <ProjectView project={project} />;
 }

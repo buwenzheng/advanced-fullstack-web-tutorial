@@ -24,7 +24,7 @@ export interface ProgressState {
   q: Record<string, AnswerRecord>;
   l: Record<string, LessonRecord>;
   p: Record<string, ProjectRecord>;
-  meta: { version: 2; startedAt: number };
+  meta: { version: number; startedAt: number; activePath: 'a' | 'b' | 'c' | 'd' };
 }
 
 function blankState(): ProgressState {
@@ -32,7 +32,7 @@ function blankState(): ProgressState {
     q: {},
     l: {},
     p: {},
-    meta: { version: 2, startedAt: Date.now() },
+    meta: { version: 3, startedAt: Date.now(), activePath: 'c' },
   };
 }
 
@@ -50,19 +50,32 @@ function read(): ProgressState {
   }
 }
 
-function migrateDrafts(): void {
+function rawProgressVersion(): number {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return 2;
+    const parsed: unknown = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return 2;
+    const version = (parsed as { meta?: { version?: number } }).meta?.version;
+    return typeof version === 'number' ? version : 0;
+  } catch {
+    return 2;
+  }
+}
+
+function migrateDrafts(progressVersion: number): void {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
     if (!raw) return;
     const parsed: unknown = JSON.parse(raw);
-    const migrated = migrateDraftMap(parsed);
-    if (migrated !== parsed) localStorage.setItem(DRAFT_KEY, JSON.stringify(migrated));
+    const migrated = migrateDraftMap(parsed, progressVersion);
+    if (JSON.stringify(migrated) !== raw) localStorage.setItem(DRAFT_KEY, JSON.stringify(migrated));
   } catch {
     /* 草稿损坏不影响主进度 */
   }
 }
 
-migrateDrafts();
+migrateDrafts(rawProgressVersion());
 let state = read();
 let version = 0;
 const listeners = new Set<(state: ProgressState) => void>();
@@ -120,6 +133,11 @@ export const store = {
 
   setLessonDone(lessonId: string, done: boolean): void {
     state.l[lessonId] = { done: Boolean(done) };
+    emit();
+  },
+
+  setActivePath(activePath: 'a' | 'b' | 'c' | 'd'): void {
+    state.meta.activePath = activePath;
     emit();
   },
 

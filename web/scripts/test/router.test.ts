@@ -7,15 +7,17 @@ const paths = [
   '/',
   ...curriculum.map((stage) => `/stage/${stage.id}`),
   ...allLessons.map((lesson) => `/lesson/${lesson.id}`),
-  ...curriculum.flatMap((stage) => (stage.project ? [`/project/${stage.project.id}`] : [])),
+  ...curriculum.flatMap((stage) => (
+    stage.projects ?? (stage.project ? [stage.project] : [])
+  )).map((project) => `/project/${project.id}`),
   `/project/${graduationProject.id}`,
   '/lab',
   '/report',
 ];
 
 describe('router', () => {
-  it('覆盖 66 条路由', () => {
-    expect(paths).toHaveLength(66);
+  it('覆盖 62 条路由', () => {
+    expect(paths).toHaveLength(62);
   });
 
   it.each(paths)('匹配 %s', (path) => {

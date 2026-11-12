@@ -3,8 +3,8 @@ import { entryUrl } from './lib/entry';
 
 test.describe('React shell', () => {
   test('侧栏、搜索与语言轨道', async ({ page }) => {
-    await page.goto(entryUrl('#/lesson/s0-l1'));
-    await expect(page.locator('.stage-node')).toHaveCount(9);
+    await page.goto(entryUrl('#/lesson/m1-http'));
+    await expect(page.locator('.stage-node')).toHaveCount(6);
     await expect(page.locator('.lesson-link')).toHaveCount(45);
     await expect(page.locator('.lesson-link.is-current')).toContainText('从 URL 到响应');
 
@@ -13,7 +13,7 @@ test.describe('React shell', () => {
     await expect(page.locator('.search-hit')).toHaveCount(1);
     await search.press('ArrowDown');
     await search.press('Enter');
-    await expect(page).toHaveURL(/#\/project\/p-graduation$/);
+    await expect(page).toHaveURL(/#\/project\/x-linkhub$/);
     await expect(search).toHaveValue('');
 
     await page.getByRole('button', { name: 'Python' }).click();
@@ -21,6 +21,12 @@ test.describe('React shell', () => {
     await page.reload();
     await expect(page.getByRole('button', { name: 'Python' })).toHaveAttribute('aria-pressed', 'true');
   });
+});
+
+test('旧课时 ID 重定向到 R2 ID', async ({ page }) => {
+  await page.goto(entryUrl('#/lesson/s0-l1'));
+  await expect(page).toHaveURL(/#\/lesson\/m1-http$/);
+  await expect(page.locator('main h1')).toHaveText('从 URL 到响应：请求的四段旅程');
 });
 
 test.describe('移动端抽屉', () => {

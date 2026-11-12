@@ -46,30 +46,30 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('React shell', () => {
-  it('侧栏规模：9 个阶段、45 个课时、0/45', async () => {
+  it('侧栏规模：6 个内容块、45 个课时、0/45', async () => {
     await renderAt('/');
-    expect(document.querySelectorAll('.stage-node')).toHaveLength(9);
+    expect(document.querySelectorAll('.stage-node')).toHaveLength(6);
     expect(document.querySelectorAll('.lesson-link')).toHaveLength(45);
     expect(document.getElementById('rail-count')).toHaveTextContent('0/45');
   });
 
-  it('当前课时：s0-l1 为 current，s0 自动展开并 active', async () => {
-    await renderAt('/lesson/s0-l1');
-    const link = document.querySelector('.lesson-link[data-lesson="s0-l1"]');
+  it('当前课时：m1-http 为 current，m1 自动展开并 active', async () => {
+    await renderAt('/lesson/m1-http');
+    const link = document.querySelector('.lesson-link[data-lesson="m1-http"]');
     expect(link).toHaveClass('is-current');
     expect(link).toHaveAttribute('aria-current', 'page');
-    const node = document.querySelector('.stage-node[data-stage="s0"]');
+    const node = document.querySelector('.stage-node[data-stage="m1"]');
     expect(node).toHaveClass('is-open');
     expect(node).toHaveClass('is-active');
     expect(node?.querySelector('.stage-node__head')).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('进度联动：标记课时后总计数与阶段徽标更新', async () => {
-    await renderAt('/lesson/s0-l1');
-    act(() => store.setLessonDone('s0-l1', true));
+    await renderAt('/lesson/m1-http');
+    act(() => store.setLessonDone('m1-http', true));
     expect(document.getElementById('rail-count')).toHaveTextContent('1/45');
-    const s0 = document.querySelector('.stage-node[data-stage="s0"]');
-    expect(within(s0 as HTMLElement).getByText('1/3')).toBeInTheDocument();
+    const m1 = document.querySelector('.stage-node[data-stage="m1"]');
+    expect(within(m1 as HTMLElement).getByText('1/3')).toBeInTheDocument();
   });
 
   it('搜索键盘：↓ + Enter 打开毕业项目并清空输入', async () => {
@@ -80,7 +80,7 @@ describe('React shell', () => {
     const listbox = screen.getByRole('listbox');
     await waitFor(() => expect(within(listbox).getAllByRole('option')).toHaveLength(1));
     await user.keyboard('{ArrowDown}{Enter}');
-    await waitFor(() => expect(router.state.location.pathname).toBe('/project/p-graduation'));
+    await waitFor(() => expect(router.state.location.pathname).toBe('/project/x-linkhub'));
     expect(input).toHaveValue('');
     expect(listbox).toHaveAttribute('hidden');
   });
@@ -115,7 +115,7 @@ describe('React shell', () => {
   });
 
   it('重置：进度归零、草稿删除、toast 出现', async () => {
-    act(() => store.setLessonDone('s0-l1', true));
+    act(() => store.setLessonDone('m1-http', true));
     localStorage.setItem(DRAFT_KEY, JSON.stringify({ draft: true }));
     const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
     const user = userEvent.setup();

@@ -1,7 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { ROOT, content, manifest, EXPECTED, LESSON_ID_RE, stripHtml } from './lib/content.js';
+import {
+  ROOT,
+  content,
+  manifest,
+  manifestLessons,
+  EXPECTED,
+  LESSON_ID_RE,
+  stripHtml,
+  sumMinutes as sumDurations,
+} from './lib/content.js';
+import { assertPathsAgainstBlocks } from '../web/scripts/content/manifest.js';
 import { runSourceSuite } from './lib/js-runner.js';
 import { createDatabase, runQuery, rowsEqual } from '../web/scripts/engine/sql/index.js';
 import type { Lesson } from '../web/scripts/content/types.js';
@@ -34,8 +44,11 @@ content.curriculum.forEach((stage, position) => {
   stageIds.add(stage.id);
 
   if (stage.appendix) {
-    if (position !== content.curriculum.length - 1) error(`附录阶段必须位于最后：${stage.id}`);
-    if (stage.index !== 8) error(`附录阶段 index 应为 8，实际 ${stage.index}`);
+    if (position !== content.curriculum.length - 1) error(`附录/工具箱阶段必须位于最后：${stage.id}`);
+    // 分块路径版：工具箱 `b` 为末位 index（现为 5），不再硬编码旧附录 index=8
+    if (stage.index !== position) {
+      error(`附录/工具箱阶段 index 应为 ${position}，实际 ${stage.index}`);
+    }
   } else if (stage.index !== position) {
     error(`阶段 ${stage.id} index=${stage.index}，期望 ${position}`);
   }
@@ -231,17 +244,17 @@ for (const stage of content.curriculum) {
     error(`${where}: 应有 11 个里程碑`);
   }
   const expectedReuse: Record<string, string[]> = {
-    m1: ['p2'],
-    m2: ['p1', 'p2'],
-    m3: ['p3', 'p5'],
-    m4: ['p3', 'p4'],
-    m5: ['p4'],
-    m6: ['p4'],
-    m7: ['p6'],
-    m8: ['p6'],
-    m9: ['p2', 'p6'],
-    m10: ['p7'],
-    m11: ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'],
+    m1: ['p-m2-api'],
+    m2: ['p-m2-api', 'p-m2-data'],
+    m3: ['p-e1-stats', 'p-m3-ship'],
+    m4: ['p-m3-ship'],
+    m5: ['p-m3-ship'],
+    m6: ['p-m3-ship'],
+    m7: ['p-m3-web'],
+    m8: ['p-m3-web'],
+    m9: ['p-m2-api', 'p-m3-web'],
+    m10: ['p-m4-ai'],
+    m11: ['p-e1-stats', 'p-m2-api', 'p-m2-data', 'p-m3-ship', 'p-m3-web', 'p-m4-ai'],
   };
   graduation.milestones.forEach((milestone, index) => {
     if (milestone.id !== `m${index + 1}`) error(`${where}.milestones[${index}]: id 应为 m${index + 1}`);
@@ -323,39 +336,56 @@ for (const [taskId, track] of Object.entries(pythonTracks)) {
   }
 }
 
-/* 11. 清单与统计 */
-const manifestStageIds = manifest.stages.map((stage) => stage.id);
-const coreStageIds = content.curriculum.filter((stage) => !stage.appendix).map((stage) => stage.id);
-if (manifestStageIds.join(',') !== coreStageIds.join(',')) error(`清单阶段顺序不一致：${manifestStageIds.join(',')} vs ${coreStageIds.join(',')}`);
+/* 11. 清单与统计（v3 blocks；课时 id 为新语义，legacyId 可选） */
+const appendix = content.curriculum.find((stage) => stage.appendix);
+if (!appendix) error('缺少附录阶段');
+else if (appendix.project !== null) error('附录阶段不应有项目');
 
-for (const manifestStage of manifest.stages) {
-  const stage = content.curriculum.find((entry) => entry.id === manifestStage.id);
-  if (!stage) continue;
-  if (manifestStage.duration !== sumMinutes(stage.lessons)) error(`清单 ${stage.id} 时长不一致`);
-  const manifestLessonIds = manifestStage.lessons.map((lesson) => lesson.id);
-  const actualIds = stage.lessons.map((lesson) => lesson.id);
-  if (manifestLessonIds.join(',') !== actualIds.join(',')) error(`清单 ${stage.id} 课时顺序不一致`);
-  for (const entry of manifestStage.lessons) {
-    const lesson = stage.lessons.find((item) => item.id === entry.id);
-    if (!lesson) error(`清单 ${stage.id} 含不存在的课时 ${entry.id}`);
-    else if (lesson.duration !== entry.duration) error(`清单 ${entry.id} 时长不一致`);
+const contentById = new Map(content.allLessons.map((lesson) => [lesson.id, lesson]));
+const seenIds = new Set<string>();
+const seenLegacy = new Set<string>();
+for (const entry of manifestLessons) {
+  if (seenIds.has(entry.id)) error(`清单课时 ID 重复：${entry.id}`);
+  seenIds.add(entry.id);
+  const legacy = entry.legacyId ?? entry.newId;
+  if (legacy) {
+    if (seenLegacy.has(legacy)) error(`清单 legacyId 重复：${legacy}`);
+    seenLegacy.add(legacy);
+  }
+  const lesson = contentById.get(entry.id);
+  if (!lesson) error(`清单课时在内容中不存在：${entry.id}`);
+  else if (lesson.duration !== entry.duration) error(`清单 ${entry.id} 时长不一致`);
+}
+for (const lesson of content.allLessons) {
+  if (!seenIds.has(lesson.id)) error(`内容课时未出现在清单：${lesson.id}`);
+}
+
+for (const block of manifest.blocks) {
+  const sum = sumDurations(block.lessons);
+  if (sum !== block.duration) error(`清单 block ${block.id} 时长 ${block.duration} != 课时合计 ${sum}`);
+  const lessonIds = new Set(block.lessons.map((lesson) => lesson.id));
+  for (const chapter of block.chapters) {
+    for (const lessonId of chapter.lessonIds) {
+      if (!lessonIds.has(lessonId)) error(`清单 ${block.id}/${chapter.id} 含未知课时 ${lessonId}`);
+    }
   }
 }
 
-const appendix = content.curriculum.find((stage) => stage.appendix);
-if (!appendix) error('缺少附录阶段');
-else {
-  const appendixIds = appendix.lessons.map((lesson) => lesson.id);
-  if (manifest.appendix.lessons.join(',') !== appendixIds.join(',')) error('清单附录课时顺序不一致');
-  if (manifest.appendix.duration !== sumMinutes(appendix.lessons)) error('清单附录时长不一致');
-  if (appendix.project !== null) error('附录阶段不应有项目');
+for (const message of assertPathsAgainstBlocks(manifest)) error(message);
+
+if (manifest.capstone.id !== content.graduationProject.id) {
+  error(`清单 capstone.id 应为 ${content.graduationProject.id}`);
 }
 
 const coreLessons = content.curriculum.filter((stage) => !stage.appendix).flatMap((stage) => stage.lessons);
 const coreMinutes = sumMinutes(coreLessons);
 const appendixMinutes = appendix ? sumMinutes(appendix.lessons) : 0;
+const toolboxMinutes = manifest.blocks
+  .filter((block) => block.kind === 'toolbox')
+  .reduce((sum, block) => sum + block.duration, 0);
 if (coreMinutes !== manifest.totals.coreMinutes) error(`清单 coreMinutes=${manifest.totals.coreMinutes}，实际 ${coreMinutes}`);
 if (appendixMinutes !== manifest.totals.appendixMinutes) error(`清单 appendixMinutes=${manifest.totals.appendixMinutes}，实际 ${appendixMinutes}`);
+if (toolboxMinutes !== manifest.totals.appendixMinutes) error(`清单 appendixMinutes 应等于 toolbox 时长 ${toolboxMinutes}`);
 if (content.allLessons.length !== manifest.totals.lessons) error(`清单 lessons=${manifest.totals.lessons}，实际 ${content.allLessons.length}`);
 if (content.allLessons.length !== EXPECTED.lessons) error(`应有 ${EXPECTED.lessons} 讲，实际 ${content.allLessons.length}`);
 if (coreLessons.length !== EXPECTED.core) error(`核心应有 ${EXPECTED.core} 讲，实际 ${coreLessons.length}`);

@@ -56,7 +56,7 @@ describe('ProjectPage', () => {
   });
 
   it('阶段项目渲染 hero、路线与里程碑清单', async () => {
-    await renderAt('/project/p0');
+    await renderAt('/project/p-m1-probe');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('HTTP 探针 CLI');
     expect(document.querySelector('.project-hero .eyebrow')).toHaveTextContent('阶段 0');
     expect(document.querySelector('.badge--amber')).toHaveTextContent('里程碑进度 0/5');
@@ -76,13 +76,13 @@ describe('ProjectPage', () => {
 
   it('勾选里程碑更新进度徽章，再次点击撤销', async () => {
     const user = userEvent.setup();
-    await renderAt('/project/p0');
+    await renderAt('/project/p-m1-probe');
     const button = screen.getByRole('button', { name: '标记 发起请求并打印响应 完成' });
     await user.click(button);
     expect(document.querySelectorAll('.milestone')[0]).toHaveClass('is-done');
     expect(document.querySelector('.milestone__box')).toBe(button);
     expect(document.querySelector('.badge--amber')).toHaveTextContent('里程碑进度 1/5');
-    expect(store.milestoneDone('p0', 'p0-m1')).toBe(true);
+    expect(store.milestoneDone('p-m1-probe', 'p-m1-probe-m1')).toBe(true);
 
     await user.click(button);
     expect(document.querySelectorAll('.milestone')[0]).not.toHaveClass('is-done');
@@ -90,7 +90,7 @@ describe('ProjectPage', () => {
   });
 
   it('毕业项目渲染 11 个里程碑、6 份模板与里程碑笔记', async () => {
-    await renderAt('/project/p-graduation');
+    await renderAt('/project/x-linkhub');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('LinkHub 短链服务');
     expect(document.querySelector('.project-hero .eyebrow')).toHaveTextContent('毕业项目');
     expect(document.querySelector('.badge--amber')).toHaveTextContent('里程碑进度 0/11');
@@ -102,13 +102,13 @@ describe('ProjectPage', () => {
 
   it('毕业里程碑笔记持久化并在重渲染后恢复', async () => {
     const user = userEvent.setup();
-    await renderAt('/project/p-graduation');
+    await renderAt('/project/x-linkhub');
     const note = screen.getAllByPlaceholderText('记录这个里程碑的证据位置、缺口与下一步……')[0] as HTMLTextAreaElement;
     await user.type(note, '证据在 docs/m1.md');
-    expect(store.milestoneNote('p-graduation', 'm1')).toBe('证据在 docs/m1.md');
+    expect(store.milestoneNote('x-linkhub', 'm1')).toBe('证据在 docs/m1.md');
 
     cleanup();
-    await renderAt('/project/p-graduation');
+    await renderAt('/project/x-linkhub');
     const restored = screen.getAllByPlaceholderText('记录这个里程碑的证据位置、缺口与下一步……')[0] as HTMLTextAreaElement;
     expect(restored.value).toBe('证据在 docs/m1.md');
   });
@@ -117,7 +117,7 @@ describe('ProjectPage', () => {
     const user = userEvent.setup();
     mockClipboard();
     writeText.mockResolvedValue(undefined);
-    await renderAt('/project/p-graduation');
+    await renderAt('/project/x-linkhub');
     await user.click(screen.getAllByRole('button', { name: '复制模板' })[0]!);
     expect(await screen.findByRole('button', { name: '已复制' })).toBeInTheDocument();
     expect(screen.getByText('已复制：ADR 模板')).toBeInTheDocument();
@@ -128,7 +128,7 @@ describe('ProjectPage', () => {
     const user = userEvent.setup();
     mockClipboard();
     writeText.mockRejectedValue(new Error('clipboard denied'));
-    await renderAt('/project/p-graduation');
+    await renderAt('/project/x-linkhub');
     await user.click(screen.getAllByRole('button', { name: '复制模板' })[0]!);
     expect(await screen.findByRole('button', { name: '复制失败' })).toBeInTheDocument();
   });

@@ -164,7 +164,7 @@ export function buildReportModel(input: ReportModelInput): ReportModel {
   });
 
   const projectEntries: Project[] = [
-    ...stages.map((stage) => stage.project).filter((project): project is Project => Boolean(project)),
+    ...stages.flatMap((stage) => stage.projects ?? (stage.project ? [stage.project] : [])),
     graduation,
   ];
   const projects: ReportProjectEntry[] = projectEntries.map((project) => {

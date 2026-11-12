@@ -1,0 +1,100 @@
+# 课时规格：e1-consistency 分布式一致性：双写、补偿与最终一致
+
+## 0. 元数据
+
+| 字段 | 值 |
+| --- | --- |
+| 课时 ID | `e1-consistency` |
+| 标题 | 分布式一致性：双写、补偿与最终一致 |
+| 所属阶段 | 阶段 5 · 分布式：边界、消息与数据扩展 |
+| 时长 | 85 分钟 |
+| 先修 | `m3-queue`（队列、幂等消费者）、`p-m3-ship`（BullMQ 统计） |
+| 对应项目里程碑 | `p-e1-stats-m1` Outbox、`p-e1-stats-m2` 发布器、`p-e1-stats-m3` 消费者 |
+
+## 1. 出口能力
+
+1. 解释双写失败窗口与 2PC 的代价。
+2. 实现 Outbox + 幂等消费，保证事件不丢不重。
+3. 比较 Saga、CQRS/读模型与一致性级别。
+4. 为 LinkHub 统计选择一致性方案，并标注延迟上界。
+
+## 2. 学习者起点与常见误解
+
+- 已经知道：BullMQ 异步任务、消费者重试、eventId 去重的基本做法（m3-queue）。
+- 常见误解：
+  - 「先写数据库再发消息，失败就重试，够了。」——两次写之间崩溃会永久丢事件。
+  - 「把发消息放进数据库事务里就原子了。」——消息代理不参与数据库事务。
+  - 「exactly-once 靠消息队列配置就能实现。」——端到端效果需要至少一次投递 + 幂等消费。
+  - 「最终一致就是不一致。」——它是有延迟上界的收敛，需要可观测与读模型说明。
+  - 「2PC 最安全，所以应该默认用。」——协调者、阻塞与运维成本很高，很多系统承担不起。
+
+## 3. 范围边界
+
+- 本讲只讲：双写问题、Outbox、幂等消费、Saga/CQRS 取舍、读模型一致性级别。
+- 本讲不讲：分布式锁与 fencing token（e1-failures）、复制与分片（e1-datascale）、BullMQ 的 API 细节（m3-queue 已讲）。
+- 与相邻讲的分工：m3-queue 讲应用内异步队列与幂等消费者；本讲把事件发布从请求链路中解耦，解决双写；e1-failures 讲跨服务失败与锁。
+
+## 4. 内容块大纲
+
+| # | type | 标题 | 核心论点 |
+| --- | --- | --- | --- |
+| 1 | analogy | 前端乐观更新与最终一致 | 用户先看到结果，后台再对齐 |
+| 2 | text | 双写问题 | 业务提交与消息发送不是原子 |
+| 3 | flow | 事务 → outbox → publisher → MQ → consumer → read model | 每一步的失败 |
+| 4 | code | Outbox 发布器 | 同事务写 outbox；SKIP LOCKED；成功后标记 |
+| 5 | code | 幂等消费 | eventId 去重 + 唯一索引兜底 |
+| 6 | table | 2PC/Outbox/Saga/CQRS | 一致性、复杂度、延迟、适用场景 |
+| 7 | pitfall | 事务内发消息与先标记后 ack | 丢事件、重复消费、读不到自己的写 |
+| 8 | steps | 从 p-m3-ship BullMQ 升级到 Outbox + RabbitMQ | 保留业务路径，替换发布方式 |
+| 9 | text（深挖） | exactly-once 是端到端效果 | at-least-once + 幂等；读模型延迟 |
+| 10 | note | 面试延伸 | 为什么不用 2PC；如何保证消息不丢 |
+
+## 5. 概念检查（3 题）
+
+- C1 单选：业务提交成功但消息发送失败，会发生什么。
+- C2 多选：Outbox 的关键步骤。
+- C3 单选：统计看板应标注什么一致性级别。
+
+## 6. 代码题：Outbox 发布器 + 幂等消费
+
+契约：`createOutbox({ store, publisher, now, maxAttempts })` 与 `createConsumer({ apply })`。
+
+- `createOutbox` 返回 `{ add, publishBatch }`：
+  - `add(businessWrite, event)`：在 `store.transaction` 中执行 `businessWrite(store)` 并写入 outbox 事件；事件字段 `eventId`、`type`、`payload`、`attempts=0`、`sentAt=null`、`failedAt=null`。
+  - `publishBatch(limit)`：用 `store.claimPending(limit)` 抢占（模拟 `FOR UPDATE SKIP LOCKED`，已锁定的事件不会被另一批取到）；逐个 `await publisher.publish(record)`；成功 `markSent(eventId, now())`；失败 `markFailed(eventId, message, maxAttempts)` 并累加 `attempts`；达到 `maxAttempts` 后标记 `failedAt`，不再被抢占；返回 `[{ eventId, ok, error? }]`。
+- `createConsumer({ apply })` 返回 `{ consume, processed }`：
+  - `consume(event)`：`eventId` 已处理则返回 `{ duplicate: true }` 且不调用 `apply`；否则先 `await apply(event)`，成功后才记入 `processed`，返回 `{ duplicate: false }`。
+  - `apply` 抛错时不记 processed，允许重试。
+- 测试脚手架提供 `createMemoryStore()`（内存事务、claim 锁、markSent/markFailed）。
+
+测试（8）：同事务写入；两个消费者抢占互斥；发布成功标记 sentAt；发布失败累加 attempts；达到上限不再抢占；重复投递只消费一次；消费失败可重试；空批次。
+
+Python 差异：同步实现即可；`set` 去重；store 用 `dict`；`publish` 可为同步函数；测试不使用真实 sleep。
+
+## 7. 方案题：LinkHub 统计一致性
+
+自检清单（10）：事件产生；outbox；发布器；MQ；消费者；读模型；一致性级别；延迟上界；重放；监控与降级。
+
+参考要点：跳转主链路只写事件，统计异步；看板标注「最终一致，延迟 ≤ N 秒」；重复投递只累加一次；关掉统计不影响跳转；p-m3-ship 的业务路径不重写。
+
+## 8. 事实清单
+
+| 事实 | registry 对应 |
+| --- | --- |
+| Outbox 模式：业务与事件同事务，异步发布 | 「Outbox 模式」条目，2026-11-09 |
+| `FOR UPDATE SKIP LOCKED` 是 PostgreSQL 特性 | 「SKIP LOCKED」条目，2026-11-09 |
+| RabbitMQ 默认至少一次投递；exactly-once 需端到端幂等 | 「投递语义」条目，2026-11-09 |
+
+## 9. 项目联动
+
+`p-e1-stats-m1` 同事务写 `click_events` 与 `outbox`；`p-e1-stats-m2` 独立发布器用 `SKIP LOCKED` 抢占并投递 RabbitMQ；`p-e1-stats-m3` 消费者按 eventId 幂等并用唯一索引兜底。
+
+## 10. 自检
+
+- [x] objectives 4 条；
+- [x] blocks 10 个，含类比/两个代码/坑/流程/表格/深挖/面试；
+- [x] 3 道检查，含 1 道多选；
+- [x] 代码题测试 8 条，solution 全过、starter 失败；
+- [x] Python 轨测试数量一致；
+- [x] 方案题清单 10 条；
+- [x] 与 m3-queue 的队列/幂等边界清晰。

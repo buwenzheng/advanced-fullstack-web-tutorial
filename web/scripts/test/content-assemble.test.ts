@@ -22,9 +22,9 @@ function legacyAttach(
 }
 
 describe('content assemble', () => {
-  it('注入 stageId 并保持 9 阶段 45 讲', () => {
+  it('注入 stageId 并保持 6 块 45 讲', () => {
     const stages = assembleContent(stageInputs);
-    expect(stages).toHaveLength(9);
+    expect(stages).toHaveLength(6);
     const lessons = stages.flatMap((stage) => stage.lessons);
     expect(lessons).toHaveLength(45);
     for (const stage of stages) {
@@ -36,9 +36,9 @@ describe('content assemble', () => {
 
   it('Python 代码块按 JS 代码块顺序注入', () => {
     const stages = assembleContent(stageInputs);
-    const lesson = stages.flatMap((stage) => stage.lessons).find((item) => item.id === 's0-l1')!;
-    const input = stageInputs.find((stage) => stage.data.lessons.some((item) => item.id === 's0-l1'))!;
-    const entries = input.pythonBlocks['s0-l1']!;
+    const lesson = stages.flatMap((stage) => stage.lessons).find((item) => item.id === 'm1-http')!;
+    const input = stageInputs.find((stage) => stage.data.lessons.some((item) => item.id === 'm1-http'))!;
+    const entries = input.pythonBlocks['m1-http']!;
     const jsBlocks = lesson.blocks.filter(
       (block) => block.type === 'code' && (block.lang || 'javascript') === 'javascript',
     );
@@ -63,9 +63,9 @@ describe('content assemble', () => {
     expect(checked).toBe(34);
   });
 
-  it('非要 JS 代码块不参与 Python 注入（s4-l3）', () => {
+  it('非要 JS 代码块不参与 Python 注入（m3-container）', () => {
     const stages = assembleContent(stageInputs);
-    const lesson = stages.flatMap((stage) => stage.lessons).find((item) => item.id === 's4-l3')!;
+    const lesson = stages.flatMap((stage) => stage.lessons).find((item) => item.id === 'm3-container')!;
     const codeBlocks = lesson.blocks.filter((block) => block.type === 'code');
     expect(codeBlocks.length).toBeGreaterThan(1);
     const jsBlocks = codeBlocks.filter((block) => (block.lang || 'javascript') === 'javascript');

@@ -88,7 +88,7 @@ export function useGraduation(): Project {
 
 export function useGraduationId(): string | null {
   const catalog = useCatalog();
-  return catalog.projects.find((project) => project.stageLabel === '毕业项目')?.id ?? null;
+  return catalog.projects.some((project) => project.id === 'x-linkhub') ? 'x-linkhub' : null;
 }
 
 export function useStats(): Stats {

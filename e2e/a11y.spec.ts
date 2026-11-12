@@ -4,10 +4,10 @@ import { entryUrl } from './lib/entry';
 
 const PAGES = [
   '#/',
-  '#/stage/s0',
-  '#/lesson/s0-l1',
-  '#/lesson/s7-l5',
-  '#/project/p-graduation',
+  '#/stage/m1',
+  '#/lesson/m1-http',
+  '#/lesson/m4-coding-team',
+  '#/project/x-linkhub',
   '#/lab',
   '#/report',
 ];

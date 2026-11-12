@@ -3,10 +3,11 @@ import { entryUrl } from './lib/entry';
 
 const pages = [
   { route: '#/', slug: 'home' },
-  { route: '#/stage/s0', slug: 'stage-s0' },
-  { route: '#/lesson/s0-l1', slug: 'lesson-s0-l1' },
-  { route: '#/lesson/s7-l5', slug: 'lesson-s7-l5' },
-  { route: '#/project/p-graduation', slug: 'project-p-graduation' },
+  // R2 IDs also rename screenshot slugs; regenerate the affected visual baselines.
+  { route: '#/stage/m1', slug: 'stage-m1' },
+  { route: '#/lesson/m1-http', slug: 'lesson-m1-http' },
+  { route: '#/lesson/m4-coding-team', slug: 'lesson-m4-coding-team' },
+  { route: '#/project/x-linkhub', slug: 'project-x-linkhub' },
   { route: '#/lab', slug: 'lab' },
   { route: '#/report', slug: 'report' },
 ];

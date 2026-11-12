@@ -15,9 +15,9 @@ test.describe('键盘路径门禁', () => {
   test('路由切换后 #main 获焦且滚动复位', async ({ page }) => {
     await page.goto(entryUrl('#/'));
     await page.evaluate(() => window.scrollTo(0, 600));
-    await page.locator('.stage-node[data-stage="s0"] .stage-node__head').click();
-    await page.locator('.lesson-link[data-lesson="s0-l1"]').click();
-    await expect(page).toHaveURL(/#\/lesson\/s0-l1$/);
+    await page.locator('.stage-node[data-stage="m1"] .stage-node__head').click();
+    await page.locator('.lesson-link[data-lesson="m1-http"]').click();
+    await expect(page).toHaveURL(/#\/lesson\/m1-http$/);
     await expect(page.locator('#main')).toBeFocused();
     expect(await page.evaluate(() => window.scrollY)).toBe(0);
   });
@@ -34,7 +34,7 @@ test.describe('键盘路径门禁', () => {
     await expect(page.locator('.search-hit.is-active')).toHaveCount(1);
 
     await page.keyboard.press('Enter');
-    await expect(page).toHaveURL(/#\/project\/p-graduation$/);
+    await expect(page).toHaveURL(/#\/project\/x-linkhub$/);
     await expect(search).toHaveValue('');
     await expect(page.locator('.search-hit')).toHaveCount(0);
   });
@@ -53,8 +53,8 @@ test.describe('键盘路径门禁', () => {
 
   test('侧栏阶段折叠可用 Enter 操作，课时列表显隐一致', async ({ page }) => {
     await page.goto(entryUrl('#/'));
-    const head = page.locator('.stage-node[data-stage="s0"] .stage-node__head');
-    const lessons = page.locator('.stage-node[data-stage="s0"] .stage-node__lessons');
+    const head = page.locator('.stage-node[data-stage="m1"] .stage-node__head');
+    const lessons = page.locator('.stage-node[data-stage="m1"] .stage-node__lessons');
     await head.focus();
     await expect(head).toBeFocused();
 
@@ -68,7 +68,7 @@ test.describe('键盘路径门禁', () => {
   });
 
   test('选择题可用 Enter 与 Space 作答', async ({ page }) => {
-    await page.goto(entryUrl('#/lesson/s0-l1'));
+    await page.goto(entryUrl('#/lesson/m1-http'));
     const options = page.locator('.quiz').first().locator('.opt');
     const first = options.nth(0);
     const second = options.nth(1);

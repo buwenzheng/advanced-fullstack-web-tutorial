@@ -44,6 +44,7 @@ function MilestoneItem({
         <svg viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" /></svg>
       </button>
       <div>
+        {milestone.group ? <span className="badge badge--muted">{milestone.group}</span> : null}
         <div className="milestone__title">{milestone.title}</div>
         <RichText className="milestone__desc" html={milestone.desc} />
         {milestone.delivery ? (

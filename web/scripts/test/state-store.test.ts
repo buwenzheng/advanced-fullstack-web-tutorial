@@ -12,7 +12,7 @@ beforeEach(() => {
 describe('state store', () => {
   it('空存储返回空白状态', async () => {
     const { store } = await loadStore();
-    expect(store.get()).toMatchObject({ q: {}, l: {}, p: {}, meta: { version: 2 } });
+    expect(store.get()).toMatchObject({ q: {}, l: {}, p: {}, meta: { version: 3 } });
   });
 
   it('读取时迁移旧键并回写 localStorage', async () => {
@@ -21,14 +21,14 @@ describe('state store', () => {
       JSON.stringify({ q: { 's6-l1-c1': { solved: true } }, l: {}, p: {}, meta: { startedAt: 1 } }),
     );
     const { store } = await loadStore();
-    expect(store.get().q['a1-c1']).toMatchObject({ solved: true });
-    expect(store.get().meta).toMatchObject({ version: 2, startedAt: 1 });
+    expect(store.get().q['b-bigO-c1']).toMatchObject({ solved: true });
+    expect(store.get().meta).toMatchObject({ version: 3, startedAt: 1 });
     const persisted = JSON.parse(localStorage.getItem('bff-lab-progress-v1')!) as {
       q: Record<string, unknown>;
       meta: { version: number };
     };
-    expect(persisted.q['a1-c1']).toBeTruthy();
-    expect(persisted.meta.version).toBe(2);
+    expect(persisted.q['b-bigO-c1']).toBeTruthy();
+    expect(persisted.meta.version).toBe(3);
   });
 
   it('损坏或非对象 JSON 回退空白状态', async () => {
@@ -41,11 +41,29 @@ describe('state store', () => {
     expect(loaded.store.get().q).toEqual({});
   });
 
-  it('导入时迁移草稿键', async () => {
+  it('导入时按进度 version 迁移草稿键', async () => {
+    localStorage.setItem('bff-lab-progress-v1', JSON.stringify({
+      q: {},
+      l: {},
+      p: {},
+      meta: { version: 2, startedAt: 0 },
+    }));
     localStorage.setItem('bff-lab-drafts-v1', JSON.stringify({ 's6-l1': { code: 'old' }, other: { code: 'keep' } }));
     await loadStore();
-    const drafts = JSON.parse(localStorage.getItem('bff-lab-drafts-v1')!) as Record<string, unknown>;
-    expect(Object.keys(drafts).sort()).toEqual(['a1', 'other']);
+    const v2Drafts = JSON.parse(localStorage.getItem('bff-lab-drafts-v1')!) as Record<string, unknown>;
+    expect(Object.keys(v2Drafts).sort()).toEqual(['m3-bff', 'other']);
+
+    localStorage.clear();
+    localStorage.setItem('bff-lab-progress-v1', JSON.stringify({
+      q: {},
+      l: {},
+      p: {},
+      meta: { version: 1, startedAt: 0 },
+    }));
+    localStorage.setItem('bff-lab-drafts-v1', JSON.stringify({ 's6-l1': { code: 'old' }, other: { code: 'keep' } }));
+    await loadStore();
+    const v1Drafts = JSON.parse(localStorage.getItem('bff-lab-drafts-v1')!) as Record<string, unknown>;
+    expect(Object.keys(v1Drafts).sort()).toEqual(['b-bigO', 'other']);
   });
 
   it('recordAnswer 记录尝试次数并保持已解决', async () => {
@@ -74,31 +92,31 @@ describe('state store', () => {
 
   it('课时、里程碑与项目笔记读写', async () => {
     const { store } = await loadStore();
-    expect(store.lessonDone('s0-l1')).toBe(false);
-    store.setLessonDone('s0-l1', true);
-    store.setLessonDone('s0-l2', false);
-    expect(store.lessonDone('s0-l1')).toBe(true);
-    expect(store.lessonDone('s0-l2')).toBe(false);
+    expect(store.lessonDone('m1-http')).toBe(false);
+    store.setLessonDone('m1-http', true);
+    store.setLessonDone('m1-runtime', false);
+    expect(store.lessonDone('m1-http')).toBe(true);
+    expect(store.lessonDone('m1-runtime')).toBe(false);
 
-    expect(store.milestoneDone('p0', 'm1')).toBe(false);
-    expect(store.toggleMilestone('p0', 'm1')).toBe(true);
-    expect(store.milestoneDone('p0', 'm1')).toBe(true);
-    expect(store.toggleMilestone('p0', 'm1')).toBe(false);
+    expect(store.milestoneDone('p-m1-probe', 'm1')).toBe(false);
+    expect(store.toggleMilestone('p-m1-probe', 'm1')).toBe(true);
+    expect(store.milestoneDone('p-m1-probe', 'm1')).toBe(true);
+    expect(store.toggleMilestone('p-m1-probe', 'm1')).toBe(false);
 
-    expect(store.projectNote('p0')).toBe('');
-    store.setProjectNote('p0', '总览笔记');
-    expect(store.projectNote('p0')).toBe('总览笔记');
+    expect(store.projectNote('p-m1-probe')).toBe('');
+    store.setProjectNote('p-m1-probe', '总览笔记');
+    expect(store.projectNote('p-m1-probe')).toBe('总览笔记');
 
-    expect(store.milestoneNote('p0', 'm1')).toBe('');
-    store.setMilestoneNote('p0', 'm1', '里程碑笔记');
-    expect(store.milestoneNote('p0', 'm1')).toBe('里程碑笔记');
+    expect(store.milestoneNote('p-m1-probe', 'm1')).toBe('');
+    store.setMilestoneNote('p-m1-probe', 'm1', '里程碑笔记');
+    expect(store.milestoneNote('p-m1-probe', 'm1')).toBe('里程碑笔记');
   });
 
   it('reset 清空全部进度', async () => {
     const { store } = await loadStore();
     store.recordAnswer('s6', [0], true);
-    store.setLessonDone('s6-l1', true);
-    store.setProjectNote('p0', 'note');
+    store.setLessonDone('m3-bff', true);
+    store.setProjectNote('p-m1-probe', 'note');
     store.reset();
     expect(store.get().q).toEqual({});
     expect(store.get().l).toEqual({});

@@ -177,6 +177,7 @@ const milestoneSchema = z.strictObject({
   title: nonEmpty,
   desc: nonEmpty,
   criteria: nonEmpty,
+  group: nonEmpty.optional(),
   delivery: nonEmpty.optional(),
   acceptance: z.array(nonEmpty).min(1).optional(),
   evidence: z.array(nonEmpty).min(1).optional(),
@@ -196,13 +197,44 @@ export const projectSchema = z.strictObject({
   title: nonEmpty,
   brief: nonEmpty,
   goal: nonEmpty,
+  prerequisites: z.array(nonEmpty).min(1),
+  nonGoals: z.array(nonEmpty).min(1),
+  xRelation: nonEmpty,
   stack: z.array(nonEmpty).min(1),
   steps: z.array(nonEmpty).min(1),
   milestones: z.array(milestoneSchema).min(1),
   deliverables: z.array(nonEmpty).min(1),
   checklist: z.array(nonEmpty).min(1),
   stretch: z.array(nonEmpty).min(1),
+  completionTiers: z.array(z.strictObject({
+    id: nonEmpty,
+    title: nonEmpty,
+    milestoneIds: z.array(nonEmpty).min(1),
+    note: nonEmpty,
+  })).min(1).optional(),
   templates: z.array(templateSchema).min(1).optional(),
+});
+
+/** 大块内章节（M2/M3/M4/B）；R1 起可选，内容文件可暂不填 */
+export const chapterSchema = z.strictObject({
+  id: nonEmpty,
+  title: nonEmpty,
+  lessonIds: z.array(nonEmpty).min(1),
+});
+
+export const blockKindSchema = z.enum(['required', 'elective', 'toolbox']);
+
+export const pathStepSchema = z.strictObject({
+  blockId: nonEmpty,
+  chapterId: nonEmpty.optional(),
+  required: z.boolean().optional(),
+});
+
+export const learningPathSchema = z.strictObject({
+  id: z.enum(['a', 'b', 'c', 'd']),
+  title: nonEmpty,
+  blurb: nonEmpty,
+  steps: z.array(pathStepSchema).min(1),
 });
 
 export const stageSchema = z.strictObject({
@@ -212,7 +244,18 @@ export const stageSchema = z.strictObject({
   subtitle: nonEmpty,
   accent: z.enum(['teal', 'blue', 'violet', 'amber', 'green', 'rose']),
   duration: z.number().int().positive(),
+  /** @deprecated 用 kind === 'toolbox'；R1 仍可读 */
   appendix: z.literal(true).optional(),
+  /** R1 可选；内容文件改 ID 前可缺省 */
+  kind: blockKindSchema.optional(),
+  chapters: z.array(chapterSchema).optional(),
+  /** 多项目挂载（如 M2）；与 project 并存时以内容为准，R2/R3 收敛 */
+  projectIds: z.array(nonEmpty).min(1).optional(),
+  /**
+   * 块内多项目实体（R2b+）。若提供，catalog/findProject 以本数组为准；
+   * `project` 可置为 projects[0] 或 null（兼容旧单项目读取）。
+   */
+  projects: z.array(projectSchema).min(1).optional(),
   goal: nonEmpty,
   outcome: z.array(nonEmpty).min(1),
   keywords: z.array(nonEmpty).min(1),

@@ -1,0 +1,18 @@
+R3 project decouple coupling scan
+===================================
+
+Command:
+rg -n "上一阶段|必须先|接续 p[0-9]|八个核心|附录课" web/scripts/content -g "*.ts"
+
+Blocking hits fixed:
+- web/scripts/content/stages/m3/project-production.ts: removed “上一阶段” dependency and described the m6-m10 group as accepting an equivalent service.
+- Project briefs no longer require continuing in one LinkHub repository; p-m2-api, p-m3-ship, p-m3-web, p-m4-ai, p-e1-stats, and x-linkhub explicitly accept equivalent inputs where appropriate.
+
+Post-fix hits (all non-blocking):
+- web/scripts/content/stages/b/python.ts: “必须先找出两个子节点” is an algorithm ordering invariant in a heap implementation.
+- web/scripts/content/stages/b/b-sysdesign.ts: “必须先解决的问题” and “必须转向” describe scale-driven design constraints, not curriculum order.
+- web/scripts/content/stages/m3/m3-resilience.ts: “必须先有幂等键” is a retry-safety invariant, not a project prerequisite.
+
+Result:
+- 0 blocking curriculum/project coupling hits.
+- Exercise tests, solutions, and assertions were not changed.

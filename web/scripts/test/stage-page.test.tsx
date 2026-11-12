@@ -43,47 +43,48 @@ describe('StagePage', () => {
   it('阶段 s0 的 hero 徽章序列与课时行', async () => {
     await renderAt('/stage/s0');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('地基：请求、运行时与排障');
-    expect(document.querySelector('.stage-hero__num')).toHaveTextContent('STAGE 00');
+    expect(document.querySelector('.stage-hero__num')).toHaveTextContent('主修 · M1');
     expect((document.querySelector('.stage-hero') as HTMLElement).style.getPropertyValue('--accent')).toBe('var(--teal)');
 
     const badges = [...document.querySelectorAll('.stage-hero__tags .badge')].map((node) => node.textContent);
     expect(badges).toEqual([
       '2 小时 50 分',
       '3 讲',
+      '主修',
       '已完成 0/3',
       'DNS', 'TCP', 'TLS', 'HTTP', '事件循环', '进程', '端口', 'curl',
     ]);
 
     const rows = document.querySelectorAll('.lesson-row');
     expect(rows).toHaveLength(3);
-    expect(rows[0]?.querySelector('.lesson-row__num')).toHaveTextContent('0.1');
-    expect(rows[2]?.querySelector('.lesson-row__num')).toHaveTextContent('0.3');
+    expect(rows[0]?.querySelector('.lesson-row__num')).toHaveTextContent('M1.1');
+    expect(rows[2]?.querySelector('.lesson-row__num')).toHaveTextContent('M1.3');
     expect(rows[0]?.querySelector('.lesson-row__right')).toHaveTextContent('5 题');
 
     const projectCard = document.querySelector('aside .panel') as HTMLElement;
-    expect(projectCard).toHaveAttribute('href', '#/project/p0');
-    expect(within(projectCard).getByText('阶段项目')).toBeInTheDocument();
+    expect(projectCard).toHaveAttribute('href', '#/project/p-m1-probe');
+    expect(within(projectCard).getByText('项目入口')).toBeInTheDocument();
     expect(within(projectCard).getByText('HTTP 探针 CLI')).toBeInTheDocument();
   });
 
   it('标记课时后显示已掌握与进度', async () => {
-    store.setLessonDone('s0-l1', true);
+    store.setLessonDone('m1-http', true);
     await renderAt('/stage/s0');
     const rows = document.querySelectorAll('.lesson-row');
     expect(within(rows[0] as HTMLElement).getByText('已掌握')).toBeInTheDocument();
-    expect(document.querySelector('.stage-hero__tags .badge:nth-child(3)')).toHaveTextContent('已完成 1/3');
+    expect(document.querySelector('.stage-hero__tags .badge:nth-child(4)')).toHaveTextContent('已完成 1/3');
   });
 
   it('附录阶段的编号、徽章与课时行', async () => {
     await renderAt('/stage/appendix');
-    expect(document.querySelector('.stage-hero__num')).toHaveTextContent('APPENDIX');
+    expect(document.querySelector('.stage-hero__num')).toHaveTextContent('工具箱 · B');
     const badges = [...document.querySelectorAll('.stage-hero__tags .badge')].map((node) => node.textContent);
-    expect(badges[2]).toBe('附录 · 性能、架构、工程与 AI 基础设施');
+    expect(badges[2]).toBe('工具箱');
 
     const rows = document.querySelectorAll('.lesson-row');
     expect(rows).toHaveLength(13);
-    expect(rows[0]?.querySelector('.lesson-row__num')).toHaveTextContent('A.1');
-    expect(rows[12]?.querySelector('.lesson-row__num')).toHaveTextContent('A.13');
+    expect(rows[0]?.querySelector('.lesson-row__num')).toHaveTextContent('B.1');
+    expect(rows[12]?.querySelector('.lesson-row__num')).toHaveTextContent('B.13');
   });
 
   it('草稿课时显示草稿徽章而不是题数', () => {
@@ -101,7 +102,7 @@ describe('StagePage', () => {
         <StageView stage={stage} />
       </Suspense>,
     );
-    expect(await screen.findByText('阶段目标')).toBeInTheDocument();
-    expect(screen.queryByText('达成标准')).not.toBeInTheDocument();
+    expect(await screen.findByText('大块目标')).toBeInTheDocument();
+    expect(screen.queryByText('出口标准')).not.toBeInTheDocument();
   });
 });
