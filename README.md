@@ -95,11 +95,18 @@ ID 参数值可按已批准迁移调整；练习答案、hash 路由形态、`lo
 ## 部署
 
 - `pull_request` 与手动触发由 `verify` 工作流跑完整门禁；
-- 推送到 `main` 由 `deploy` 工作流先跑完整 `npm run verify`，通过后构建 `dist/` 并发布到 GitHub Pages；
-- 首次使用需在仓库 Settings → Pages 把 Source 设为「GitHub Actions」；`deploy` 也可在 Actions 中手动运行；
-- 站点地址以 Pages 显示为准（通常为 `https://<owner>.github.io/<repo>/`）；Vite 使用相对 `base`，项目子路径可直接工作；
+- 推送到 `main` 由 `deploy` 工作流先跑完整 `npm run verify`，通过后把 `dist/` 发布到 GitHub Pages；`deploy` 也可在 Actions 中手动运行。
+
+### 首次开通 Pages（必做一次）
+
+1. 打开 [Settings → Pages](https://github.com/buwenzheng/advanced-fullstack-web-tutorial/settings/pages)
+2. **Build and deployment → Source** 选 **GitHub Actions**（不要选 “Deploy from a branch”）
+3. 回到 [Actions](https://github.com/buwenzheng/advanced-fullstack-web-tutorial/actions) 对最近一次 `Deploy to GitHub Pages` 点 **Re-run failed jobs**（或再推一次 `main`）
+
+未开通时，`configure-pages` 会报 `Get Pages site failed / Not Found`；这与 `verify` 无关。站点地址以 Pages 页为准（通常 `https://buwenzheng.github.io/advanced-fullstack-web-tutorial/`）。Vite 使用相对 `base`，项目子路径可直接工作。
+
 - `dist/` 仍是纯静态产物，可改部署到任意静态服务器；GitHub Pages 不托管 `functions/`，实验台 live 模式需另行部署边缘函数，mock 模式不受影响；
-- GitHub Pages 站点默认公开；私有仓库启用 Pages 需要账户计划支持，但若必须保留私有访问，Pages 不适用；
+- GitHub Pages 站点默认公开；私有仓库启用 Pages 需要账户计划支持，若必须保留私有访问则 Pages 不适用；
 - 不提交 `dist/`、`web/generated/`、任何密钥。
 
 ## 文档
